@@ -1,0 +1,11 @@
+# secrets
+.env
+
+# build output
+bin/
+*.exe
+coverage.out
+
+# OS
+Thumbs.db
+.DS_Store

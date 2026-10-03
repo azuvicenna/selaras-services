@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package patient.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/patient-service/proto/patient/v1;patientv1";
+
+enum Gender {
+  GENDER_UNSPECIFIED = 0;
+  GENDER_MALE = 1;
+  GENDER_FEMALE = 2;
+}
+
+message Patient {
+  string id = 1;
+  string medical_record_no = 2;
+  string nik = 3;
+  string name = 4;
+  google.protobuf.Timestamp birth_date = 5;
+  Gender gender = 6;
+  string phone = 7;
+  string address = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+}
+
+service PatientService {
+  rpc RegisterPatient(RegisterPatientRequest) returns (RegisterPatientResponse);
+  rpc GetPatient(GetPatientRequest) returns (GetPatientResponse);
+  rpc ListPatients(ListPatientsRequest) returns (ListPatientsResponse);
+  rpc UpdatePatient(UpdatePatientRequest) returns (UpdatePatientResponse);
+}
+
+message RegisterPatientRequest {
+  string nik = 1;
+  string name = 2;
+  google.protobuf.Timestamp birth_date = 3;
+  Gender gender = 4;
+  string phone = 5;
+  string address = 6;
+}
+
+message RegisterPatientResponse {
+  Patient patient = 1;
+}
+
+message GetPatientRequest {
+  string id = 1;
+}
+
+message GetPatientResponse {
+  Patient patient = 1;
+}
+
+message ListPatientsRequest {
+  int32 limit = 1;
+  int32 offset = 2;
+}
+
+message ListPatientsResponse {
+  repeated Patient patients = 1;
+}
+
+message UpdatePatientRequest {
+  string id = 1;
+  string nik = 2;
+  string name = 3;
+  google.protobuf.Timestamp birth_date = 4;
+  Gender gender = 5;
+  string phone = 6;
+  string address = 7;
+}
+
+message UpdatePatientResponse {
+  Patient patient = 1;
+}

@@ -1,0 +1,9 @@
+version: v2
+modules:
+  - path: patient-service/proto
+lint:
+  use:
+    - STANDARD
+breaking:
+  use:
+    - FILE
