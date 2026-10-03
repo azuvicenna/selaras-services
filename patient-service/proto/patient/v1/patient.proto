@@ -6,72 +6,110 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/azuvicenna/selaras-services/patient-service/proto/patient/v1;patientv1";
 
+// -----------------------------------------------------------------------------
+// ENUMS
+// -----------------------------------------------------------------------------
+
 enum Gender {
   GENDER_UNSPECIFIED = 0;
-  GENDER_MALE = 1;
-  GENDER_FEMALE = 2;
+  GENDER_MALE = 1;                // Laki-laki
+  GENDER_FEMALE = 2;              // Perempuan
 }
+
+enum BloodType {
+  BLOOD_TYPE_UNSPECIFIED = 0;
+  BLOOD_TYPE_A = 1;               // A
+  BLOOD_TYPE_B = 2;               // B
+  BLOOD_TYPE_AB = 3;              // AB
+  BLOOD_TYPE_O = 4;               // O
+}
+
+enum MaritalStatus {
+  MARITAL_STATUS_UNSPECIFIED = 0;
+  MARITAL_STATUS_SINGLE = 1;       // Belum Menikah
+  MARITAL_STATUS_MARRIED = 2;      // Menikah
+  MARITAL_STATUS_DIVORCED = 3;     // Cerai Hidup
+  MARITAL_STATUS_WIDOWED = 4;      // Cerai Mati / Janda / Duda
+}
+
+enum Religion {
+  RELIGION_UNSPECIFIED = 0;
+  RELIGION_ISLAM = 1;              // Islam
+  RELIGION_PROTESTANT = 2;         // Kristen / Protestan
+  RELIGION_CATHOLIC = 3;           // Katolik
+  RELIGION_HINDU = 4;              // Hindu
+  RELIGION_BUDDHIST = 5;           // Buddha
+  RELIGION_CONFUCIAN = 6;          // Khonghucu
+  RELIGION_OTHER = 7;              // Kepercayaan Lainnya
+}
+
+enum DisabilityType {
+  DISABILITY_TYPE_UNSPECIFIED = 0;
+  DISABILITY_TYPE_NONE = 1;            // Tidak ada disabilitas
+  DISABILITY_TYPE_HEARING = 2;         // Tunarungu (Gangguan Pendengaran)
+  DISABILITY_TYPE_VISUAL = 3;          // Tunanetra (Gangguan Penglihatan)
+  DISABILITY_TYPE_SPEECH = 4;          // Tunawicara (Gangguan Bicara)
+  DISABILITY_TYPE_PHYSICAL = 5;        // Tunadaksa (Pengguna Kursi Roda / Alat Bantu)
+  DISABILITY_TYPE_MENTAL = 6;          // Tunagrahita / Gangguan Mental/Intelektual
+  DISABILITY_TYPE_OTHER = 7;           // Lainnya
+}
+
+enum PatientStatus {
+  PATIENT_STATUS_UNSPECIFIED = 0;
+  PATIENT_STATUS_ACTIVE = 1;       // Aktif
+  PATIENT_STATUS_INACTIVE = 2;     // Tidak Aktif
+  PATIENT_STATUS_DECEASED = 3;     // Meninggal
+}
+
+// -----------------------------------------------------------------------------
+// DOMAIN MODEL
+// -----------------------------------------------------------------------------
 
 message Patient {
+  // Identitas Utama & SATUSEHAT
   string id = 1;
-  string medical_record_no = 2;
-  string nik = 3;
-  string name = 4;
-  google.protobuf.Timestamp birth_date = 5;
-  Gender gender = 6;
-  string phone = 7;
-  string address = 8;
-  google.protobuf.Timestamp created_at = 9;
-  google.protobuf.Timestamp updated_at = 10;
+  string medical_record_no = 2;               // Nomor Rekam Medis (NORM)
+  string satusehat_id = 3;                    // IHS ID SATUSEHAT Kemenkes
+  string nik = 4;                             // Nomor Induk Kependudukan (NIK)
+  string name = 5;                            // Nama Lengkap Pasien
+  string mother_name = 6;                     // Nama Ibu Kandung (Wajib Dukcapil/SATUSEHAT)
+  
+  // Demografi & Status
+  string birth_place = 7;                     // Tempat Lahir
+  google.protobuf.Timestamp birth_date = 8;   // Tanggal Lahir
+  Gender gender = 9;                          // Jenis Kelamin (Enum)
+  BloodType blood_type = 10;                  // Golongan Darah (Enum)
+  MaritalStatus marital_status = 11;          // Status Pernikahan (Enum)
+  Religion religion = 12;                     // Agama (Enum)
+  
+  // Kontak & Alamat
+  string phone = 13;                          // Nomor Telepon / WA
+  string email = 14;                          // Email Pasien (Opsional)
+  string address = 15;                        // Alamat Lengkap (Nama Jalan / Rumah)
+  string village_code = 16;                   // Kode Kelurahan/Desa
+  string district_code = 17;                  // Kode Kecamatan
+  string city_code = 18;                      // Kode Kab/Kota
+  string province_code = 19;                  // Kode Provinsi
+  string postal_code = 20;                    // Kode Pos
+  string rt = 21;                             // Nomor RT
+  string rw = 22;                             // Nomor RW
+  
+  // Profil Sosial & Komunikasi
+  string occupation = 23;                     // Pekerjaan (PNS, Swasta, TNI, dll)
+  string education = 24;                      // Pendidikan Terakhir (SD, SMA, S1, dll)
+  string preferred_language = 25;             // Bahasa Komunikasi Pasien (e.g., "Indonesia", "Sunda")
+
+  // Kebutuhan Khusus & Pelayanan Pelanggan
+  DisabilityType disability_type = 26;        // Jenis Disabilitas (Enum)
+  string special_needs_note = 27;             // Catatan Kebutuhan Khusus (e.g., "Butuh kursi roda", "Pendamping bahasa isyarat")
+
+  // Foto & Biometrik Dasar
+  string photo_url = 28;                      // URL / Storage Path Foto Pasien
+  bytes fingerprint_template = 29;            // Hash / Template Sidik Jari (opsional untuk verifikasi cepat)
+  
+  // Status Operasional & Audit Trail
+  PatientStatus status = 30;                  // Status Aktif Pasien (Enum)
+  google.protobuf.Timestamp created_at = 31;
+  google.protobuf.Timestamp updated_at = 32;
 }
 
-service PatientService {
-  rpc RegisterPatient(RegisterPatientRequest) returns (RegisterPatientResponse);
-  rpc GetPatient(GetPatientRequest) returns (GetPatientResponse);
-  rpc ListPatients(ListPatientsRequest) returns (ListPatientsResponse);
-  rpc UpdatePatient(UpdatePatientRequest) returns (UpdatePatientResponse);
-}
-
-message RegisterPatientRequest {
-  string nik = 1;
-  string name = 2;
-  google.protobuf.Timestamp birth_date = 3;
-  Gender gender = 4;
-  string phone = 5;
-  string address = 6;
-}
-
-message RegisterPatientResponse {
-  Patient patient = 1;
-}
-
-message GetPatientRequest {
-  string id = 1;
-}
-
-message GetPatientResponse {
-  Patient patient = 1;
-}
-
-message ListPatientsRequest {
-  int32 limit = 1;
-  int32 offset = 2;
-}
-
-message ListPatientsResponse {
-  repeated Patient patients = 1;
-}
-
-message UpdatePatientRequest {
-  string id = 1;
-  string nik = 2;
-  string name = 3;
-  google.protobuf.Timestamp birth_date = 4;
-  Gender gender = 5;
-  string phone = 6;
-  string address = 7;
-}
-
-message UpdatePatientResponse {
-  Patient patient = 1;
-}

@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package patient.v1;
+
+import "google/protobuf/timestamp.proto";
+import "patient/v1/patient.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/patient-service/proto/patient/v1;patientv1";
+
+// -----------------------------------------------------------------------------
+// SERVICE DEFINITION
+// -----------------------------------------------------------------------------
+
+service PatientService {
+  rpc CreatePatient (CreatePatientRequest) returns (CreatePatientResponse);
+  rpc GetPatientByID (GetPatientByIDRequest) returns (GetPatientByIDResponse);
+  rpc SearchPatients (SearchPatientsRequest) returns (SearchPatientsResponse);
+  rpc UpdatePatient (UpdatePatientRequest) returns (UpdatePatientResponse);
+  
+  // Verifikasi Sidik Jari untuk pendaftaran / BPJS
+  rpc VerifyFingerprint (VerifyFingerprintRequest) returns (VerifyFingerprintResponse);
+}
+
+// -----------------------------------------------------------------------------
+// REQUEST & RESPONSE MESSAGES
+// -----------------------------------------------------------------------------

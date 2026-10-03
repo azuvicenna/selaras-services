@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package patient.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/patient-service/proto/patient/v1;patientv1";
+
+// -----------------------------------------------------------------------------
+// ENUMS
+// -----------------------------------------------------------------------------
+
+enum AllergyType {
+  ALLERGY_TYPE_UNSPECIFIED = 0;
+  ALLERGY_TYPE_DRUG = 1;                // Obat-obatan (e.g., Penicillin, Paracetamol)
+  ALLERGY_TYPE_FOOD = 2;                // Makanan (e.g., Udang, Kacang, Telur)
+  ALLERGY_TYPE_ENVIRONMENT = 3;         // Lingkungan (e.g., Debu, Dingin, Latex)
+  ALLERGY_TYPE_OTHER = 4;               // Lainnya
+}
+
+enum AllergySeverity {
+  ALLERGY_SEVERITY_UNSPECIFIED = 0;
+  ALLERGY_SEVERITY_MILD = 1;            // Ringan (Gatal, ruam)
+  ALLERGY_SEVERITY_MODERATE = 2;        // Sedang (Bengkak, mual)
+  ALLERGY_SEVERITY_SEVERE = 3;          // Berat / Anafilaksis (Mengancam Nyawa, Sesak)
+}
+
+// -----------------------------------------------------------------------------
+// DOMAIN MODEL
+// -----------------------------------------------------------------------------
+
+message PatientAllergy {
+  string id = 1;
+  string patient_id = 2;                        // Foreign Key ke Patient.id
+  AllergyType type = 3;                         // Jenis Alergi (Enum)
+  string allergen = 4;                          // Pencetus alergi (e.g., "Amoxicillin", "Seafood")
+  AllergySeverity severity = 5;                 // Tingkat Keparahan (Enum)
+  string reaction = 6;                          // Reaksi yang timbul (e.g., "Gatal-gatal, ruam merah")
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}

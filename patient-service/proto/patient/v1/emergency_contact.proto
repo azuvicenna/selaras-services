@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package patient.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/patient-service/proto/patient/v1;patientv1";
+
+// -----------------------------------------------------------------------------
+// DOMAIN MODEL
+// -----------------------------------------------------------------------------
+
+message PatientEmergencyContact {
+  string id = 1;
+  string patient_id = 2;                    // Foreign Key ke Patient.id
+  string name = 3;                          // Nama Kontak Darurat
+  string relationship = 4;                  // Hubungan (e.g., "Teman Kerja", "Atasan", "Tetangga")
+  string phone = 5;                         // Nomor Telepon 24/7
+  string address = 6;                       // Alamat Singkat
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}

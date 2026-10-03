@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package patient.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/patient-service/proto/patient/v1;patientv1";
+
+// -----------------------------------------------------------------------------
+// ENUMS
+// -----------------------------------------------------------------------------
+
+enum FamilyRelation {
+  FAMILY_RELATION_UNSPECIFIED = 0;
+  FAMILY_RELATION_SPOUSE = 1;         // Suami / Istri
+  FAMILY_RELATION_PARENT = 2;         // Orang Tua (Ayah / Ibu)
+  FAMILY_RELATION_CHILD = 3;          // Anak
+  FAMILY_RELATION_SIBLING = 4;        // Saudara Kandung
+  FAMILY_RELATION_GUARDIAN = 5;       // Wali / Lainnya
+}
+
+// -----------------------------------------------------------------------------
+// DOMAIN MODEL
+// -----------------------------------------------------------------------------
+
+message PatientFamily {
+    string id = 1;
+    string patient_id = 2;                          // Foreign Key ke Patient.id
+    string name = 3;                                // Nama Lengkap Penanggung Jawab / Keluarga
+    string nik = 4;                                 // NIK Penanggung Jawab (Opsional)
+    FamilyRelation relation = 5;                    // Hubungan Keluarga (Enum)
+    string phone = 6;                               // Nomor Telepon / WA yang bisa dihubungi
+    string address = 7;                             // Alamat jika berbeda dengan pasien
+    bool is_emergency_contact = 8;                  // Apakah kontak darurat utama?
+    google.protobuf.Timestamp created_at = 9;
+    google.protobuf.Timestamp updated_at = 10;
+}

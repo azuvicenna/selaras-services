@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package patient.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/patient-service/proto/patient/v1;patientv1";
+
+// -----------------------------------------------------------------------------
+// ENUMS
+// -----------------------------------------------------------------------------
+
+enum InsuranceProvider {
+    INSURANCE_PROVIDER_UNSPECIFIED = 0;
+    INSURANCE_PROVIDER_BPJS = 1;            // BPJS Mandiri, BPJS PBI APBN, & BPJS PBI APBD (Jamkesda Integrasi)
+    INSURANCE_PROVIDER_JAMKESDA = 2;        // Jamkesda Murni / SKTM / Jaminan Daerah Non-BPJS
+    INSURANCE_PROVIDER_PRIVATE = 3;         // Asuransi Swasta
+}
+
+// -----------------------------------------------------------------------------
+// DOMAIN MODEL
+// -----------------------------------------------------------------------------
+
+message PatientInsurance {
+    string id = 1;
+    string patient_id = 2;                      // Foreign Key ke Patient.id
+    InsuranceProvider provider = 3;             // Jenis/Penyedia (Enum)
+    string policy_number = 4;                   // Nomor kartu / Asuransi
+    string insurance_name = 5;                  // Nama Penyedia (BPJS, Prudential, Mandiri Inhealth, Jamkesda, dll)
+    string class_type = 6;                      // Kelas Hak Rawat (Kelas I, VIP, dll)
+    bool is_active = 7;                         // Status Aktif Asuransi
+    google.protobuf.Timestamp created_at = 8;
+    google.protobuf.Timestamp updated_at = 9;
+}

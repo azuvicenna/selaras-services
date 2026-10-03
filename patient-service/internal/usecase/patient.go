@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/oklog/ulid/v2"
 	"github.com/azuvicenna/selaras-services/patient-service/internal/domain"
 )
 
@@ -29,6 +30,7 @@ func (u *PatientUsecase) Register(ctx context.Context, p domain.Patient) (*domai
 	if err := validate(p); err != nil {
 		return nil, err
 	}
+	p.ID = ulid.Make().String()
 	if err := u.repo.Create(ctx, &p); err != nil {
 		return nil, err
 	}
