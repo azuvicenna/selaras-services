@@ -18,56 +18,139 @@ const (
 
 var nikPattern = regexp.MustCompile(`^\d{16}$`)
 
-type PatientUsecase struct {
+type PatientUsecaseImpl struct {
 	repo domain.PatientRepository
 }
 
-func NewPatientUsecase(repo domain.PatientRepository) *PatientUsecase {
-	return &PatientUsecase{repo: repo}
+func NewPatientUsecase(repo domain.PatientRepository) *PatientUsecaseImpl {
+	return &PatientUsecaseImpl{repo: repo}
 }
 
-func (u *PatientUsecase) Register(ctx context.Context, p domain.Patient) (*domain.Patient, error) {
-	if err := validate(p); err != nil {
+// CreatePatient mendaftarkan pasien baru, membuat ID (ULID) dan NORM unik, 
+func (u *PatientUsecaseImpl) CreatePatient(ctx context.Context, p domain.Patient) (*domain.Patient, error) {
+	if err := validatePatient(p); err != nil {
 		return nil, err
 	}
+
 	p.ID = ulid.Make().String()
+	p.Status = domain.PatientStatusActive
+	p.CreatedAt = time.Now()
+	p.UpdatedAt = time.Now()
+
 	if err := u.repo.Create(ctx, &p); err != nil {
 		return nil, err
 	}
+
 	return &p, nil
 }
 
-func (u *PatientUsecase) GetByID(ctx context.Context, id string) (*domain.Patient, error) {
+// GetPatientByID mengambil detail profil lengkap pasien berdasarkan ID.
+func (u *PatientUsecaseImpl) GetPatientByID(ctx context.Context, id string) (*domain.Patient, error) {
+	if strings.TrimSpace(id) == "" {
+		return nil, fmt.Errorf("%w: patient id is required", domain.ErrInvalidInput)
+	}
 	return u.repo.GetByID(ctx, id)
 }
 
-func (u *PatientUsecase) List(ctx context.Context, limit, offset int) ([]domain.Patient, error) {
-	if limit <= 0 {
-		limit = defaultLimit
+// GetPatientByNIK mencari data pasien secara cepat berdasarkan NIK.
+func (u *PatientUsecaseImpl) GetPatientByNIK(ctx context.Context, nik string) (*domain.Patient, error) {
+	if !nikPattern.MatchString(nik) {
+		return nil, fmt.Errorf("%w: nik must be 16 digits", domain.ErrInvalidInput)
 	}
-	return u.repo.List(ctx, min(limit, maxLimit), max(offset, 0))
+	return u.repo.GetByNIK(ctx, nik)
 }
 
-func (u *PatientUsecase) Update(ctx context.Context, p domain.Patient) (*domain.Patient, error) {
-	if err := validate(p); err != nil {
+// GetPatientByMedicalRecordNo mencari data pasien berdasarkan Nomor Rekam Medis (NORM).
+func (u *PatientUsecaseImpl) GetPatientByMedicalRecordNo(ctx context.Context, norm string) (*domain.Patient, error) {
+	if strings.TrimSpace(norm) == "" {
+		return nil, fmt.Errorf("%w: medical record number is required", domain.ErrInvalidInput)
+	}
+	return u.repo.GetByMedicalRecordNo(ctx, norm)
+}
+
+// ListPatients mengambil daftar pasien dengan fitur pagination aman dan filter.
+func (u *PatientUsecaseImpl) ListPatients(ctx context.Context, filter domain.PatientFilter) ([]domain.Patient, int64, error) {
+	if filter.Limit <= 0 {
+		filter.Limit = defaultLimit
+	}
+	filter.Limit = min(filter.Limit, maxLimit)
+	filter.Offset = max(filter.Offset, 0)
+
+	return u.repo.List(ctx, filter)
+}
+
+// UpdatePatient memperbarui informasi profil, alamat, atau kebutuhan khusus pasien.
+func (u *PatientUsecaseImpl) UpdatePatient(ctx context.Context, p domain.Patient) (*domain.Patient, error) {
+	if strings.TrimSpace(p.ID) == "" {
+		return nil, fmt.Errorf("%w: patient id is required for update", domain.ErrInvalidInput)
+	}
+
+	if err := validatePatient(p); err != nil {
 		return nil, err
 	}
+
+	p.UpdatedAt = time.Now()
+
 	if err := u.repo.Update(ctx, &p); err != nil {
 		return nil, err
 	}
+
 	return &p, nil
 }
 
-func validate(p domain.Patient) error {
+// UpdatePatientStatus memperbarui status operasional pasien (Active, Inactive, Deceased).
+func (u *PatientUsecaseImpl) UpdatePatientStatus(ctx context.Context, id string, status domain.PatientStatus) error {
+	if strings.TrimSpace(id) == "" {
+		return fmt.Errorf("%w: patient id is required", domain.ErrInvalidInput)
+	}
+
+	if status == domain.PatientStatusUnspecified {
+		return fmt.Errorf("%w: invalid patient status", domain.ErrInvalidInput)
+	}
+
+	return u.repo.UpdateStatus(ctx, id, status, time.Now())
+}
+
+// VerifyPatientBiometric memverifikasi sidik jari pasien terhadap template biometrik yang tersimpan.
+func (u *PatientUsecaseImpl) VerifyPatientBiometric(ctx context.Context, id string, fingerprint []byte) (bool, error) {
+	if strings.TrimSpace(id) == "" {
+		return false, fmt.Errorf("%w: patient id is required", domain.ErrInvalidInput)
+	}
+	if len(fingerprint) == 0 {
+		return false, fmt.Errorf("%w: fingerprint data is required", domain.ErrInvalidInput)
+	}
+
+	patient, err := u.repo.GetByID(ctx, id)
+	if err != nil {
+		return false, err
+	}
+
+	if len(patient.FingerprintTemplate) == 0 {
+		return false, fmt.Errorf("%w: no registered fingerprint for this patient", domain.ErrNotFound)
+	}
+
+	// Logika pembandingan template biometrik disesuaikan dengan matcher engine yang dipakai
+	return matchFingerprint(patient.FingerprintTemplate, fingerprint), nil
+}
+
+// Helper internal untuk validasi aturan bisnis entitas Pasien (fail-fast)
+func validatePatient(p domain.Patient) error {
 	switch {
 	case strings.TrimSpace(p.Name) == "":
-		return fmt.Errorf("%w: name is required", domain.ErrInvalidInput)
+		return fmt.Errorf("%w: patient name is required", domain.ErrInvalidInput)
+	case strings.TrimSpace(p.MotherName) == "":
+		return fmt.Errorf("%w: mother name is required for SATUSEHAT/Dukcapil verification", domain.ErrInvalidInput)
 	case !nikPattern.MatchString(p.NIK):
 		return fmt.Errorf("%w: nik must be 16 digits", domain.ErrInvalidInput)
 	case p.BirthDate.IsZero() || p.BirthDate.After(time.Now()):
 		return fmt.Errorf("%w: birth date is invalid", domain.ErrInvalidInput)
-	case p.Gender != domain.Male && p.Gender != domain.Female:
+	case p.Gender != domain.GenderMale && p.Gender != domain.GenderFemale:
 		return fmt.Errorf("%w: gender must be male or female", domain.ErrInvalidInput)
 	}
 	return nil
+}
+
+// Dummy helper untuk pencocokan sidik jari (bisa diintegrasikan dengan SDK matcher biometrik)
+func matchFingerprint(source, target []byte) bool {
+	return string(source) == string(target)
 }

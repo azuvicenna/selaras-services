@@ -2,42 +2,33 @@ package domain
 
 import (
 	"context"
-	"errors"
 	"time"
 )
 
-var (
-	ErrNotFound      = errors.New("patient not found")
-	ErrAlreadyExists = errors.New("patient already exists")
-	ErrInvalidInput  = errors.New("invalid input")
-)
-
-type Gender string
-
-const (
-	Male   Gender = "male"
-	Female Gender = "female"
-)
-
-type Patient struct {
-	ID              string
-	MedicalRecordNo string
-	NIK             string
-	Name            string
-	BirthDate       time.Time
-	Gender          Gender
-	Phone           string
-	Address         string
-	CreatedAt       time.Time
-	UpdatedAt       time.Time
+type PatientFilter struct {
+	Name   string
+	Status PatientStatus
+	Limit  int
+	Offset int
 }
 
-// PatientRepository is implemented by the repository layer.
-// Create must fill ID, MedicalRecordNo and timestamps, and return ErrAlreadyExists on duplicate NIK.
-// GetByID and Update must return ErrNotFound when the patient does not exist.
+type PatientUsecase interface {
+	CreatePatient(ctx context.Context, p Patient) (*Patient, error)
+	GetPatientByID(ctx context.Context, id string) (*Patient, error)
+	GetPatientByNIK(ctx context.Context, nik string) (*Patient, error)
+	GetPatientByMedicalRecordNo(ctx context.Context, norm string) (*Patient, error)
+	ListPatients(ctx context.Context, filter PatientFilter) ([]Patient, int64, error)
+	UpdatePatient(ctx context.Context, p Patient) (*Patient, error)
+	UpdatePatientStatus(ctx context.Context, id string, status PatientStatus) error
+	VerifyPatientBiometric(ctx context.Context, id string, fingerprint []byte) (bool, error)
+}
+
 type PatientRepository interface {
 	Create(ctx context.Context, p *Patient) error
 	GetByID(ctx context.Context, id string) (*Patient, error)
-	List(ctx context.Context, limit, offset int) ([]Patient, error)
+	GetByNIK(ctx context.Context, nik string) (*Patient, error)
+	GetByMedicalRecordNo(ctx context.Context, norm string) (*Patient, error)
+	List(ctx context.Context, filter PatientFilter) ([]Patient, int64, error)
 	Update(ctx context.Context, p *Patient) error
+	UpdateStatus(ctx context.Context, id string, status PatientStatus, updatedAt time.Time) error
 }
