@@ -1,0 +1,360 @@
+[
+  {
+    "patient": {
+      "medicalRecordNo": "RM-2026-0001",
+      "satusehatId": "IHS-10002938101",
+      "nik": "3201011508900001",
+      "name": "Budi Santoso",
+      "motherName": "Siti Aminah",
+      "birthPlace": "Jakarta",
+      "birthDate": "1990-08-15T00:00:00Z",
+      "gender": "GENDER_MALE",
+      "bloodType": "BLOOD_TYPE_A",
+      "maritalStatus": "MARITAL_STATUS_MARRIED",
+      "religion": "RELIGION_ISLAM",
+      "phone": "081234567890",
+      "email": "budi.santoso@example.com",
+      "address": "Jl. Mawar No. 12",
+      "villageCode": "3171010001",
+      "districtCode": "3171010",
+      "cityCode": "3171",
+      "provinceCode": "31",
+      "postalCode": "12110",
+      "rt": "005",
+      "rw": "002",
+      "occupation": "Karyawan Swasta",
+      "education": "S1",
+      "preferredLanguage": "Indonesia",
+      "disabilityType": "DISABILITY_TYPE_NONE",
+      "specialNeedsNote": "",
+      "photoUrl": "https://storage.selaras.id/patients/photos/pat-001.jpg",
+      "status": "PATIENT_STATUS_ACTIVE"
+    },
+    "allergies": [
+      {
+        "type": "ALLERGY_TYPE_DRUG",
+        "allergen": "Amoxicillin",
+        "severity": "ALLERGY_SEVERITY_MODERATE",
+        "reaction": "Ruam merah dan gatal-gatal pada kulit"
+      }
+    ],
+    "documents": [
+      {
+        "type": "DOCUMENT_TYPE_KTP",
+        "documentNumber": "3201011508900001",
+        "fileUrl": "https://storage.selaras.id/patients/docs/ktp-001.pdf"
+      },
+      {
+        "type": "DOCUMENT_TYPE_BPJS_CARD",
+        "documentNumber": "0001234567890",
+        "fileUrl": "https://storage.selaras.id/patients/docs/bpjs-001.pdf"
+      }
+    ],
+    "emergencyContact": {
+      "name": "Siti Rahma",
+      "relationship": "Istri",
+      "phone": "081298765432",
+      "address": "Jl. Mawar No. 12"
+    },
+    "families": [
+      {
+        "name": "Siti Rahma",
+        "nik": "3201015203920002",
+        "relation": "FAMILY_RELATION_SPOUSE",
+        "phone": "081298765432",
+        "address": "Jl. Mawar No. 12",
+        "isEmergencyContact": true
+      }
+    ],
+    "insurances": [
+      {
+        "provider": "INSURANCE_PROVIDER_BPJS",
+        "policyNumber": "0001234567890",
+        "insuranceName": "BPJS Kesehatan",
+        "classType": "Kelas I",
+        "isActive": true
+      }
+    ]
+  },
+  {
+    "patient": {
+      "medicalRecordNo": "RM-2026-0002",
+      "satusehatId": "IHS-10002938102",
+      "nik": "3204024503950003",
+      "name": "Dewi Lestari",
+      "motherName": "Kartini",
+      "birthPlace": "Bandung",
+      "birthDate": "1995-03-05T00:00:00Z",
+      "gender": "GENDER_FEMALE",
+      "bloodType": "BLOOD_TYPE_B",
+      "maritalStatus": "MARITAL_STATUS_SINGLE",
+      "religion": "RELIGION_ISLAM",
+      "phone": "085678901234",
+      "email": "dewi.lestari@example.com",
+      "address": "Jl. Anggrek No. 45",
+      "villageCode": "3273010002",
+      "districtCode": "3273010",
+      "cityCode": "3273",
+      "provinceCode": "32",
+      "postalCode": "40115",
+      "rt": "001",
+      "rw": "004",
+      "occupation": "Desainer Grafis",
+      "education": "S1",
+      "preferredLanguage": "Sunda",
+      "disabilityType": "DISABILITY_TYPE_NONE",
+      "specialNeedsNote": "",
+      "photoUrl": "https://storage.selaras.id/patients/photos/pat-002.jpg",
+      "status": "PATIENT_STATUS_ACTIVE"
+    },
+    "allergies": [
+      {
+        "type": "ALLERGY_TYPE_FOOD",
+        "allergen": "Udang / Seafood",
+        "severity": "ALLERGY_SEVERITY_SEVERE",
+        "reaction": "Bengkak bibir dan sesak napas ringan"
+      }
+    ],
+    "documents": [
+      {
+        "type": "DOCUMENT_TYPE_KTP",
+        "documentNumber": "3204024503950003",
+        "fileUrl": "https://storage.selaras.id/patients/docs/ktp-002.pdf"
+      }
+    ],
+    "emergencyContact": {
+      "name": "Ahmad Supardi",
+      "relationship": "Ayah Kandung",
+      "phone": "085211223344",
+      "address": "Jl. Anggrek No. 45"
+    },
+    "families": [
+      {
+        "name": "Ahmad Supardi",
+        "nik": "3204021001650001",
+        "relation": "FAMILY_RELATION_PARENT",
+        "phone": "085211223344",
+        "address": "Jl. Anggrek No. 45",
+        "isEmergencyContact": true
+      }
+    ],
+    "insurances": [
+      {
+        "provider": "INSURANCE_PROVIDER_PRIVATE",
+        "policyNumber": "PRU-987654321",
+        "insuranceName": "Prudential Life Assurance",
+        "classType": "VIP",
+        "isActive": true
+      }
+    ]
+  },
+  {
+    "patient": {
+      "medicalRecordNo": "RM-2026-0003",
+      "satusehatId": "IHS-10002938103",
+      "nik": "3374012011780004",
+      "name": "Bambang Wijaya",
+      "motherName": "Sri Wahyuni",
+      "birthPlace": "Semarang",
+      "birthDate": "1978-11-20T00:00:00Z",
+      "gender": "GENDER_MALE",
+      "bloodType": "BLOOD_TYPE_O",
+      "maritalStatus": "MARITAL_STATUS_MARRIED",
+      "religion": "RELIGION_PROTESTANT",
+      "phone": "081311223344",
+      "email": "",
+      "address": "Jl. Pemuda No. 88",
+      "villageCode": "3374020003",
+      "districtCode": "3374020",
+      "cityCode": "3374",
+      "provinceCode": "33",
+      "postalCode": "50132",
+      "rt": "003",
+      "rw": "008",
+      "occupation": "PNS",
+      "education": "S2",
+      "preferredLanguage": "Jawa",
+      "disabilityType": "DISABILITY_TYPE_PHYSICAL",
+      "specialNeedsNote": "Pengguna Kursi Roda",
+      "photoUrl": "https://storage.selaras.id/patients/photos/pat-003.jpg",
+      "status": "PATIENT_STATUS_ACTIVE"
+    },
+    "allergies": [],
+    "documents": [
+      {
+        "type": "DOCUMENT_TYPE_KTP",
+        "documentNumber": "3374012011780004",
+        "fileUrl": "https://storage.selaras.id/patients/docs/ktp-003.pdf"
+      }
+    ],
+    "emergencyContact": {
+      "name": "Eka Wijaya",
+      "relationship": "Anak",
+      "phone": "081399887766",
+      "address": "Jl. Pemuda No. 88"
+    },
+    "families": [
+      {
+        "name": "Eka Wijaya",
+        "nik": "3374011005020005",
+        "relation": "FAMILY_RELATION_CHILD",
+        "phone": "081399887766",
+        "address": "Jl. Pemuda No. 88",
+        "isEmergencyContact": true
+      }
+    ],
+    "insurances": [
+      {
+        "provider": "INSURANCE_PROVIDER_BPJS",
+        "policyNumber": "0009876543210",
+        "insuranceName": "BPJS PNS",
+        "classType": "Kelas I",
+        "isActive": true
+      }
+    ]
+  },
+  {
+    "patient": {
+      "medicalRecordNo": "RM-2026-0004",
+      "satusehatId": "IHS-10002938104",
+      "nik": "3578036212010002",
+      "name": "Maria Ratna",
+      "motherName": "Elisabeth",
+      "birthPlace": "Surabaya",
+      "birthDate": "2001-12-22T00:00:00Z",
+      "gender": "GENDER_FEMALE",
+      "bloodType": "BLOOD_TYPE_AB",
+      "maritalStatus": "MARITAL_STATUS_SINGLE",
+      "religion": "RELIGION_CATHOLIC",
+      "phone": "087855667788",
+      "email": "maria.ratna@example.com",
+      "address": "Jl. Raya Darmo No. 101",
+      "villageCode": "3578040001",
+      "districtCode": "3578040",
+      "cityCode": "3578",
+      "provinceCode": "35",
+      "postalCode": "60241",
+      "rt": "002",
+      "rw": "001",
+      "occupation": "Mahasiswa",
+      "education": "SMA",
+      "preferredLanguage": "Indonesia",
+      "disabilityType": "DISABILITY_TYPE_NONE",
+      "specialNeedsNote": "",
+      "photoUrl": "https://storage.selaras.id/patients/photos/pat-004.jpg",
+      "status": "PATIENT_STATUS_ACTIVE"
+    },
+    "allergies": [
+      {
+        "type": "ALLERGY_TYPE_ENVIRONMENT",
+        "allergen": "Debu Ruangan / Cold Air",
+        "severity": "ALLERGY_SEVERITY_MILD",
+        "reaction": "Bersin-bersin dan hidung tersumbat"
+      }
+    ],
+    "documents": [
+      {
+        "type": "DOCUMENT_TYPE_KTP",
+        "documentNumber": "3578036212010002",
+        "fileUrl": "https://storage.selaras.id/patients/docs/ktp-004.pdf"
+      }
+    ],
+    "emergencyContact": {
+      "name": "Yoseph Ratna",
+      "relationship": "Kakak Kandung",
+      "phone": "087811224455",
+      "address": "Jl. Raya Darmo No. 101"
+    },
+    "families": [
+      {
+        "name": "Yoseph Ratna",
+        "nik": "3578031505970001",
+        "relation": "FAMILY_RELATION_SIBLING",
+        "phone": "087811224455",
+        "address": "Jl. Raya Darmo No. 101",
+        "isEmergencyContact": true
+      }
+    ],
+    "insurances": [
+      {
+        "provider": "INSURANCE_PROVIDER_JAMKESDA",
+        "policyNumber": "SKTM-2026-0089",
+        "insuranceName": "Jamkesda Surabaya",
+        "classType": "Kelas III",
+        "isActive": true
+      }
+    ]
+  },
+  {
+    "patient": {
+      "medicalRecordNo": "RM-2026-0005",
+      "satusehatId": "IHS-10002938105",
+      "nik": "5103011001550005",
+      "name": "I Wayan Sudiarta",
+      "motherName": "Ni Luh Rai",
+      "birthPlace": "Denpasar",
+      "birthDate": "1955-01-10T00:00:00Z",
+      "gender": "GENDER_MALE",
+      "bloodType": "BLOOD_TYPE_B",
+      "maritalStatus": "MARITAL_STATUS_WIDOWED",
+      "religion": "RELIGION_HINDU",
+      "phone": "081999888777",
+      "email": "",
+      "address": "Jl. Gajah Mada No. 12B",
+      "villageCode": "5171010004",
+      "districtCode": "5171010",
+      "cityCode": "5171",
+      "provinceCode": "51",
+      "postalCode": "80111",
+      "rt": "004",
+      "rw": "003",
+      "occupation": "Pensiun",
+      "education": "SMP",
+      "preferredLanguage": "Bali",
+      "disabilityType": "DISABILITY_TYPE_HEARING",
+      "specialNeedsNote": "Gangguan Pendengaran (Tunarungu)",
+      "photoUrl": "https://storage.selaras.id/patients/photos/pat-005.jpg",
+      "status": "PATIENT_STATUS_ACTIVE"
+    },
+    "allergies": [
+      {
+        "type": "ALLERGY_TYPE_DRUG",
+        "allergen": "NSAID / Aspirin",
+        "severity": "ALLERGY_SEVERITY_MODERATE",
+        "reaction": "Nyeri ulu hati berat dan mual"
+      }
+    ],
+    "documents": [
+      {
+        "type": "DOCUMENT_TYPE_KTP",
+        "documentNumber": "5103011001550005",
+        "fileUrl": "https://storage.selaras.id/patients/docs/ktp-005.pdf"
+      }
+    ],
+    "emergencyContact": {
+      "name": "Ni Made Kurniati",
+      "relationship": "Anak Kandung",
+      "phone": "081911223344",
+      "address": "Jl. Gajah Mada No. 12B"
+    },
+    "families": [
+      {
+        "name": "Ni Made Kurniati",
+        "nik": "5103014508850002",
+        "relation": "FAMILY_RELATION_CHILD",
+        "phone": "081911223344",
+        "address": "Jl. Gajah Mada No. 12B",
+        "isEmergencyContact": true
+      }
+    ],
+    "insurances": [
+      {
+        "provider": "INSURANCE_PROVIDER_BPJS",
+        "policyNumber": "0005544332211",
+        "insuranceName": "BPJS PBI APBN",
+        "classType": "Kelas III",
+        "isActive": true
+      }
+    ]
+  }
+]

@@ -51,7 +51,8 @@ enum DisabilityType {
   DISABILITY_TYPE_SPEECH = 4;          // Tunawicara (Gangguan Bicara)
   DISABILITY_TYPE_PHYSICAL = 5;        // Tunadaksa (Pengguna Kursi Roda / Alat Bantu)
   DISABILITY_TYPE_MENTAL = 6;          // Tunagrahita / Gangguan Mental/Intelektual
-  DISABILITY_TYPE_OTHER = 7;           // Lainnya
+  DISABILITY_TYPE_COLOR_BLINDNESS = 7; // Buta Warna (Parsial / Total)
+  DISABILITY_TYPE_OTHER = 8;           // Lainnya
 }
 
 enum PatientStatus {
