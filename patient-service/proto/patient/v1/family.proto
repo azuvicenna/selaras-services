@@ -4,7 +4,7 @@ package patient.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/azuvicenna/selaras-services/patient-service/proto/patient/v1;patientv1";
+option go_package = "github.com/azuvicenna/selaras-services/patient-service/gen/patient/v1;patientv1";
 
 // -----------------------------------------------------------------------------
 // ENUMS

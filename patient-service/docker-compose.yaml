@@ -16,12 +16,28 @@ services:
       timeout: 3s
       retries: 5
 
+  minio:
+    image: pgsty/minio:RELEASE.2026-06-18T00-00-00Z
+    container_name: patient-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${STORAGE_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${STORAGE_SECRET_KEY}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - patient-minio-data:/data
+
   app:
     build: .
     container_name: patient-service
+    restart: on-failure
     depends_on:
       db:
         condition: service_healthy
+      minio:
+        condition: service_started
     environment:
       DB_HOST: db
       DB_PORT: "5432"
@@ -29,8 +45,12 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
       GRPC_PORT: ${GRPC_PORT}
+      STORAGE_ENDPOINT: minio:9000
+      STORAGE_ACCESS_KEY: ${STORAGE_ACCESS_KEY}
+      STORAGE_SECRET_KEY: ${STORAGE_SECRET_KEY}
     ports:
       - "${GRPC_PORT}:${GRPC_PORT}"
 
 volumes:
   patient-db-data:
+  patient-minio-data:

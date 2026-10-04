@@ -1,1 +1,3 @@
 DROP TABLE IF EXISTS patients;
+
+DROP SEQUENCE IF EXISTS patient_norm_seq;

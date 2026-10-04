@@ -22,8 +22,8 @@ proto:
 	@mkdir -p $(OUT_DIR)
 	protoc \
 		--proto_path=proto \
-		--go_out=. --go_opt=paths=source_relative \
-		--go-grpc_out=. --go-grpc_opt=paths=source_relative \
+		--go_out=gen --go_opt=paths=source_relative \
+		--go-grpc_out=gen --go-grpc_opt=paths=source_relative \
 		$(PROTO_DIR)/*.proto
 	@echo "✓ Generated Protobuf & gRPC files successfully in $(OUT_DIR)"
 

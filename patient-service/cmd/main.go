@@ -19,7 +19,8 @@ import (
 	"github.com/azuvicenna/selaras-services/patient-service/internal/middleware"
 	"github.com/azuvicenna/selaras-services/patient-service/internal/repository"
 	"github.com/azuvicenna/selaras-services/patient-service/internal/usecase"
-	patientv1 "github.com/azuvicenna/selaras-services/patient-service/proto/patient/v1"
+	"github.com/azuvicenna/selaras-services/patient-service/internal/client"
+	patientv1 "github.com/azuvicenna/selaras-services/patient-service/gen/patient/v1"
 )
 
 func main() {
@@ -53,11 +54,17 @@ func run() error {
 	familyRepo := repository.NewFamilyRepository(pool)
 	emergencyRepo := repository.NewEmergencyContactRepository(pool)
 	insuranceRepo := repository.NewInsuranceRepository(pool)
+	// 2b. Inisialisasi Object Storage   
+	storage, err := client.NewMinioStorage(ctx, cfg.StorageEndpoint, cfg.StorageAccessKey,
+		cfg.StorageSecretKey, cfg.StorageBucket, cfg.StorageUseSSL)
+	if err != nil {
+		return fmt.Errorf("failed to init storage: %w", err)
+	}
 
 	// 3. Inisialisasi Usecases
 	patientUC := usecase.NewPatientUsecase(patientRepo)
 	allergyUC := usecase.NewAllergyUsecase(allergyRepo, patientRepo)
-	documentUC := usecase.NewDocumentUsecase(documentRepo, patientRepo)
+	documentUC := usecase.NewDocumentUsecase(documentRepo, patientRepo, storage)
 	familyUC := usecase.NewFamilyUsecase(familyRepo, patientRepo)
 	emergencyUC := usecase.NewEmergencyContactUsecase(emergencyRepo, patientRepo)
 	insuranceUC := usecase.NewInsuranceUsecase(insuranceRepo, patientRepo)

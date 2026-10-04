@@ -42,3 +42,5 @@ CREATE TABLE patients (
 CREATE UNIQUE INDEX idx_patients_nik          ON patients (nik)          WHERE nik <> '';
 CREATE UNIQUE INDEX idx_patients_satusehat_id ON patients (satusehat_id) WHERE satusehat_id <> '';
 CREATE INDEX        idx_patients_name         ON patients (name);
+
+CREATE SEQUENCE patient_norm_seq;

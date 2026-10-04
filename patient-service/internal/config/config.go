@@ -9,6 +9,12 @@ import (
 type Config struct {
 	DatabaseURL string
 	GRPCPort    string
+
+	StorageEndpoint  string
+	StorageAccessKey string
+	StorageSecretKey string
+	StorageBucket    string
+	StorageUseSSL    bool
 }
 
 func Load() Config {
@@ -22,6 +28,12 @@ func Load() Config {
 	return Config{
 		DatabaseURL: dbURL.String(),
 		GRPCPort:    getEnv("GRPC_PORT", "50051"),
+
+		StorageEndpoint:  getEnv("STORAGE_ENDPOINT", "localhost:9000"),
+		StorageAccessKey: os.Getenv("STORAGE_ACCESS_KEY"),
+		StorageSecretKey: os.Getenv("STORAGE_SECRET_KEY"),
+		StorageBucket:    getEnv("STORAGE_BUCKET", "patient-documents"),
+		StorageUseSSL:    os.Getenv("STORAGE_USE_SSL") == "true",
 	}
 }
 

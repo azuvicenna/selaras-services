@@ -10,7 +10,7 @@ import "patient/v1/family.proto";
 import "patient/v1/emergency_contact.proto";
 import "patient/v1/insurance.proto";
 
-option go_package = "github.com/azuvicenna/selaras-services/patient-service/proto/patient/v1;patientv1";
+option go_package = "github.com/azuvicenna/selaras-services/patient-service/gen/patient/v1;patientv1";
 
 // =============================================================================
 // SERVICE DEFINITION
