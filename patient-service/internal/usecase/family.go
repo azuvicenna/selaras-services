@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/oklog/ulid/v2"
 	"github.com/azuvicenna/selaras-services/patient-service/internal/domain"
+	"github.com/oklog/ulid/v2"
 )
 
 type FamilyUsecaseImpl struct {

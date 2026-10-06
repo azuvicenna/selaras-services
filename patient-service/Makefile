@@ -1,7 +1,8 @@
 -include .env
 export
 
-# Default Database Configurations
+# Default Configurations
+GRPC_PORT   ?= 50051
 DB_HOST     ?= localhost
 DB_PORT     ?= 5432
 DB_USER     ?= postgres
@@ -13,12 +14,23 @@ DB_URL       = postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_N
 PROTO_DIR = proto/patient/v1
 OUT_DIR   = gen/patient/v1
 
-.PHONY: proto run test build up down migrate-up migrate-down clean
+.DEFAULT_GOAL := help
+
+.PHONY: help proto run test test-coverage build up down logs restart \
+        migrate-up migrate-down migrate-force migrate-create migrate-version \
+        seed lint fmt tidy clean
+
+# -----------------------------------------------------------------------------
+# HELP
+# -----------------------------------------------------------------------------
+help: ## Menampilkan daftar perintah yang tersedia
+	@echo "Perintah yang tersedia di patient-service:"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
 
 # -----------------------------------------------------------------------------
 # PROTOBUF GENERATION
 # -----------------------------------------------------------------------------
-proto:
+proto: ## Generate protobuf & gRPC Go stubs
 	@mkdir -p $(OUT_DIR)
 	protoc \
 		--proto_path=proto \
@@ -30,36 +42,75 @@ proto:
 # -----------------------------------------------------------------------------
 # APPLICATION COMMANDS
 # -----------------------------------------------------------------------------
-run:
+run: ## Menjalankan service secara lokal
 	go run ./cmd
 
-test:
+build: proto ## Build binary executable service
+	go build -o bin/patient-service ./cmd
+
+tidy: ## Merapikan dan memverifikasi go.mod dependencies
+	go mod tidy
+	go mod verify
+
+seed: ## Menjalankan seeder data awal pasien
+	go run ./db/seeders/main.go -addr localhost:$(GRPC_PORT) -file db/seeders/patients.json
+
+# -----------------------------------------------------------------------------
+# CODE QUALITY & TESTING
+# -----------------------------------------------------------------------------
+test: ## Menjalankan unit & integration tests
 	go test ./... -cover
 
-build: proto
-	go build -o bin/patient-service ./cmd
+test-coverage: ## Menjalankan test dan membuat laporan coverage HTML
+	@mkdir -p coverage
+	go test -coverprofile=coverage/coverage.out ./...
+	go tool cover -html=coverage/coverage.out -o coverage/coverage.html
+	@echo "✓ Coverage report generated at coverage/coverage.html"
+
+lint: ## Menjalankan golangci-lint
+	golangci-lint run ./...
+
+fmt: ## Format kode menggunakan gofmt
+	gofmt -s -w .
 
 # -----------------------------------------------------------------------------
 # DOCKER COMMANDS
 # -----------------------------------------------------------------------------
-up:
+up: ## Menyalakan seluruh service Docker (Postgres, MinIO, App)
 	docker compose up -d --build
 
-down:
+down: ## Mematikan container Docker
 	docker compose down
+
+restart: ## Restart container aplikasi
+	docker compose restart app
+
+logs: ## Melihat streaming logs dari container aplikasi
+	docker compose logs -f app
 
 # -----------------------------------------------------------------------------
 # DATABASE MIGRATIONS
 # -----------------------------------------------------------------------------
-migrate-up:
+migrate-up: ## Menjalankan semua migrasi database yang belum dieksekusi
 	migrate -path db/migrations -database "$(DB_URL)" up
 
-migrate-down:
+migrate-down: ## Rollback 1 step migrasi database
 	migrate -path db/migrations -database "$(DB_URL)" down 1
+
+migrate-version: ## Melihat status versi migrasi database saat ini
+	migrate -path db/migrations -database "$(DB_URL)" version
+
+migrate-force: ## Memperbaiki status dirty migrasi (penggunaan: make migrate-force v=1)
+	@if [ -z "$(v)" ]; then echo "Error: tentukan versi, contoh: make migrate-force v=1"; exit 1; fi
+	migrate -path db/migrations -database "$(DB_URL)" force $(v)
+
+migrate-create: ## Membuat file migrasi baru (penggunaan: make migrate-create name=add_column)
+	@if [ -z "$(name)" ]; then echo "Error: tentukan nama, contoh: make migrate-create name=add_column"; exit 1; fi
+	migrate create -ext sql -dir db/migrations -seq $(name)
 
 # -----------------------------------------------------------------------------
 # CLEANUP
 # -----------------------------------------------------------------------------
-clean:
-	rm -rf bin/ gen/
-	@echo "✓ Cleaned build binaries and generated proto files"
+clean: ## Membersihkan hasil build dan coverage
+	rm -rf bin/ coverage/
+	@echo "✓ Cleaned build binaries and coverage reports"

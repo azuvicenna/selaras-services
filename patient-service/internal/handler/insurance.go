@@ -5,8 +5,8 @@ import (
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"github.com/azuvicenna/selaras-services/patient-service/internal/domain"
 	patientv1 "github.com/azuvicenna/selaras-services/patient-service/gen/patient/v1"
+	"github.com/azuvicenna/selaras-services/patient-service/internal/domain"
 )
 
 func (h *PatientHandler) AddPatientInsurance(ctx context.Context, req *patientv1.AddPatientInsuranceRequest) (*patientv1.AddPatientInsuranceResponse, error) {

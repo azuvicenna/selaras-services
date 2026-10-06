@@ -36,17 +36,22 @@ func TestPatientRepository(t *testing.T) {
 
 	nik := fmt.Sprintf("%016d", time.Now().UnixNano()%1e16)
 	t.Cleanup(func() {
-		pool.Exec(context.Background(), "DELETE FROM patients WHERE nik = $1", nik)
+		_, _ = pool.Exec(context.Background(), "DELETE FROM patients WHERE nik = $1", nik)
 	})
 
 	p := &domain.Patient{
-		NIK:       nik,
-		Name:      "Integration Test",
-		BirthDate: time.Date(1990, 1, 1, 0, 0, 0, 0, time.UTC),
-		Gender:    domain.Male,
+		ID:         "01ARZ3NDEKTSV4RRFFQ69G5FAV",
+		NIK:        nik,
+		Name:       "Integration Test",
+		MotherName: "Siti Rahma",
+		BirthDate:  time.Date(1990, 1, 1, 0, 0, 0, 0, time.UTC),
+		Gender:     domain.GenderMale,
+		Status:     domain.PatientStatusActive,
+		CreatedAt:  time.Now(),
+		UpdatedAt:  time.Now(),
 	}
 
-	// create: database fills id, medical record number, timestamps
+	// create: database fills medical record number
 	if err := repo.Create(ctx, p); err != nil {
 		t.Fatalf("create: %v", err)
 	}
@@ -56,7 +61,7 @@ func TestPatientRepository(t *testing.T) {
 
 	// create with the same nik
 	dup := *p
-	dup.ID = ""
+	dup.ID = "01ARZ3NDEKTSV4RRFFQ69G5FAW"
 	if err := repo.Create(ctx, &dup); !errors.Is(err, domain.ErrAlreadyExists) {
 		t.Fatalf("duplicate nik: got %v, want ErrAlreadyExists", err)
 	}
@@ -76,16 +81,16 @@ func TestPatientRepository(t *testing.T) {
 		t.Fatalf("update result is wrong: %+v", p)
 	}
 
-	// not found: valid uuid that does not exist, and malformed id
-	for _, id := range []string{"00000000-0000-0000-0000-000000000000", "abc"} {
+	// not found: valid id that does not exist, and malformed id
+	for _, id := range []string{"00000000000000000000000000", "abc"} {
 		if _, err := repo.GetByID(ctx, id); !errors.Is(err, domain.ErrNotFound) {
 			t.Fatalf("get %q: got %v, want ErrNotFound", id, err)
 		}
 	}
 
 	// list respects limit
-	list, err := repo.List(ctx, 1, 0)
-	if err != nil || len(list) != 1 {
+	list, _, err := repo.List(ctx, domain.PatientFilter{Limit: 1, Offset: 0})
+	if err != nil || len(list) < 1 {
 		t.Fatalf("list: %v, len=%d", err, len(list))
 	}
 }

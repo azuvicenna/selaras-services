@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"net/url"
 	"path"
+	"time"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -41,15 +43,28 @@ func NewMinioStorage(ctx context.Context, endpoint, accessKey, secretKey, bucket
 	return &MinioStorage{client: mc, bucket: bucket}, nil
 }
 
-// UploadFile menyimpan berkas dan mengembalikan object key, yang disimpan sebagai file_url.
-func (s *MinioStorage) UploadFile(ctx context.Context, patientID, docID, fileName, contentType string, content io.Reader) (string, error) {
+// UploadFile menyimpan berkas dengan ukuran spesifik (menghindari buffering RAM besar) dan mengembalikan object key.
+func (s *MinioStorage) UploadFile(ctx context.Context, patientID, docID, fileName, contentType string, content io.Reader, size int64) (string, error) {
 	key := path.Join("patients", patientID, docID, path.Base(fileName))
 
-	_, err := s.client.PutObject(ctx, s.bucket, key, content, -1, minio.PutObjectOptions{ContentType: contentType})
+	_, err := s.client.PutObject(ctx, s.bucket, key, content, size, minio.PutObjectOptions{ContentType: contentType})
 	if err != nil {
 		return "", err
 	}
 	return key, nil
+}
+
+// GetPresignedURL membuat URL bertempo (temporary link) agar client dapat mengunduh atau melihat dokumen langsung dari browser/mobile.
+func (s *MinioStorage) GetPresignedURL(ctx context.Context, fileURL string, expiry time.Duration) (string, error) {
+	if expiry <= 0 {
+		expiry = 15 * time.Minute
+	}
+	reqParams := make(url.Values)
+	presignedURL, err := s.client.PresignedGetObject(ctx, s.bucket, fileURL, expiry, reqParams)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate presigned url: %w", err)
+	}
+	return presignedURL.String(), nil
 }
 
 // DeleteFile menerima object key yang dikembalikan UploadFile.

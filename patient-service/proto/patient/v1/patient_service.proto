@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package patient.v1;
 
-import "google/protobuf/timestamp.proto";
 import "patient/v1/patient.proto";
 import "patient/v1/allergy.proto";
 import "patient/v1/document.proto";

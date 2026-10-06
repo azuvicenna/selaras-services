@@ -37,7 +37,7 @@ func run(addr, file string) error {
 	if err != nil {
 		return fmt.Errorf("failed to create gRPC client: %w", err)
 	}
-	defer conn.Close()
+	defer func() { _ = conn.Close() }()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()

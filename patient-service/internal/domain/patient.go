@@ -12,6 +12,11 @@ type PatientFilter struct {
 	Offset int
 }
 
+// BiometricMatcher mendefinisikan kontrak engine pencocokan biometrik (sidik jari, iris, dll).
+type BiometricMatcher interface {
+	Match(template, sample []byte) (bool, error)
+}
+
 type PatientUsecase interface {
 	CreatePatient(ctx context.Context, p Patient) (*Patient, error)
 	GetPatientByID(ctx context.Context, id string) (*Patient, error)

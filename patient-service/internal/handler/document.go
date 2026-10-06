@@ -7,21 +7,24 @@ import (
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"github.com/azuvicenna/selaras-services/patient-service/internal/domain"
 	patientv1 "github.com/azuvicenna/selaras-services/patient-service/gen/patient/v1"
+	"github.com/azuvicenna/selaras-services/patient-service/internal/domain"
 )
 
 func (h *PatientHandler) UploadPatientDocument(ctx context.Context, req *patientv1.UploadPatientDocumentRequest) (*patientv1.UploadPatientDocumentResponse, error) {
-	// Reader dibiarkan nil kalau file kosong, supaya validasi usecase yang menolaknya.
 	var file io.Reader
-	if len(req.GetFileContent()) > 0 {
-		file = bytes.NewReader(req.GetFileContent())
+	var size int64
+	content := req.GetFileContent()
+	if len(content) > 0 {
+		file = bytes.NewReader(content)
+		size = int64(len(content))
 	}
 
 	d, err := h.document.UploadPatientDocument(
 		ctx,
 		fromProtoDocument(req.GetDocument()),
 		file,
+		size,
 		req.GetFileName(),
 		req.GetContentType(),
 	)

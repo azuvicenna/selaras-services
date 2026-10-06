@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/oklog/ulid/v2"
 	"github.com/azuvicenna/selaras-services/patient-service/internal/domain"
+	"github.com/oklog/ulid/v2"
 )
 
 const (
@@ -19,14 +19,18 @@ const (
 var nikPattern = regexp.MustCompile(`^\d{16}$`)
 
 type PatientUsecaseImpl struct {
-	repo domain.PatientRepository
+	repo    domain.PatientRepository
+	matcher domain.BiometricMatcher
 }
 
-func NewPatientUsecase(repo domain.PatientRepository) *PatientUsecaseImpl {
-	return &PatientUsecaseImpl{repo: repo}
+func NewPatientUsecase(repo domain.PatientRepository, matcher domain.BiometricMatcher) *PatientUsecaseImpl {
+	return &PatientUsecaseImpl{
+		repo:    repo,
+		matcher: matcher,
+	}
 }
 
-// CreatePatient mendaftarkan pasien baru, membuat ID (ULID) dan NORM unik, 
+// CreatePatient mendaftarkan pasien baru, membuat ID (ULID) dan NORM unik,
 func (u *PatientUsecaseImpl) CreatePatient(ctx context.Context, p domain.Patient) (*domain.Patient, error) {
 	if err := validatePatient(p); err != nil {
 		return nil, err
@@ -98,7 +102,7 @@ func (u *PatientUsecaseImpl) UpdatePatient(ctx context.Context, p domain.Patient
 	return &p, nil
 }
 
-// UpdatePatientStatus memperbarui status operasional pasien (Active, Inactive, Deceased).
+// UpdatePatientStatus memperbarui status operational pasien (Active, Inactive, Deceased).
 func (u *PatientUsecaseImpl) UpdatePatientStatus(ctx context.Context, id string, status domain.PatientStatus) error {
 	if strings.TrimSpace(id) == "" {
 		return fmt.Errorf("%w: patient id is required", domain.ErrInvalidInput)
@@ -129,8 +133,7 @@ func (u *PatientUsecaseImpl) VerifyPatientBiometric(ctx context.Context, id stri
 		return false, fmt.Errorf("%w: no registered fingerprint for this patient", domain.ErrNotFound)
 	}
 
-	// Logika pembandingan template biometrik disesuaikan dengan matcher engine yang dipakai
-	return matchFingerprint(patient.FingerprintTemplate, fingerprint), nil
+	return u.matcher.Match(patient.FingerprintTemplate, fingerprint)
 }
 
 // Helper internal untuk validasi aturan bisnis entitas Pasien (fail-fast)
@@ -148,9 +151,4 @@ func validatePatient(p domain.Patient) error {
 		return fmt.Errorf("%w: gender must be male or female", domain.ErrInvalidInput)
 	}
 	return nil
-}
-
-// Dummy helper untuk pencocokan sidik jari (bisa diintegrasikan dengan SDK matcher biometrik)
-func matchFingerprint(source, target []byte) bool {
-	return string(source) == string(target)
 }

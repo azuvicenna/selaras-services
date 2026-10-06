@@ -28,7 +28,7 @@ type PatientDocument struct {
 }
 
 type DocumentUsecase interface {
-	UploadPatientDocument(ctx context.Context, doc PatientDocument, fileReader io.Reader, fileName, contentType string) (*PatientDocument, error)
+	UploadPatientDocument(ctx context.Context, doc PatientDocument, fileReader io.Reader, size int64, fileName, contentType string) (*PatientDocument, error)
 	GetPatientDocuments(ctx context.Context, patientID string) ([]PatientDocument, error)
 	GetPatientDocumentByID(ctx context.Context, id string) (*PatientDocument, error)
 	DeletePatientDocument(ctx context.Context, id string) error
@@ -42,6 +42,7 @@ type DocumentRepository interface {
 }
 
 type StorageClient interface {
-	UploadFile(ctx context.Context, patientID, docID, fileName, contentType string, content io.Reader) (string, error)
+	UploadFile(ctx context.Context, patientID, docID, fileName, contentType string, content io.Reader, size int64) (string, error)
+	GetPresignedURL(ctx context.Context, fileURL string, expiry time.Duration) (string, error)
 	DeleteFile(ctx context.Context, fileURL string) error
 }
