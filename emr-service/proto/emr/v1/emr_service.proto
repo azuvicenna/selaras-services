@@ -1,0 +1,392 @@
+syntax = "proto3";
+
+package emr.v1;
+
+import "emr/v1/allergy.proto";
+import "emr/v1/clinical_note.proto";
+import "emr/v1/condition.proto";
+import "emr/v1/diagnostic_report.proto";
+import "emr/v1/encounter.proto";
+import "emr/v1/medication_request.proto";
+import "emr/v1/observation.proto";
+import "emr/v1/procedure.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/emr-service/gen/emr/v1;emrv1";
+
+// =============================================================================
+// SERVICE DEFINITION
+// =============================================================================
+
+service EmrService {
+  // --- 1. ENCOUNTER (MANAJEMEN KUNJUNGAN PASIEN) ---
+  rpc StartEncounter (StartEncounterRequest) returns (StartEncounterResponse);
+  rpc GetEncounterByID (GetEncounterByIDRequest) returns (GetEncounterByIDResponse);
+  rpc ListPatientEncounters (ListPatientEncountersRequest) returns (ListPatientEncountersResponse);
+  rpc UpdateEncounterStatus (UpdateEncounterStatusRequest) returns (UpdateEncounterStatusResponse);
+  rpc FinishEncounter (FinishEncounterRequest) returns (FinishEncounterResponse);
+
+  // --- 2. OBSERVATION (MANAJEMEN PENGUKURAN & TANDA VITAL) ---
+  rpc CreateObservation (CreateObservationRequest) returns (CreateObservationResponse);
+  rpc GetEncounterObservations (GetEncounterObservationsRequest) returns (GetEncounterObservationsResponse);
+  rpc GetPatientObservations (GetPatientObservationsRequest) returns (GetPatientObservationsResponse);
+
+  // --- 3. CLINICAL NOTE (MANAJEMEN CATATAN KLINIS / CPPT) ---
+  rpc CreateClinicalNote (CreateClinicalNoteRequest) returns (CreateClinicalNoteResponse);
+  rpc GetClinicalNoteByID (GetClinicalNoteByIDRequest) returns (GetClinicalNoteByIDResponse);
+  rpc ListEncounterClinicalNotes (ListEncounterClinicalNotesRequest) returns (ListEncounterClinicalNotesResponse);
+  rpc AmendClinicalNote (AmendClinicalNoteRequest) returns (AmendClinicalNoteResponse);
+  rpc SignClinicalNote (SignClinicalNoteRequest) returns (SignClinicalNoteResponse);
+
+  // --- 4. CONDITION (MANAJEMEN DIAGNOSIS & DAFTAR MASALAH) ---
+  rpc AddCondition (AddConditionRequest) returns (AddConditionResponse);
+  rpc GetEncounterConditions (GetEncounterConditionsRequest) returns (GetEncounterConditionsResponse);
+  rpc GetPatientProblemList (GetPatientProblemListRequest) returns (GetPatientProblemListResponse);
+  rpc UpdateConditionStatus (UpdateConditionStatusRequest) returns (UpdateConditionStatusResponse);
+
+  // --- 5. PROCEDURE (MANAJEMEN TINDAKAN MEDIS) ---
+  rpc RecordProcedure (RecordProcedureRequest) returns (RecordProcedureResponse);
+  rpc GetEncounterProcedures (GetEncounterProceduresRequest) returns (GetEncounterProceduresResponse);
+  rpc UpdateProcedureStatus (UpdateProcedureStatusRequest) returns (UpdateProcedureStatusResponse);
+
+  // --- 6. MEDICATION REQUEST (MANAJEMEN RESEP & PENGOBATAN) ---
+  rpc CreateMedicationRequest (CreateMedicationRequestRequest) returns (CreateMedicationRequestResponse);
+  rpc GetEncounterMedicationRequests (GetEncounterMedicationRequestsRequest) returns (GetEncounterMedicationRequestsResponse);
+  rpc UpdateMedicationRequestStatus (UpdateMedicationRequestStatusRequest) returns (UpdateMedicationRequestStatusResponse);
+
+  // --- 7. DIAGNOSTIC REPORT (MANAJEMEN HASIL PEMERIKSAAN PENUNJANG) ---
+  rpc CreateDiagnosticReport (CreateDiagnosticReportRequest) returns (CreateDiagnosticReportResponse);
+  rpc GetDiagnosticReportByID (GetDiagnosticReportByIDRequest) returns (GetDiagnosticReportByIDResponse);
+  rpc ListEncounterDiagnosticReports (ListEncounterDiagnosticReportsRequest) returns (ListEncounterDiagnosticReportsResponse);
+
+  // --- 8. ALLERGY (MANAJEMEN RIWAYAT ALERGI PASIEN) ---
+  rpc CreatePatientAllergy (CreatePatientAllergyRequest) returns (CreatePatientAllergyResponse);
+  rpc GetPatientAllergies (GetPatientAllergiesRequest) returns (GetPatientAllergiesResponse);
+  rpc UpdateAllergyStatus (UpdateAllergyStatusRequest) returns (UpdateAllergyStatusResponse);
+
+  // --- 9. SATUSEHAT INTEROPERABILITY (SINKRONISASI IHS / SATUSEHAT ID) ---
+  rpc SyncSatusehatID (SyncSatusehatIDRequest) returns (SyncSatusehatIDResponse);
+}
+
+// =============================================================================
+// REQUEST & RESPONSE MESSAGES
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// 1. ENCOUNTER MESSAGES
+// -----------------------------------------------------------------------------
+
+message StartEncounterRequest {
+  Encounter encounter = 1;
+}
+
+message StartEncounterResponse {
+  Encounter encounter = 1;
+}
+
+message GetEncounterByIDRequest {
+  string id = 1;
+}
+
+message GetEncounterByIDResponse {
+  Encounter encounter = 1;
+}
+
+message ListPatientEncountersRequest {
+  string patient_id = 1;
+  EncounterStatus status = 2;
+  EncounterClass encounter_class = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message ListPatientEncountersResponse {
+  repeated Encounter encounters = 1;
+  int64 total_count = 2;
+}
+
+message UpdateEncounterStatusRequest {
+  string id = 1;
+  EncounterStatus status = 2;
+}
+
+message UpdateEncounterStatusResponse {
+  bool success = 1;
+}
+
+message FinishEncounterRequest {
+  string id = 1;
+  DischargeDisposition discharge_disposition = 2;
+}
+
+message FinishEncounterResponse {
+  Encounter encounter = 1;
+}
+
+// -----------------------------------------------------------------------------
+// 2. OBSERVATION MESSAGES
+// -----------------------------------------------------------------------------
+
+message CreateObservationRequest {
+  Observation observation = 1;
+}
+
+message CreateObservationResponse {
+  Observation observation = 1;
+}
+
+message GetEncounterObservationsRequest {
+  string encounter_id = 1;
+  ObservationCategory category = 2;
+}
+
+message GetEncounterObservationsResponse {
+  repeated Observation observations = 1;
+}
+
+message GetPatientObservationsRequest {
+  string patient_id = 1;
+  ObservationCategory category = 2;
+  string code = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message GetPatientObservationsResponse {
+  repeated Observation observations = 1;
+  int64 total_count = 2;
+}
+
+// -----------------------------------------------------------------------------
+// 3. CLINICAL NOTE MESSAGES
+// -----------------------------------------------------------------------------
+
+message CreateClinicalNoteRequest {
+  ClinicalNote clinical_note = 1;
+}
+
+message CreateClinicalNoteResponse {
+  ClinicalNote clinical_note = 1;
+}
+
+message GetClinicalNoteByIDRequest {
+  string id = 1;
+}
+
+message GetClinicalNoteByIDResponse {
+  ClinicalNote clinical_note = 1;
+}
+
+message ListEncounterClinicalNotesRequest {
+  string encounter_id = 1;
+  ClinicalNoteType note_type = 2;
+}
+
+message ListEncounterClinicalNotesResponse {
+  repeated ClinicalNote clinical_notes = 1;
+}
+
+message AmendClinicalNoteRequest {
+  string original_note_id = 1;
+  ClinicalNote amended_note = 2;
+}
+
+message AmendClinicalNoteResponse {
+  ClinicalNote clinical_note = 1;
+}
+
+message SignClinicalNoteRequest {
+  string id = 1;
+  string signer_id = 2;
+  string digital_signature = 3;
+}
+
+message SignClinicalNoteResponse {
+  ClinicalNote clinical_note = 1;
+}
+
+// -----------------------------------------------------------------------------
+// 4. CONDITION MESSAGES
+// -----------------------------------------------------------------------------
+
+message AddConditionRequest {
+  Condition condition = 1;
+}
+
+message AddConditionResponse {
+  Condition condition = 1;
+}
+
+message GetEncounterConditionsRequest {
+  string encounter_id = 1;
+}
+
+message GetEncounterConditionsResponse {
+  repeated Condition conditions = 1;
+}
+
+message GetPatientProblemListRequest {
+  string patient_id = 1;
+  ConditionClinicalStatus clinical_status = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+}
+
+message GetPatientProblemListResponse {
+  repeated Condition conditions = 1;
+  int64 total_count = 2;
+}
+
+message UpdateConditionStatusRequest {
+  string id = 1;
+  ConditionClinicalStatus clinical_status = 2;
+  ConditionVerificationStatus verification_status = 3;
+}
+
+message UpdateConditionStatusResponse {
+  bool success = 1;
+}
+
+// -----------------------------------------------------------------------------
+// 5. PROCEDURE MESSAGES
+// -----------------------------------------------------------------------------
+
+message RecordProcedureRequest {
+  Procedure procedure = 1;
+}
+
+message RecordProcedureResponse {
+  Procedure procedure = 1;
+}
+
+message GetEncounterProceduresRequest {
+  string encounter_id = 1;
+}
+
+message GetEncounterProceduresResponse {
+  repeated Procedure procedures = 1;
+}
+
+message UpdateProcedureStatusRequest {
+  string id = 1;
+  ProcedureStatus status = 2;
+  string outcome = 3;
+}
+
+message UpdateProcedureStatusResponse {
+  bool success = 1;
+}
+
+// -----------------------------------------------------------------------------
+// 6. MEDICATION REQUEST MESSAGES
+// -----------------------------------------------------------------------------
+
+message CreateMedicationRequestRequest {
+  MedicationRequest medication_request = 1;
+}
+
+message CreateMedicationRequestResponse {
+  MedicationRequest medication_request = 1;
+}
+
+message GetEncounterMedicationRequestsRequest {
+  string encounter_id = 1;
+}
+
+message GetEncounterMedicationRequestsResponse {
+  repeated MedicationRequest medication_requests = 1;
+}
+
+message UpdateMedicationRequestStatusRequest {
+  string id = 1;
+  MedicationRequestStatus status = 2;
+}
+
+message UpdateMedicationRequestStatusResponse {
+  bool success = 1;
+}
+
+// -----------------------------------------------------------------------------
+// 7. DIAGNOSTIC REPORT MESSAGES
+// -----------------------------------------------------------------------------
+
+message CreateDiagnosticReportRequest {
+  DiagnosticReport diagnostic_report = 1;
+}
+
+message CreateDiagnosticReportResponse {
+  DiagnosticReport diagnostic_report = 1;
+}
+
+message GetDiagnosticReportByIDRequest {
+  string id = 1;
+}
+
+message GetDiagnosticReportByIDResponse {
+  DiagnosticReport diagnostic_report = 1;
+}
+
+message ListEncounterDiagnosticReportsRequest {
+  string encounter_id = 1;
+  DiagnosticReportCategory category = 2;
+}
+
+message ListEncounterDiagnosticReportsResponse {
+  repeated DiagnosticReport diagnostic_reports = 1;
+}
+
+// -----------------------------------------------------------------------------
+// 8. ALLERGY MESSAGES
+// -----------------------------------------------------------------------------
+
+message CreatePatientAllergyRequest {
+  Allergy allergy = 1;
+}
+
+message CreatePatientAllergyResponse {
+  Allergy allergy = 1;
+}
+
+message GetPatientAllergiesRequest {
+  string patient_id = 1;
+  AllergyClinicalStatus clinical_status = 2;
+}
+
+message GetPatientAllergiesResponse {
+  repeated Allergy allergies = 1;
+}
+
+message UpdateAllergyStatusRequest {
+  string id = 1;
+  AllergyClinicalStatus clinical_status = 2;
+  AllergyVerificationStatus verification_status = 3;
+}
+
+message UpdateAllergyStatusResponse {
+  bool success = 1;
+}
+
+// -----------------------------------------------------------------------------
+// 9. SATUSEHAT INTEROPERABILITY MESSAGES
+// -----------------------------------------------------------------------------
+
+enum SatusehatResourceType {
+  SATUSEHAT_RESOURCE_TYPE_UNSPECIFIED = 0;
+  SATUSEHAT_RESOURCE_TYPE_ENCOUNTER = 1;
+  SATUSEHAT_RESOURCE_TYPE_OBSERVATION = 2;
+  SATUSEHAT_RESOURCE_TYPE_CLINICAL_NOTE = 3;
+  SATUSEHAT_RESOURCE_TYPE_CONDITION = 4;
+  SATUSEHAT_RESOURCE_TYPE_PROCEDURE = 5;
+  SATUSEHAT_RESOURCE_TYPE_MEDICATION_REQUEST = 6;
+  SATUSEHAT_RESOURCE_TYPE_DIAGNOSTIC_REPORT = 7;
+  SATUSEHAT_RESOURCE_TYPE_ALLERGY = 8;
+}
+
+message SyncSatusehatIDRequest {
+  SatusehatResourceType resource_type = 1;
+  string resource_id = 2;
+  string satusehat_id = 3;
+}
+
+message SyncSatusehatIDResponse {
+  bool success = 1;
+}

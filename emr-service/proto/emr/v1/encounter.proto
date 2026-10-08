@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package emr.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/emr-service/gen/emr/v1;emrv1";
+
+// -----------------------------------------------------------------------------
+// ENUMS
+// -----------------------------------------------------------------------------
+
+enum EncounterStatus {
+  ENCOUNTER_STATUS_UNSPECIFIED = 0;
+  ENCOUNTER_STATUS_PLANNED = 1;       // Jadwal/Booking dibuat
+  ENCOUNTER_STATUS_ARRIVED = 2;       // Pasien tiba di faskes
+  ENCOUNTER_STATUS_IN_PROGRESS = 3;   // Sedang dalam pemeriksaan/perawatan
+  ENCOUNTER_STATUS_FINISHED = 4;      // Pemeriksaan selesai
+  ENCOUNTER_STATUS_CANCELLED = 5;     // Batal periksa
+}
+
+enum EncounterClass {
+  ENCOUNTER_CLASS_UNSPECIFIED = 0;
+  ENCOUNTER_CLASS_AMBULATORY = 1;     // Rawat Jalan (Poliklinik)
+  ENCOUNTER_CLASS_EMERGENCY = 2;      // Gawat Darurat (UGD)
+  ENCOUNTER_CLASS_INPATIENT = 3;      // Rawat Inap
+}
+
+enum EncounterPriority {
+  ENCOUNTER_PRIORITY_UNSPECIFIED = 0;
+  ENCOUNTER_PRIORITY_ROUTINE = 1;     // Rutin / Biasa (Hijau)
+  ENCOUNTER_PRIORITY_URGENT = 2;      // Mendesak (Kuning)
+  ENCOUNTER_PRIORITY_EMERGENCY = 3;   // Darurat / Mengancam Nyawa (Merah)
+}
+
+// Status Kepulangan / Pengakhiran Kunjungan (Wajib untuk SATUSEHAT & Inpatient/UGD)
+enum DischargeDisposition {
+  DISCHARGE_DISPOSITION_UNSPECIFIED = 0;
+  DISCHARGE_DISPOSITION_HOME = 1;              // Pulang ke rumah / sembuh
+  DISCHARGE_DISPOSITION_REFERRED = 2;          // Dirujuk ke Faskes lain
+  DISCHARGE_DISPOSITION_LEFT_AGAINST_ADVICE = 3; // Pulang Atas Permintaan Sendiri (APS)
+  DISCHARGE_DISPOSITION_EXPIRED = 4;           // Meninggal dunia
+  DISCHARGE_DISPOSITION_OTHER = 5;             // Lainnya
+}
+
+// -----------------------------------------------------------------------------
+// DOMAIN MODEL
+// -----------------------------------------------------------------------------
+
+message Encounter {
+  string id = 1;
+  string patient_id = 2;              // ID dari patient-service
+  string practitioner_id = 3;         // ID Dokter Penanggung Jawab (DPJP)
+  string location_id = 4;             // ID Ruangan / Poliklinik
+
+  EncounterStatus status = 5;
+  EncounterClass encounter_class = 6;
+  EncounterPriority priority = 7;     // Tingkat kegawatan saat triase
+
+  string chief_complaint = 8;         // Keluhan utama pasien (alasan datang)
+
+  // Integrasi SATUSEHAT & BPJS
+  string satusehat_id = 9;            // ID Encounter dari SATUSEHAT Kemenkes
+  string sep_number = 10;             // Nomor SEP BPJS Kesehatan
+
+  // Hirarki & Relasi Kunjungan
+  string parent_encounter_id = 11;    // ID kunjungan utama jika ini sub-encounter
+  string referral_id = 12;            // ID Surat Rujukan
+
+  // Detail Layanan & Tim Medis
+  string service_type = 13;           // Spesialisasi/Poli Layanan
+  repeated string participant_ids = 14; // Tim medis pendamping (Perawat/Dokter lain)
+  DischargeDisposition discharge_disposition = 15; // Status akhir kepulangan
+
+  google.protobuf.Timestamp start_time = 16;  // Waktu mulai pemeriksaan
+  google.protobuf.Timestamp end_time = 17;   // Waktu selesai / pulang
+
+  google.protobuf.Timestamp created_at = 18;
+  google.protobuf.Timestamp updated_at = 19;
+}

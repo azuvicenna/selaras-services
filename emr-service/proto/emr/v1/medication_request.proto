@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package emr.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/emr-service/gen/emr/v1;emrv1";
+
+// -----------------------------------------------------------------------------
+// ENUMS
+// -----------------------------------------------------------------------------
+
+enum MedicationRequestStatus {
+  MEDICATION_REQUEST_STATUS_UNSPECIFIED = 0;
+  MEDICATION_REQUEST_STATUS_ACTIVE = 1;             // Resep aktif dan siap ditebus
+  MEDICATION_REQUEST_STATUS_ON_HOLD = 2;            // Ditunda (misal: tunggu approval asuransi)
+  MEDICATION_REQUEST_STATUS_CANCELLED = 3;          // Dibatalkan oleh dokter
+  MEDICATION_REQUEST_STATUS_COMPLETED = 4;          // Obat sudah diserahkan ke pasien
+  MEDICATION_REQUEST_STATUS_ENTERED_IN_ERROR = 5;   // Kesalahan input
+}
+
+enum MedicationPriority {
+  MEDICATION_PRIORITY_UNSPECIFIED = 0;
+  MEDICATION_PRIORITY_ROUTINE = 1;                  // Biasa / Rutin
+  MEDICATION_PRIORITY_URGENT = 2;                   // Mendesak
+  MEDICATION_PRIORITY_STAT = 3;                     // Cito! (UGD/Emergency)
+}
+
+enum MedicationCategory {
+  MEDICATION_CATEGORY_UNSPECIFIED = 0;
+  MEDICATION_CATEGORY_INPATIENT = 1;                // Obat Rawat Inap
+  MEDICATION_CATEGORY_OUTPATIENT = 2;               // Obat Rawat Jalan
+  MEDICATION_CATEGORY_DISCHARGE = 3;                // Obat Pulang (Discharge)
+  MEDICATION_CATEGORY_COMMUNITY = 4;                // Swamedikasi / Bebas
+}
+
+// -----------------------------------------------------------------------------
+// DOMAIN MODEL
+// -----------------------------------------------------------------------------
+
+// Komponen bahan obat jika peresepan berupa RACIKAN
+message MedicationIngredient {
+  string kfa_code = 1;                              // Kode KFA bahan
+  string medication_name = 2;                       // Nama bahan obat
+  double strength_value = 3;                        // Kekuatan bahan (misal: 100)
+  string strength_unit = 4;                         // Satuan kekuatan (misal: "mg")
+}
+
+message MedicationRequest {
+  string id = 1;
+  string patient_id = 2;              // Relasi ke patient-service
+  string encounter_id = 3;            // Kunjungan tempat resep diterbitkan
+  string practitioner_id = 4;         // Dokter yang meresepkan
+  string condition_id = 5;            // Referensi ID Diagnosis / Condition
+
+  MedicationRequestStatus status = 6;
+  MedicationPriority priority = 7;
+  MedicationCategory category = 8;
+
+  // Standarisasi SATUSEHAT & Material
+  string satusehat_id = 9;            // ID Resource SATUSEHAT
+  string kfa_code = 10;               // Kode KFA Kemenkes
+  string medication_code = 11;        // Kode internal/BPJS
+  string medication_name = 12;        // Nama obat tunggal / merek
+
+  // Fitur Obat Racikan
+  bool is_compound = 13;              // True jika resep racikan
+  string compound_name = 14;          // Nama racikan (misal: "Puyer Batuk No.1")
+  repeated MedicationIngredient ingredients = 15; // Komponen racikan
+
+  // Aturan Dosis & Pakai
+  string dosage_instruction = 16;     // Signatura (contoh: "3 x sehari 1 tablet")
+  string route = 17;                  // Rute (Oral, IV, Topikal)
+  string patient_instruction = 18;   // Catatan khusus pasien (contoh: "Sesudah makan")
+  int32 duration_in_days = 19;        // Durasi konsumsi obat (dalam hari)
+
+  // Jumlah & Aturan Apotek
+  double dispense_quantity = 20;     // Jumlah total obat yang diberikan
+  string dispense_unit = 21;         // Satuan (Tablet, Botol, Kapsul)
+  int32 number_of_refills_allowed = 22; // Jumlah Iterasi / Refill (BPJS Kronis)
+  bool substitution_allowed = 23;     // Boleh diganti merek/generik oleh apoteker
+
+  string reason_code = 24;            // Kode alasan / ICD-10
+  
+  google.protobuf.Timestamp authored_on = 25; // Kapan resep ditandatangani
+  google.protobuf.Timestamp created_at = 26;
+  google.protobuf.Timestamp updated_at = 27;
+}

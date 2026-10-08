@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package emr.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/emr-service/gen/emr/v1;emrv1";
+
+// -----------------------------------------------------------------------------
+// ENUMS
+// -----------------------------------------------------------------------------
+
+enum ProcedureStatus {
+  PROCEDURE_STATUS_UNSPECIFIED = 0;
+  PROCEDURE_STATUS_PREPARATION = 1;       // Sedang disiapkan
+  PROCEDURE_STATUS_IN_PROGRESS = 2;       // Sedang berlangsung
+  PROCEDURE_STATUS_COMPLETED = 3;         // Selesai
+  PROCEDURE_STATUS_ABANDONED = 4;         // Dihentikan di tengah jalan
+  PROCEDURE_STATUS_ENTERED_IN_ERROR = 5;  // Kesalahan input
+}
+
+enum ProcedureCategory {
+  PROCEDURE_CATEGORY_UNSPECIFIED = 0;
+  PROCEDURE_CATEGORY_SURGICAL = 1;        // Tindakan Bedah / Operasi
+  PROCEDURE_CATEGORY_DIAGNOSTIC = 2;      // Tindakan Diagnostik (misal: Endoskopi)
+  PROCEDURE_CATEGORY_THERAPEUTIC = 3;      // Tindakan Terapi / Rehabilitasi
+  PROCEDURE_CATEGORY_NURSING = 4;         // Asuhan Keperawatan
+}
+
+// -----------------------------------------------------------------------------
+// DOMAIN MODEL
+// -----------------------------------------------------------------------------
+
+// Detail anggota tim medis yang terlibat dalam tindakan
+message ProcedurePerformer {
+  string practitioner_id = 1;             // ID Dokter/Perawat
+  string role = 2;                        // Peran (misal: "Primary Surgeon", "Anesthesiologist", "Scrub Nurse")
+}
+
+message Procedure {
+  string id = 1;
+  string patient_id = 2;              // Relasi ke patient-service
+  string encounter_id = 3;            // Kunjungan tempat tindakan dilakukan
+  string practitioner_id = 4;         // Dokter penanggung jawab utama (Operator)
+  string reason_condition_id = 5;     // Indikasi diagnosis (Relasi ke Condition)
+  string clinical_note_id = 6;        // ID Laporan Operasi lengkap di ClinicalNote
+
+  ProcedureStatus status = 7;
+  ProcedureCategory category = 8;
+
+  // Standarisasi Kodifikasi & SATUSEHAT
+  string satusehat_id = 9;            // ID Resource SATUSEHAT Kemenkes
+  string snomed_code = 10;            // Kode SNOMED CT
+  string icd9cm_code = 11;            // Kode ICD-9-CM untuk klaim BPJS
+  string procedure_name = 12;         // Nama tindakan
+
+  // Tim Medis Terlibat
+  repeated ProcedurePerformer performers = 13; // Anggota tim operasi/tindakan
+
+  // Detail Klinis, Anatomi & Komplikasi
+  string body_site = 14;             // Lokasi anatomi
+  string outcome = 15;               // Hasil atau kesimpulan tindakan
+  repeated string complications = 16;// Komplikasi saat prosedur
+  repeated string focal_device_ids = 17; // ID Implan / Alat kesehatan terpasang
+  string notes = 18;                 // Catatan ringkas tambahan
+
+  // Waktu Pelaksanaan
+  google.protobuf.Timestamp performed_start = 19; // Waktu mulai
+  google.protobuf.Timestamp performed_end = 20;   // Waktu selesai
+
+  google.protobuf.Timestamp created_at = 21;
+  google.protobuf.Timestamp updated_at = 22;
+}

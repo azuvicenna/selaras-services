@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package emr.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/emr-service/gen/emr/v1;emrv1";
+
+// -----------------------------------------------------------------------------
+// ENUMS
+// -----------------------------------------------------------------------------
+
+// Status legal dari catatan klinis. Penting untuk audit trail medis.
+enum ClinicalNoteStatus {
+  CLINICAL_NOTE_STATUS_UNSPECIFIED = 0;
+  CLINICAL_NOTE_STATUS_DRAFT = 1;             // Masih diketik/belum dikunci
+  CLINICAL_NOTE_STATUS_FINAL = 2;             // Sudah ditandatangani/dikunci (tidak bisa diubah)
+  CLINICAL_NOTE_STATUS_AMENDED = 3;           // Ada revisi/addendum (secara hukum harus dilacak)
+  CLINICAL_NOTE_STATUS_ENTERED_IN_ERROR = 4;  // Salah input (misal: salah tulis di profil pasien lain)
+}
+
+// Jenis dokumen/catatan agar memudahkan filter di antarmuka pengguna (UI).
+enum ClinicalNoteType {
+  CLINICAL_NOTE_TYPE_UNSPECIFIED = 0;
+  CLINICAL_NOTE_TYPE_SOAP = 1;                // Catatan SOAP umum (CPPT)
+  CLINICAL_NOTE_TYPE_NURSING = 2;             // Asuhan Keperawatan
+  CLINICAL_NOTE_TYPE_OPERATIVE = 3;           // Laporan Operasi/Tindakan
+  CLINICAL_NOTE_TYPE_DISCHARGE_SUMMARY = 4;   // Resume Medis (Saat pasien pulang)
+}
+
+// -----------------------------------------------------------------------------
+// DOMAIN MODEL
+// -----------------------------------------------------------------------------
+
+message ClinicalNote {
+  string id = 1;
+  string patient_id = 2;
+  string encounter_id = 3;
+  string practitioner_id = 4;
+
+  ClinicalNoteStatus status = 5;
+  ClinicalNoteType note_type = 6;
+
+  string subjective = 7;
+  string objective = 8;
+  string assessment = 9;
+  string plan = 10;
+  string free_text_note = 11;
+
+  // Koreksi & Verifikasi
+  string amendment_reason = 12;
+  string amended_from_note_id = 13;
+  string cosigner_id = 14;
+  google.protobuf.Timestamp cosigned_at = 15;
+
+  // Konteks Pelayanan & Hak Akses
+  string practitioner_role = 16;
+  string unit_id = 17;
+  bool is_confidential = 18;
+
+  // Kodifikasi Medis Terstruktur
+  string primary_icd10_code = 19;
+  repeated string secondary_icd10_codes = 20;
+  repeated string icd9cm_codes = 21;
+
+  // Berkas & Referensi Tambahan
+  repeated string attachment_urls = 22;
+  repeated string observation_ids = 23;
+
+  // Integrasi SATUSEHAT & Tanda Tangan Elektronik (TTE / BSrE Permenkes 24/2022)
+  string satusehat_id = 24;                   // ID FHIR Composition di SATUSEHAT
+  string digital_signature = 25;              // Hash / Token TTE tersertifikasi BSrE
+  string signer_id = 26;                      // ID tenaga medis penanda tangan elektronik
+  google.protobuf.Timestamp signed_at = 27;   // Waktu pembubuhan TTE
+
+  google.protobuf.Timestamp recorded_at = 28;
+  google.protobuf.Timestamp created_at = 29;
+  google.protobuf.Timestamp updated_at = 30;
+}

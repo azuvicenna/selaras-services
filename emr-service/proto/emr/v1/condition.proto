@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package emr.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/emr-service/gen/emr/v1;emrv1";
+
+// -----------------------------------------------------------------------------
+// ENUMS
+// -----------------------------------------------------------------------------
+
+enum ConditionClinicalStatus {
+  CONDITION_CLINICAL_STATUS_UNSPECIFIED = 0;
+  CONDITION_CLINICAL_STATUS_ACTIVE = 1;
+  CONDITION_CLINICAL_STATUS_INACTIVE = 2;
+  CONDITION_CLINICAL_STATUS_RESOLVED = 3;
+}
+
+enum ConditionVerificationStatus {
+  CONDITION_VERIFICATION_STATUS_UNSPECIFIED = 0;
+  CONDITION_VERIFICATION_STATUS_PROVISIONAL = 1;
+  CONDITION_VERIFICATION_STATUS_DIFFERENTIAL = 2;
+  CONDITION_VERIFICATION_STATUS_CONFIRMED = 3;
+  CONDITION_VERIFICATION_STATUS_REFUTED = 4;
+}
+
+enum ConditionCategory {
+  CONDITION_CATEGORY_UNSPECIFIED = 0;
+  CONDITION_CATEGORY_ENCOUNTER_DIAGNOSIS = 1; // Diagnosis pada kunjungan saat ini
+  CONDITION_CATEGORY_PROBLEM_LIST_ITEM = 2;   // Catatan riwayat medis jangka panjang
+}
+
+// -----------------------------------------------------------------------------
+// DOMAIN MODEL
+// -----------------------------------------------------------------------------
+
+message Condition {
+  string id = 1;
+  string patient_id = 2;
+  string encounter_id = 3;
+  string practitioner_id = 4;
+  string clinical_note_id = 5;                // ID referensi catatan SOAP
+
+  ConditionClinicalStatus clinical_status = 6;
+  ConditionVerificationStatus verification_status = 7;
+  ConditionCategory category = 8;
+
+  bool is_primary = 9;                        // True jika diagnosis utama
+  string satusehat_id = 10;                   // ID Resource Condition dari SATUSEHAT
+  string icd10_code = 11;                     // Kode ICD-10
+  string snomed_code = 12;                    // Kode SNOMED CT
+  string name = 13;                           // Nama diagnosis
+  string severity = 14;                       // Contoh: Mild, Moderate, Severe
+  string notes = 15;                          // Catatan tambahan dokter
+
+  google.protobuf.Timestamp onset_at = 16;    // Kapan gejala/penyakit mulai timbul
+  google.protobuf.Timestamp abatement_at = 17;// Kapan kondisi dinyatakan sembuh
+  google.protobuf.Timestamp recorded_at = 18; // Waktu dicatat oleh tenaga medis
+  google.protobuf.Timestamp created_at = 19;
+  google.protobuf.Timestamp updated_at = 20;
+}

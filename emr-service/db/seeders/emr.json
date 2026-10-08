@@ -1,0 +1,612 @@
+[
+  {
+    "encounter": {
+      "patientId": "01JQXK7M9P2R4T6V8X0Z1B3D5F",
+      "practitionerId": "PRAC-2026-0001",
+      "locationId": "LOC-POLI-UMUM-01",
+      "status": "ENCOUNTER_STATUS_FINISHED",
+      "encounterClass": "ENCOUNTER_CLASS_AMBULATORY",
+      "priority": "ENCOUNTER_PRIORITY_ROUTINE",
+      "chiefComplaint": "Demam tinggi sejak 3 hari disertai batuk berdahak dan nyeri tenggorokan",
+      "satusehatId": "ENC-IHS-2026-0001",
+      "sepNumber": "0123R0010326V000001",
+      "serviceType": "Poli Penyakit Dalam",
+      "participantIds": ["NURS-2026-0001"],
+      "dischargeDisposition": "DISCHARGE_DISPOSITION_HOME",
+      "startTime": "2026-03-10T08:30:00Z",
+      "endTime": "2026-03-10T09:15:00Z"
+    },
+    "allergies": [
+      {
+        "clinicalStatus": "ALLERGY_CLINICAL_STATUS_ACTIVE",
+        "verificationStatus": "ALLERGY_VERIFICATION_STATUS_CONFIRMED",
+        "type": "ALLERGY_TYPE_DRUG",
+        "severity": "ALLERGY_SEVERITY_MODERATE",
+        "satusehatId": "ALG-IHS-2026-0001",
+        "kfaCode": "93000123",
+        "snomedCode": "372687004",
+        "allergen": "Amoxicillin",
+        "reaction": "Ruam merah dan gatal-gatal pada kulit",
+        "notes": "Hindari golongan Penicillin",
+        "onsetAt": "2020-05-12T00:00:00Z",
+        "recordedAt": "2026-03-10T08:35:00Z"
+      }
+    ],
+    "observations": [
+      {
+        "status": "OBSERVATION_STATUS_FINAL",
+        "category": "OBSERVATION_CATEGORY_VITAL_SIGNS",
+        "satusehatId": "OBS-IHS-2026-0001",
+        "code": "85354-9",
+        "name": "Blood pressure panel with all children optional",
+        "interpretation": "Normal",
+        "bodySite": "Lengan Kiri",
+        "method": "Tensimeter Digital",
+        "components": [
+          {
+            "code": "8480-6",
+            "name": "Systolic blood pressure",
+            "valueQuantity": 120,
+            "unit": "mmHg",
+            "interpretation": "Normal",
+            "referenceRange": "90 - 120"
+          },
+          {
+            "code": "8462-4",
+            "name": "Diastolic blood pressure",
+            "valueQuantity": 80,
+            "unit": "mmHg",
+            "interpretation": "Normal",
+            "referenceRange": "60 - 80"
+          }
+        ],
+        "effectiveTime": "2026-03-10T08:35:00Z"
+      },
+      {
+        "status": "OBSERVATION_STATUS_FINAL",
+        "category": "OBSERVATION_CATEGORY_VITAL_SIGNS",
+        "satusehatId": "OBS-IHS-2026-0002",
+        "code": "8310-5",
+        "name": "Body temperature",
+        "valueQuantity": 38.6,
+        "unit": "Cel",
+        "referenceRange": "36.5 - 37.5",
+        "interpretation": "High",
+        "bodySite": "Axilla",
+        "method": "Termometer Inframerah",
+        "effectiveTime": "2026-03-10T08:36:00Z"
+      }
+    ],
+    "clinicalNotes": [
+      {
+        "status": "CLINICAL_NOTE_STATUS_FINAL",
+        "noteType": "CLINICAL_NOTE_TYPE_SOAP",
+        "subjective": "Pasien mengeluhkan demam naik turun sejak 3 hari lalu, disertai nyeri menelan dan batuk berdahak kekuningan.",
+        "objective": "Kesadaran compos mentis, TD 120/80 mmHg, Suhu 38.6 C, Faring hiperemis (+), Tonsil T1-T1.",
+        "assessment": "Faringitis Akut bakterial (J02.9) dengan riwayat alergi Amoxicillin.",
+        "plan": "Berikan Azithromycin 1x500mg selama 3 hari, Paracetamol 3x500mg bila demam, edukasi istirahat dan banyak minum air putih.",
+        "practitionerRole": "Dokter Spesialis Penyakit Dalam",
+        "unitId": "LOC-POLI-UMUM-01",
+        "isConfidential": false,
+        "primaryIcd10Code": "J02.9",
+        "recordedAt": "2026-03-10T08:50:00Z"
+      }
+    ],
+    "conditions": [
+      {
+        "clinicalStatus": "CONDITION_CLINICAL_STATUS_ACTIVE",
+        "verificationStatus": "CONDITION_VERIFICATION_STATUS_CONFIRMED",
+        "category": "CONDITION_CATEGORY_ENCOUNTER_DIAGNOSIS",
+        "isPrimary": true,
+        "icd10Code": "J02.9",
+        "snomedCode": "363746003",
+        "name": "Acute pharyngitis, unspecified",
+        "severity": "Moderate",
+        "notes": "Infeksi saluran napas atas akut",
+        "onsetAt": "2026-03-07T00:00:00Z",
+        "recordedAt": "2026-03-10T08:50:00Z"
+      }
+    ],
+    "procedures": [],
+    "medicationRequests": [
+      {
+        "status": "MEDICATION_REQUEST_STATUS_COMPLETED",
+        "priority": "MEDICATION_PRIORITY_ROUTINE",
+        "category": "MEDICATION_CATEGORY_OUTPATIENT",
+        "satusehatId": "MED-IHS-2026-0001",
+        "kfaCode": "93004511",
+        "medicationCode": "OBT-AZI-500",
+        "medicationName": "Azithromycin 500 mg Tablet",
+        "isCompound": false,
+        "dosageInstruction": "1 x sehari 1 tablet",
+        "route": "Oral",
+        "patientInstruction": "Diminum 1 jam sebelum makan atau 2 jam sesudah makan, habiskan",
+        "durationInDays": 3,
+        "dispenseQuantity": 3,
+        "dispenseUnit": "Tablet",
+        "numberOfRefillsAllowed": 0,
+        "substitutionAllowed": true,
+        "reasonCode": "J02.9",
+        "authoredOn": "2026-03-10T08:55:00Z"
+      },
+      {
+        "status": "MEDICATION_REQUEST_STATUS_COMPLETED",
+        "priority": "MEDICATION_PRIORITY_ROUTINE",
+        "category": "MEDICATION_CATEGORY_OUTPATIENT",
+        "satusehatId": "MED-IHS-2026-0002",
+        "kfaCode": "93001001",
+        "medicationCode": "OBT-PCT-500",
+        "medicationName": "Paracetamol 500 mg Tablet",
+        "isCompound": false,
+        "dosageInstruction": "3 x sehari 1 tablet bila demam",
+        "route": "Oral",
+        "patientInstruction": "Diminum sesudah makan",
+        "durationInDays": 3,
+        "dispenseQuantity": 10,
+        "dispenseUnit": "Tablet",
+        "numberOfRefillsAllowed": 0,
+        "substitutionAllowed": true,
+        "reasonCode": "J02.9",
+        "authoredOn": "2026-03-10T08:55:00Z"
+      }
+    ],
+    "diagnosticReports": [
+      {
+        "serviceRequestId": "SR-LAB-2026-0001",
+        "practitionerId": "PRAC-PATKLIN-0001",
+        "status": "DIAGNOSTIC_REPORT_STATUS_FINAL",
+        "category": "DIAGNOSTIC_REPORT_CATEGORY_LABORATORY",
+        "reportCode": "58410-2",
+        "reportName": "Darah Lengkap (Complete Blood Count)",
+        "results": [
+          {
+            "id": "RES-001",
+            "code": "718-7",
+            "name": "Hemoglobin",
+            "value": "14.2",
+            "unit": "g/dL",
+            "referenceRange": "13.0 - 17.0",
+            "interpretation": "N"
+          },
+          {
+            "id": "RES-002",
+            "code": "6690-2",
+            "name": "Leukosit",
+            "value": "12.8",
+            "unit": "10^3/uL",
+            "referenceRange": "4.5 - 11.0",
+            "interpretation": "H"
+          }
+        ],
+        "conclusion": "Leukositosis ringan mendukung gambaran infeksi bakteri akut.",
+        "conclusionCodes": ["414478003"],
+        "attachmentUrls": ["https://storage.selaras.id/emr/labs/cbc-2026-0001.pdf"],
+        "specimenId": "SPEC-2026-0001",
+        "effectiveAt": "2026-03-10T08:40:00Z",
+        "issuedAt": "2026-03-10T09:05:00Z"
+      }
+    ]
+  },
+  {
+    "encounter": {
+      "patientId": "01JQXK7M9P2R4T6V8X0Z1B3D5G",
+      "practitionerId": "PRAC-2026-0002",
+      "locationId": "LOC-IGD-01",
+      "status": "ENCOUNTER_STATUS_FINISHED",
+      "encounterClass": "ENCOUNTER_CLASS_EMERGENCY",
+      "priority": "ENCOUNTER_PRIORITY_EMERGENCY",
+      "chiefComplaint": "Bengkak pada bibir dan sesak napas setelah makan olahan udang 1 jam yang lalu",
+      "satusehatId": "ENC-IHS-2026-0002",
+      "sepNumber": "0123R0010326V000002",
+      "serviceType": "Instalasi Gawat Darurat",
+      "participantIds": ["NURS-2026-0002", "NURS-2026-0003"],
+      "dischargeDisposition": "DISCHARGE_DISPOSITION_HOME",
+      "startTime": "2026-03-11T19:00:00Z",
+      "endTime": "2026-03-11T22:30:00Z"
+    },
+    "allergies": [
+      {
+        "clinicalStatus": "ALLERGY_CLINICAL_STATUS_ACTIVE",
+        "verificationStatus": "ALLERGY_VERIFICATION_STATUS_CONFIRMED",
+        "type": "ALLERGY_TYPE_FOOD",
+        "severity": "ALLERGY_SEVERITY_SEVERE",
+        "satusehatId": "ALG-IHS-2026-0002",
+        "snomedCode": "419967000",
+        "allergen": "Udang / Seafood",
+        "reaction": "Angioedema bibir, urtikaria generalisata, dan bronkospasme ringan",
+        "notes": "Pasien wajib menghindari seluruh produk krustasea",
+        "onsetAt": "2026-03-11T18:00:00Z",
+        "recordedAt": "2026-03-11T19:10:00Z"
+      }
+    ],
+    "observations": [
+      {
+        "status": "OBSERVATION_STATUS_FINAL",
+        "category": "OBSERVATION_CATEGORY_VITAL_SIGNS",
+        "satusehatId": "OBS-IHS-2026-0003",
+        "code": "2708-6",
+        "name": "Oxygen saturation in Arterial blood",
+        "valueQuantity": 94,
+        "unit": "%",
+        "referenceRange": "95 - 100",
+        "interpretation": "Low",
+        "bodySite": "Jari Telunjuk Kanan",
+        "method": "Pulse Oximetry",
+        "effectiveTime": "2026-03-11T19:05:00Z"
+      }
+    ],
+    "clinicalNotes": [
+      {
+        "status": "CLINICAL_NOTE_STATUS_FINAL",
+        "noteType": "CLINICAL_NOTE_TYPE_SOAP",
+        "subjective": "Pasien datang ke IGD dengan keluhan sesak napas dan bibir bengkak setelah makan malam berbahan udang.",
+        "objective": "Edema labialis (+), wheezing tipis bilateral (+/+), SpO2 awal 94% room air, membaik menjadi 99% pasca oksigenasi dan terapi.",
+        "assessment": "Reaksi alergi makanan akut / angioedema akibat seafood (T78.1).",
+        "plan": "Oksigen nasal kanul 3 lpm, injeksi Dexamethasone IV dan Diphenhydramine IV, observasi 3 jam di IGD. Pasien stabil dan boleh pulang dengan obat oral.",
+        "practitionerRole": "Dokter Jaga IGD",
+        "unitId": "LOC-IGD-01",
+        "isConfidential": false,
+        "primaryIcd10Code": "T78.1",
+        "icd9cmCodes": ["93.96", "99.23"],
+        "recordedAt": "2026-03-11T21:45:00Z"
+      }
+    ],
+    "conditions": [
+      {
+        "clinicalStatus": "CONDITION_CLINICAL_STATUS_RESOLVED",
+        "verificationStatus": "CONDITION_VERIFICATION_STATUS_CONFIRMED",
+        "category": "CONDITION_CATEGORY_ENCOUNTER_DIAGNOSIS",
+        "isPrimary": true,
+        "icd10Code": "T78.1",
+        "snomedCode": "414285001",
+        "name": "Other adverse food reactions, not elsewhere classified",
+        "severity": "Severe",
+        "notes": "Teratasi setelah tata laksana di IGD",
+        "onsetAt": "2026-03-11T18:00:00Z",
+        "abatementAt": "2026-03-11T22:00:00Z",
+        "recordedAt": "2026-03-11T19:15:00Z"
+      }
+    ],
+    "procedures": [
+      {
+        "status": "PROCEDURE_STATUS_COMPLETED",
+        "category": "PROCEDURE_CATEGORY_THERAPEUTIC",
+        "satusehatId": "PROC-IHS-2026-0001",
+        "snomedCode": "371907003",
+        "icd9cmCode": "93.96",
+        "procedureName": "Oxygen enrichment therapy via nasal cannula",
+        "performers": [
+          {
+            "practitionerId": "PRAC-2026-0002",
+            "role": "Emergency Physician"
+          },
+          {
+            "practitionerId": "NURS-2026-0002",
+            "role": "Emergency Nurse"
+          }
+        ],
+        "bodySite": "Nasal cavity",
+        "outcome": "Saturasi oksigen meningkat dari 94% menjadi 99%",
+        "notes": "Pemberian O2 3 L/menit selama 90 menit",
+        "performedStart": "2026-03-11T19:05:00Z",
+        "performedEnd": "2026-03-11T20:35:00Z"
+      }
+    ],
+    "medicationRequests": [
+      {
+        "status": "MEDICATION_REQUEST_STATUS_COMPLETED",
+        "priority": "MEDICATION_PRIORITY_STAT",
+        "category": "MEDICATION_CATEGORY_DISCHARGE",
+        "satusehatId": "MED-IHS-2026-0003",
+        "kfaCode": "93008812",
+        "medicationCode": "OBT-CET-10",
+        "medicationName": "Cetirizine 10 mg Tablet",
+        "isCompound": false,
+        "dosageInstruction": "1 x sehari 1 tablet malam hari",
+        "route": "Oral",
+        "patientInstruction": "Dapat menyebabkan kantuk, hindari mengemudi",
+        "durationInDays": 5,
+        "dispenseQuantity": 5,
+        "dispenseUnit": "Tablet",
+        "numberOfRefillsAllowed": 0,
+        "substitutionAllowed": true,
+        "reasonCode": "T78.1",
+        "authoredOn": "2026-03-11T22:00:00Z"
+      }
+    ],
+    "diagnosticReports": []
+  },
+  {
+    "encounter": {
+      "patientId": "01JQXK7M9P2R4T6V8X0Z1B3D5H",
+      "practitionerId": "PRAC-2026-0003",
+      "locationId": "LOC-POLI-SARAF-01",
+      "status": "ENCOUNTER_STATUS_FINISHED",
+      "encounterClass": "ENCOUNTER_CLASS_AMBULATORY",
+      "priority": "ENCOUNTER_PRIORITY_ROUTINE",
+      "chiefComplaint": "Kontrol rutin hipertensi dan keluhan kaku pada tungkai bawah",
+      "satusehatId": "ENC-IHS-2026-0003",
+      "sepNumber": "0123R0010326V000003",
+      "serviceType": "Poli Saraf & Rehabilitasi Medik",
+      "participantIds": ["NURS-2026-0004"],
+      "dischargeDisposition": "DISCHARGE_DISPOSITION_HOME",
+      "startTime": "2026-03-12T09:00:00Z",
+      "endTime": "2026-03-12T10:00:00Z"
+    },
+    "allergies": [],
+    "observations": [
+      {
+        "status": "OBSERVATION_STATUS_FINAL",
+        "category": "OBSERVATION_CATEGORY_VITAL_SIGNS",
+        "satusehatId": "OBS-IHS-2026-0004",
+        "code": "85354-9",
+        "name": "Blood pressure panel",
+        "interpretation": "High",
+        "bodySite": "Lengan Kanan",
+        "method": "Tensimeter Digital",
+        "components": [
+          {
+            "code": "8480-6",
+            "name": "Systolic blood pressure",
+            "valueQuantity": 148,
+            "unit": "mmHg",
+            "interpretation": "High",
+            "referenceRange": "90 - 120"
+          },
+          {
+            "code": "8462-4",
+            "name": "Diastolic blood pressure",
+            "valueQuantity": 92,
+            "unit": "mmHg",
+            "interpretation": "High",
+            "referenceRange": "60 - 80"
+          }
+        ],
+        "effectiveTime": "2026-03-12T09:05:00Z"
+      }
+    ],
+    "clinicalNotes": [
+      {
+        "status": "CLINICAL_NOTE_STATUS_FINAL",
+        "noteType": "CLINICAL_NOTE_TYPE_SOAP",
+        "subjective": "Pasien pengguna kursi roda datang untuk kontrol bulanan, mengeluhkan tekanan darah kadang naik dan otot kaki terasa kaku.",
+        "objective": "TD 148/92 mmHg, Nadi 78x/menit, kekuatan motorik ekstremitas bawah 3/3.",
+        "assessment": "Essential (primary) hypertension (I10).",
+        "plan": "Lanjutkan Amlodipine 1x10mg, program fisioterapi rutin.",
+        "practitionerRole": "Dokter Spesialis Saraf",
+        "unitId": "LOC-POLI-SARAF-01",
+        "isConfidential": false,
+        "primaryIcd10Code": "I10",
+        "recordedAt": "2026-03-12T09:30:00Z"
+      }
+    ],
+    "conditions": [
+      {
+        "clinicalStatus": "CONDITION_CLINICAL_STATUS_ACTIVE",
+        "verificationStatus": "CONDITION_VERIFICATION_STATUS_CONFIRMED",
+        "category": "CONDITION_CATEGORY_PROBLEM_LIST_ITEM",
+        "isPrimary": true,
+        "icd10Code": "I10",
+        "snomedCode": "59621000",
+        "name": "Essential (primary) hypertension",
+        "severity": "Moderate",
+        "notes": "Hipertensi kronis terkontrol obat",
+        "onsetAt": "2022-01-15T00:00:00Z",
+        "recordedAt": "2026-03-12T09:30:00Z"
+      }
+    ],
+    "procedures": [],
+    "medicationRequests": [
+      {
+        "status": "MEDICATION_REQUEST_STATUS_ACTIVE",
+        "priority": "MEDICATION_PRIORITY_ROUTINE",
+        "category": "MEDICATION_CATEGORY_OUTPATIENT",
+        "satusehatId": "MED-IHS-2026-0004",
+        "kfaCode": "93002210",
+        "medicationCode": "OBT-AML-10",
+        "medicationName": "Amlodipine 10 mg Tablet",
+        "isCompound": false,
+        "dosageInstruction": "1 x sehari 1 tablet pagi hari",
+        "route": "Oral",
+        "patientInstruction": "Diminum rutin setiap pagi pada jam yang sama",
+        "durationInDays": 30,
+        "dispenseQuantity": 30,
+        "dispenseUnit": "Tablet",
+        "numberOfRefillsAllowed": 2,
+        "substitutionAllowed": true,
+        "reasonCode": "I10",
+        "authoredOn": "2026-03-12T09:35:00Z"
+      }
+    ],
+    "diagnosticReports": []
+  },
+  {
+    "encounter": {
+      "patientId": "01JQXK7M9P2R4T6V8X0Z1B3D5J",
+      "practitionerId": "PRAC-2026-0004",
+      "locationId": "LOC-POLI-THT-01",
+      "status": "ENCOUNTER_STATUS_FINISHED",
+      "encounterClass": "ENCOUNTER_CLASS_AMBULATORY",
+      "priority": "ENCOUNTER_PRIORITY_ROUTINE",
+      "chiefComplaint": "Bersin-bersin terus menerus setiap pagi dan hidung tersumbat",
+      "satusehatId": "ENC-IHS-2026-0004",
+      "sepNumber": "0123R0010326V000004",
+      "serviceType": "Poli THT-KL",
+      "participantIds": ["NURS-2026-0005"],
+      "dischargeDisposition": "DISCHARGE_DISPOSITION_HOME",
+      "startTime": "2026-03-13T10:00:00Z",
+      "endTime": "2026-03-13T10:40:00Z"
+    },
+    "allergies": [
+      {
+        "clinicalStatus": "ALLERGY_CLINICAL_STATUS_ACTIVE",
+        "verificationStatus": "ALLERGY_VERIFICATION_STATUS_CONFIRMED",
+        "type": "ALLERGY_TYPE_ENVIRONMENT",
+        "severity": "ALLERGY_SEVERITY_MILD",
+        "satusehatId": "ALG-IHS-2026-0003",
+        "snomedCode": "232347008",
+        "allergen": "Debu Ruangan / Cold Air",
+        "reaction": "Bersin-bersin dan hidung tersumbat",
+        "notes": "Gunakan masker saat membersihkan ruangan",
+        "onsetAt": "2018-06-01T00:00:00Z",
+        "recordedAt": "2026-03-13T10:10:00Z"
+      }
+    ],
+    "observations": [],
+    "clinicalNotes": [
+      {
+        "status": "CLINICAL_NOTE_STATUS_FINAL",
+        "noteType": "CLINICAL_NOTE_TYPE_SOAP",
+        "subjective": "Pasien mengeluhkan bersin beruntun terutama saat pagi hari atau terkena debu.",
+        "objective": "Rinoskopi anterior: konka inferior livide dan edema bilateral, sekret serosa (+).",
+        "assessment": "Allergic rhinitis, unspecified (J30.4).",
+        "plan": "Berikan racikan kapsul simtomatik rhinitis alergi 2x1 selama 5 hari.",
+        "practitionerRole": "Dokter Spesialis THT",
+        "unitId": "LOC-POLI-THT-01",
+        "isConfidential": false,
+        "primaryIcd10Code": "J30.4",
+        "recordedAt": "2026-03-13T10:25:00Z"
+      }
+    ],
+    "conditions": [
+      {
+        "clinicalStatus": "CONDITION_CLINICAL_STATUS_ACTIVE",
+        "verificationStatus": "CONDITION_VERIFICATION_STATUS_CONFIRMED",
+        "category": "CONDITION_CATEGORY_ENCOUNTER_DIAGNOSIS",
+        "isPrimary": true,
+        "icd10Code": "J30.4",
+        "snomedCode": "61582004",
+        "name": "Allergic rhinitis, unspecified",
+        "severity": "Mild",
+        "notes": "Dipicu alergen debu dan udara dingin",
+        "onsetAt": "2026-03-01T00:00:00Z",
+        "recordedAt": "2026-03-13T10:25:00Z"
+      }
+    ],
+    "procedures": [],
+    "medicationRequests": [
+      {
+        "status": "MEDICATION_REQUEST_STATUS_COMPLETED",
+        "priority": "MEDICATION_PRIORITY_ROUTINE",
+        "category": "MEDICATION_CATEGORY_OUTPATIENT",
+        "satusehatId": "MED-IHS-2026-0005",
+        "isCompound": true,
+        "compoundName": "Kapsul Racikan Rhinitis Alergi",
+        "ingredients": [
+          {
+            "kfaCode": "93008812",
+            "medicationName": "Cetirizine HCl",
+            "strengthValue": 5,
+            "strengthUnit": "mg"
+          },
+          {
+            "kfaCode": "93007721",
+            "medicationName": "Pseudoephedrine HCl",
+            "strengthValue": 30,
+            "strengthUnit": "mg"
+          }
+        ],
+        "dosageInstruction": "2 x sehari 1 kapsul",
+        "route": "Oral",
+        "patientInstruction": "Diminum pagi dan malam sesudah makan",
+        "durationInDays": 5,
+        "dispenseQuantity": 10,
+        "dispenseUnit": "Kapsul",
+        "numberOfRefillsAllowed": 0,
+        "substitutionAllowed": false,
+        "reasonCode": "J30.4",
+        "authoredOn": "2026-03-13T10:30:00Z"
+      }
+    ],
+    "diagnosticReports": []
+  },
+  {
+    "encounter": {
+      "patientId": "01JQXK7M9P2R4T6V8X0Z1B3D5K",
+      "practitionerId": "PRAC-2026-0001",
+      "locationId": "LOC-POLI-DALAM-01",
+      "status": "ENCOUNTER_STATUS_FINISHED",
+      "encounterClass": "ENCOUNTER_CLASS_AMBULATORY",
+      "priority": "ENCOUNTER_PRIORITY_URGENT",
+      "chiefComplaint": "Nyeri ulu hati terasa perih dan mual setelah minum obat pereda nyeri sendi",
+      "satusehatId": "ENC-IHS-2026-0005",
+      "sepNumber": "0123R0010326V000005",
+      "serviceType": "Poli Penyakit Dalam",
+      "participantIds": ["NURS-2026-0001"],
+      "dischargeDisposition": "DISCHARGE_DISPOSITION_HOME",
+      "startTime": "2026-03-14T11:00:00Z",
+      "endTime": "2026-03-14T11:50:00Z"
+    },
+    "allergies": [
+      {
+        "clinicalStatus": "ALLERGY_CLINICAL_STATUS_ACTIVE",
+        "verificationStatus": "ALLERGY_VERIFICATION_STATUS_CONFIRMED",
+        "type": "ALLERGY_TYPE_DRUG",
+        "severity": "ALLERGY_SEVERITY_MODERATE",
+        "satusehatId": "ALG-IHS-2026-0004",
+        "kfaCode": "93003344",
+        "snomedCode": "293586001",
+        "allergen": "NSAID / Aspirin",
+        "reaction": "Nyeri ulu hati berat dan mual",
+        "notes": "Gunakan alternatif analgesik non-NSAID",
+        "onsetAt": "2023-09-10T00:00:00Z",
+        "recordedAt": "2026-03-14T11:10:00Z"
+      }
+    ],
+    "observations": [],
+    "clinicalNotes": [
+      {
+        "status": "CLINICAL_NOTE_STATUS_FINAL",
+        "noteType": "CLINICAL_NOTE_TYPE_SOAP",
+        "subjective": "Pasien lansia mengeluhkan nyeri epigastrium dan mual sejak kemarin pasca konsumsi obat warung untuk nyeri lutut.",
+        "objective": "Nyeri tekan epigastrium (+), bising usus normal, tanda peritonitis (-).",
+        "assessment": "Acute gastritis (K29.1) diinduksi NSAID.",
+        "plan": "Hentikan konsumsi NSAID, berikan Lansoprazole 1x30mg sebelum makan dan Sucralfate suspensi 3x10ml.",
+        "practitionerRole": "Dokter Spesialis Penyakit Dalam",
+        "unitId": "LOC-POLI-DALAM-01",
+        "isConfidential": false,
+        "primaryIcd10Code": "K29.1",
+        "recordedAt": "2026-03-14T11:30:00Z"
+      }
+    ],
+    "conditions": [
+      {
+        "clinicalStatus": "CONDITION_CLINICAL_STATUS_ACTIVE",
+        "verificationStatus": "CONDITION_VERIFICATION_STATUS_CONFIRMED",
+        "category": "CONDITION_CATEGORY_ENCOUNTER_DIAGNOSIS",
+        "isPrimary": true,
+        "icd10Code": "K29.1",
+        "snomedCode": "25458004",
+        "name": "Other acute gastritis",
+        "severity": "Moderate",
+        "notes": "Gastritis akut akibat konsumsi NSAID",
+        "onsetAt": "2026-03-13T00:00:00Z",
+        "recordedAt": "2026-03-14T11:30:00Z"
+      }
+    ],
+    "procedures": [],
+    "medicationRequests": [
+      {
+        "status": "MEDICATION_REQUEST_STATUS_COMPLETED",
+        "priority": "MEDICATION_PRIORITY_ROUTINE",
+        "category": "MEDICATION_CATEGORY_OUTPATIENT",
+        "satusehatId": "MED-IHS-2026-0006",
+        "kfaCode": "93006120",
+        "medicationCode": "OBT-LAN-30",
+        "medicationName": "Lansoprazole 30 mg Kapsul",
+        "isCompound": false,
+        "dosageInstruction": "1 x sehari 1 kapsul pagi hari",
+        "route": "Oral",
+        "patientInstruction": "Diminum 30 menit sebelum makan pagi",
+        "durationInDays": 7,
+        "dispenseQuantity": 7,
+        "dispenseUnit": "Kapsul",
+        "numberOfRefillsAllowed": 0,
+        "substitutionAllowed": true,
+        "reasonCode": "K29.1",
+        "authoredOn": "2026-03-14T11:35:00Z"
+      }
+    ],
+    "diagnosticReports": []
+  }
+]

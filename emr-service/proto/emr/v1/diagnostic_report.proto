@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package emr.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/emr-service/gen/emr/v1;emrv1";
+
+// -----------------------------------------------------------------------------
+// ENUMS
+// -----------------------------------------------------------------------------
+
+enum DiagnosticReportStatus {
+  DIAGNOSTIC_REPORT_STATUS_UNSPECIFIED = 0;
+  DIAGNOSTIC_REPORT_STATUS_REGISTERED = 1;
+  DIAGNOSTIC_REPORT_STATUS_PARTIAL = 2;
+  DIAGNOSTIC_REPORT_STATUS_PRELIMINARY = 3;
+  DIAGNOSTIC_REPORT_STATUS_FINAL = 4;
+  DIAGNOSTIC_REPORT_STATUS_AMENDED = 5;
+  DIAGNOSTIC_REPORT_STATUS_CANCELLED = 6;
+}
+
+enum DiagnosticReportCategory {
+  DIAGNOSTIC_REPORT_CATEGORY_UNSPECIFIED = 0;
+  DIAGNOSTIC_REPORT_CATEGORY_LABORATORY = 1;
+  DIAGNOSTIC_REPORT_CATEGORY_RADIOLOGY = 2;
+  DIAGNOSTIC_REPORT_CATEGORY_PATHOLOGY = 3;
+  DIAGNOSTIC_REPORT_CATEGORY_CARDIOLOGY = 4;
+}
+
+// -----------------------------------------------------------------------------
+// DOMAIN MODEL
+// -----------------------------------------------------------------------------
+
+// Hasil kuantitatif/kualitatif individual untuk lab terstruktur
+message DiagnosticObservation {
+  string id = 1;
+  string code = 2;               // Kode LOINC (contoh: "718-7" untuk Hemoglobin)
+  string name = 3;               // Nama parameter (contoh: "Hemoglobin")
+  string value = 4;              // Nilai hasil (contoh: "13.5")
+  string unit = 5;               // Satuan pengukuran (contoh: "g/dL")
+  string reference_range = 6;     // Rentang nilai rujukan (contoh: "12.0 - 16.0")
+  string interpretation = 7;      // Interpretasi flag (contoh: "N", "H", "L", "CRITICAL")
+}
+
+message DiagnosticReport {
+  string id = 1;
+  string patient_id = 2;
+  string encounter_id = 3;
+  string service_request_id = 4;      // ID order/permintaan medis
+  string requester_id = 5;           // ID dokter peminta pemeriksaan
+  string practitioner_id = 6;        // ID dokter spesialis penanggung jawab/pemvalidasi
+
+  DiagnosticReportStatus status = 7;
+  DiagnosticReportCategory category = 8;
+
+  string satusehat_id = 9;                    // ID Resource DiagnosticReport dari SATUSEHAT
+  string report_code = 10;                    // Kode pemeriksaan (LOINC)
+  string report_name = 11;                    // Nama pemeriksaan
+
+  // Hasil Terstruktur & Naratif
+  repeated DiagnosticObservation results = 12; // Parameter lab terstruktur
+  string conclusion = 13;                       // Ekspertise/Kesimpulan naratif dokter
+  repeated string conclusion_codes = 14;        // Kode SNOMED-CT/ICD-10 kesimpulan
+
+  // Integrasi Berkas & Radiologi PACS
+  repeated string attachment_urls = 15;         // Berkas PDF / Gambar hasil
+  string dicom_study_instance_uid = 16;         // UID Study DICOM untuk PACS
+  string specimen_id = 17;                      // ID Sampel laboratorium
+  string amended_from_report_id = 18;           // ID Laporan asal jika revisi
+
+  // Waktu
+  google.protobuf.Timestamp effective_at = 19;  // Waktu sampling / pengambilan foto
+  google.protobuf.Timestamp issued_at = 20;     // Waktu laporan resmi terbit
+  google.protobuf.Timestamp created_at = 21;
+  google.protobuf.Timestamp updated_at = 22;
+}

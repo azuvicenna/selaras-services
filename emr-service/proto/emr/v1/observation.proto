@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package emr.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/emr-service/gen/emr/v1;emrv1";
+
+// -----------------------------------------------------------------------------
+// ENUMS
+// -----------------------------------------------------------------------------
+
+enum ObservationStatus {
+  OBSERVATION_STATUS_UNSPECIFIED = 0;
+  OBSERVATION_STATUS_PRELIMINARY = 1;
+  OBSERVATION_STATUS_FINAL = 2;
+  OBSERVATION_STATUS_AMENDED = 3;
+  OBSERVATION_STATUS_CANCELLED = 4;
+}
+
+enum ObservationCategory {
+  OBSERVATION_CATEGORY_UNSPECIFIED = 0;
+  OBSERVATION_CATEGORY_VITAL_SIGNS = 1;
+  OBSERVATION_CATEGORY_LABORATORY = 2;
+  OBSERVATION_CATEGORY_EXAM = 3;
+  OBSERVATION_CATEGORY_SOCIAL = 4;
+}
+
+// -----------------------------------------------------------------------------
+// DOMAIN MODEL
+// -----------------------------------------------------------------------------
+
+// Sub-komponen untuk pengukuran majemuk (contoh: Sistolik & Diastolik)
+message ObservationComponent {
+  string code = 1;               // Kode LOINC komponen (misal: "8480-6" untuk Sistolik)
+  string name = 2;               // Deskripsi komponen (misal: "Systolic blood pressure")
+  
+  oneof value {
+    double value_quantity = 3;
+    string value_string = 4;
+    bool value_boolean = 5;
+  }
+  
+  string unit = 6;               // Satuan (misal: "mmHg")
+  string interpretation = 7;     // Interpretasi (misal: "High")
+  string reference_range = 8;    // Nilai rujukan spesifik komponen
+}
+
+message Observation {
+  string id = 1;
+  string patient_id = 2;
+  string encounter_id = 3;
+  string practitioner_id = 4;
+
+  ObservationStatus status = 5;
+  ObservationCategory category = 6;
+
+  // Identitas Pengukuran & SATUSEHAT
+  string satusehat_id = 7;            // ID Resource SATUSEHAT
+  string code = 8;                   // Kode LOINC / SNOMED CT
+  string name = 9;                   // Deskripsi pengukuran
+
+  // Nilai Hasil Tunggal
+  oneof value {
+    double value_quantity = 10;
+    string value_string = 11;
+    bool value_boolean = 12;
+    string value_code = 13;          // Kode kualitatif standar
+  }
+  
+  string unit = 14;                  // Satuan ukur
+  string reference_range = 15;       // Nilai normal / rujukan (misal: "36.5 - 37.5")
+  string interpretation = 16;        // Interpretasi hasil (Normal, High, Critical)
+
+  // Nilai Hasil Majemuk (jika pengukuran memiliki >1 parameter)
+  repeated ObservationComponent components = 17;
+
+  // Metodologi & Anatomi
+  string body_site = 18;             // Lokasi tubuh pengukuran
+  string method = 19;                // Alat / Metode pengukuran
+  string notes = 20;                 // Catatan klinis
+
+  string amended_from_observation_id = 21; // ID referensi jika ini adalah revisi
+
+  google.protobuf.Timestamp effective_time = 22; // Waktu observasi dilakukan
+  google.protobuf.Timestamp created_at = 23;
+  google.protobuf.Timestamp updated_at = 24;
+}

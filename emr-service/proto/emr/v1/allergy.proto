@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package emr.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/emr-service/gen/emr/v1;emrv1";
+
+// -----------------------------------------------------------------------------
+// ENUMS
+// -----------------------------------------------------------------------------
+
+enum AllergyClinicalStatus {
+  ALLERGY_CLINICAL_STATUS_UNSPECIFIED = 0;
+  ALLERGY_CLINICAL_STATUS_ACTIVE = 1;           // Alergi masih aktif
+  ALLERGY_CLINICAL_STATUS_INACTIVE = 2;         // Tidak aktif
+  ALLERGY_CLINICAL_STATUS_RESOLVED = 3;         // Sudah sembuh / toleran
+}
+
+enum AllergyVerificationStatus {
+  ALLERGY_VERIFICATION_STATUS_UNSPECIFIED = 0;
+  ALLERGY_VERIFICATION_STATUS_UNCONFIRMED = 1;  // Baru laporan subjektif pasien, belum diuji
+  ALLERGY_VERIFICATION_STATUS_CONFIRMED = 2;    // Sudah terkonfirmasi medis
+  ALLERGY_VERIFICATION_STATUS_REFUTED = 3;      // Terbukti bukan alergi setelah pemeriksaan
+  ALLERGY_VERIFICATION_STATUS_ENTERED_IN_ERROR = 4; // Kesalahan pencatatan
+}
+
+enum AllergyType {
+  ALLERGY_TYPE_UNSPECIFIED = 0;
+  ALLERGY_TYPE_DRUG = 1;                        // Obat-obatan (e.g., Penicillin, Paracetamol)
+  ALLERGY_TYPE_FOOD = 2;                        // Makanan (e.g., Udang, Kacang, Telur)
+  ALLERGY_TYPE_ENVIRONMENT = 3;                 // Lingkungan (e.g., Debu, Dingin, Latex)
+  ALLERGY_TYPE_OTHER = 4;                       // Lainnya
+}
+
+enum AllergySeverity {
+  ALLERGY_SEVERITY_UNSPECIFIED = 0;
+  ALLERGY_SEVERITY_MILD = 1;                    // Ringan (Gatal, ruam lokal)
+  ALLERGY_SEVERITY_MODERATE = 2;                // Sedang (Bengkak, mual, muntah)
+  ALLERGY_SEVERITY_SEVERE = 3;                  // Berat / Anafilaksis (Mengancam nyawa, sesak napas)
+}
+
+// -----------------------------------------------------------------------------
+// DOMAIN MODEL
+// -----------------------------------------------------------------------------
+
+message Allergy {
+  string id = 1;
+  string patient_id = 2;                        // Relasi ke patient-service
+  string encounter_id = 3;                      // Kunjungan saat alergi dicatat (opsional jika riwayat lama)
+  string practitioner_id = 4;                   // Tenaga medis yang mencatat/memverifikasi
+
+  AllergyClinicalStatus clinical_status = 5;
+  AllergyVerificationStatus verification_status = 6;
+  AllergyType type = 7;                         // Kategori pencetus alergi (Obat, Makanan, Lingkungan)
+  AllergySeverity severity = 8;                 // Tingkat keparahan reaksi
+
+  // Standarisasi SATUSEHAT & Kodifikasi Alergen
+  string satusehat_id = 9;                      // ID AllergyIntolerance dari SATUSEHAT Kemenkes
+  string kfa_code = 10;                         // Kode KFA (jika alergi obat)
+  string snomed_code = 11;                      // Kode SNOMED CT alergen / reaksi
+  string allergen = 12;                         // Nama pencetus alergi (e.g., "Amoxicillin", "Seafood")
+  string reaction = 13;                         // Manifestasi reaksi klinis (e.g., "Urtikaria, gatal-gatal")
+  string notes = 14;                            // Catatan tambahan dokter
+
+  google.protobuf.Timestamp onset_at = 15;      // Kapan alergi pertama kali diketahui/muncul
+  google.protobuf.Timestamp recorded_at = 16;   // Waktu dicatat oleh tenaga medis
+  google.protobuf.Timestamp created_at = 17;
+  google.protobuf.Timestamp updated_at = 18;
+}
