@@ -64,13 +64,6 @@ func seedPatient(ctx context.Context, c patientv1.PatientServiceClient, agg *Pat
 	}
 	patientID := res.GetPatient().GetId()
 
-	for _, allergy := range agg.Allergies {
-		allergy.PatientId = patientID
-		if _, err := c.AddPatientAllergy(ctx, &patientv1.AddPatientAllergyRequest{Allergy: allergy}); err != nil {
-			return fmt.Errorf("allergy: %w", err)
-		}
-	}
-
 	if agg.EmergencyContact != nil {
 		agg.EmergencyContact.PatientId = patientID
 		if _, err := c.AddEmergencyContact(ctx, &patientv1.AddEmergencyContactRequest{Contact: agg.EmergencyContact}); err != nil {

@@ -14,7 +14,6 @@ import (
 // Field "documents" di JSON diabaikan.
 type SeedPatientWrapper struct {
 	Patient          json.RawMessage   `json:"patient"`
-	Allergies        []json.RawMessage `json:"allergies"`
 	EmergencyContact json.RawMessage   `json:"emergencyContact"`
 	Families         []json.RawMessage `json:"families"`
 	Insurances       []json.RawMessage `json:"insurances"`
@@ -22,7 +21,6 @@ type SeedPatientWrapper struct {
 
 type PatientAggregate struct {
 	Patient          *patientv1.Patient
-	Allergies        []*patientv1.PatientAllergy
 	EmergencyContact *patientv1.PatientEmergencyContact
 	Families         []*patientv1.PatientFamily
 	Insurances       []*patientv1.PatientInsurance
@@ -49,14 +47,6 @@ func loadSeedData(filePath string) ([]*PatientAggregate, error) {
 		agg.Patient = &patientv1.Patient{}
 		if err := protojson.Unmarshal(item.Patient, agg.Patient); err != nil {
 			return nil, fmt.Errorf("failed to unmarshal patient: %w", err)
-		}
-
-		for _, raw := range item.Allergies {
-			allergy := &patientv1.PatientAllergy{}
-			if err := protojson.Unmarshal(raw, allergy); err != nil {
-				return nil, fmt.Errorf("failed to unmarshal allergy: %w", err)
-			}
-			agg.Allergies = append(agg.Allergies, allergy)
 		}
 
 		if len(item.EmergencyContact) > 0 && string(item.EmergencyContact) != "null" {

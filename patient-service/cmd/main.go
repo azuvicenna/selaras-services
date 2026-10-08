@@ -70,7 +70,6 @@ func run() error {
 
 	// 2. Inisialisasi Repositories
 	patientRepo := repository.NewPatientRepository(pool)
-	allergyRepo := repository.NewAllergyRepository(pool)
 	documentRepo := repository.NewDocumentRepository(pool)
 	familyRepo := repository.NewFamilyRepository(pool)
 	emergencyRepo := repository.NewEmergencyContactRepository(pool)
@@ -86,7 +85,6 @@ func run() error {
 	// 3. Inisialisasi Usecases
 	biometricMatcher := client.NewDefaultBiometricMatcher(0.75)
 	patientUC := usecase.NewPatientUsecase(patientRepo, biometricMatcher)
-	allergyUC := usecase.NewAllergyUsecase(allergyRepo, patientRepo)
 	documentUC := usecase.NewDocumentUsecase(documentRepo, patientRepo, storage)
 	familyUC := usecase.NewFamilyUsecase(familyRepo, patientRepo)
 	emergencyUC := usecase.NewEmergencyContactUsecase(emergencyRepo, patientRepo)
@@ -95,7 +93,6 @@ func run() error {
 	// 4. Inisialisasi Handler & Injeksi Seluruh Usecase
 	patientHandler := handler.NewPatientHandler(
 		patientUC,
-		allergyUC,
 		documentUC,
 		familyUC,
 		emergencyUC,

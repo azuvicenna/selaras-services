@@ -27,10 +27,6 @@ const (
 	PatientService_UpdatePatient_FullMethodName               = "/patient.v1.PatientService/UpdatePatient"
 	PatientService_UpdatePatientStatus_FullMethodName         = "/patient.v1.PatientService/UpdatePatientStatus"
 	PatientService_VerifyPatientBiometric_FullMethodName      = "/patient.v1.PatientService/VerifyPatientBiometric"
-	PatientService_AddPatientAllergy_FullMethodName           = "/patient.v1.PatientService/AddPatientAllergy"
-	PatientService_GetPatientAllergies_FullMethodName         = "/patient.v1.PatientService/GetPatientAllergies"
-	PatientService_UpdatePatientAllergy_FullMethodName        = "/patient.v1.PatientService/UpdatePatientAllergy"
-	PatientService_DeletePatientAllergy_FullMethodName        = "/patient.v1.PatientService/DeletePatientAllergy"
 	PatientService_UploadPatientDocument_FullMethodName       = "/patient.v1.PatientService/UploadPatientDocument"
 	PatientService_GetPatientDocuments_FullMethodName         = "/patient.v1.PatientService/GetPatientDocuments"
 	PatientService_GetPatientDocumentByID_FullMethodName      = "/patient.v1.PatientService/GetPatientDocumentByID"
@@ -63,27 +59,22 @@ type PatientServiceClient interface {
 	UpdatePatient(ctx context.Context, in *UpdatePatientRequest, opts ...grpc.CallOption) (*UpdatePatientResponse, error)
 	UpdatePatientStatus(ctx context.Context, in *UpdatePatientStatusRequest, opts ...grpc.CallOption) (*UpdatePatientStatusResponse, error)
 	VerifyPatientBiometric(ctx context.Context, in *VerifyPatientBiometricRequest, opts ...grpc.CallOption) (*VerifyPatientBiometricResponse, error)
-	// --- 2. ALLERGY ---
-	AddPatientAllergy(ctx context.Context, in *AddPatientAllergyRequest, opts ...grpc.CallOption) (*AddPatientAllergyResponse, error)
-	GetPatientAllergies(ctx context.Context, in *GetPatientAllergiesRequest, opts ...grpc.CallOption) (*GetPatientAllergiesResponse, error)
-	UpdatePatientAllergy(ctx context.Context, in *UpdatePatientAllergyRequest, opts ...grpc.CallOption) (*UpdatePatientAllergyResponse, error)
-	DeletePatientAllergy(ctx context.Context, in *DeletePatientAllergyRequest, opts ...grpc.CallOption) (*DeletePatientAllergyResponse, error)
-	// --- 3. DOCUMENT ---
+	// --- 2. DOCUMENT ---
 	UploadPatientDocument(ctx context.Context, in *UploadPatientDocumentRequest, opts ...grpc.CallOption) (*UploadPatientDocumentResponse, error)
 	GetPatientDocuments(ctx context.Context, in *GetPatientDocumentsRequest, opts ...grpc.CallOption) (*GetPatientDocumentsResponse, error)
 	GetPatientDocumentByID(ctx context.Context, in *GetPatientDocumentByIDRequest, opts ...grpc.CallOption) (*GetPatientDocumentByIDResponse, error)
 	DeletePatientDocument(ctx context.Context, in *DeletePatientDocumentRequest, opts ...grpc.CallOption) (*DeletePatientDocumentResponse, error)
-	// --- 4. FAMILY ---
+	// --- 3. FAMILY ---
 	AddPatientFamily(ctx context.Context, in *AddPatientFamilyRequest, opts ...grpc.CallOption) (*AddPatientFamilyResponse, error)
 	GetPatientFamilies(ctx context.Context, in *GetPatientFamiliesRequest, opts ...grpc.CallOption) (*GetPatientFamiliesResponse, error)
 	UpdatePatientFamily(ctx context.Context, in *UpdatePatientFamilyRequest, opts ...grpc.CallOption) (*UpdatePatientFamilyResponse, error)
 	DeletePatientFamily(ctx context.Context, in *DeletePatientFamilyRequest, opts ...grpc.CallOption) (*DeletePatientFamilyResponse, error)
-	// --- 5. EMERGENCY CONTACT ---
+	// --- 4. EMERGENCY CONTACT ---
 	AddEmergencyContact(ctx context.Context, in *AddEmergencyContactRequest, opts ...grpc.CallOption) (*AddEmergencyContactResponse, error)
 	GetEmergencyContacts(ctx context.Context, in *GetEmergencyContactsRequest, opts ...grpc.CallOption) (*GetEmergencyContactsResponse, error)
 	UpdateEmergencyContact(ctx context.Context, in *UpdateEmergencyContactRequest, opts ...grpc.CallOption) (*UpdateEmergencyContactResponse, error)
 	DeleteEmergencyContact(ctx context.Context, in *DeleteEmergencyContactRequest, opts ...grpc.CallOption) (*DeleteEmergencyContactResponse, error)
-	// --- 6. INSURANCE ---
+	// --- 5. INSURANCE ---
 	AddPatientInsurance(ctx context.Context, in *AddPatientInsuranceRequest, opts ...grpc.CallOption) (*AddPatientInsuranceResponse, error)
 	GetPatientInsurances(ctx context.Context, in *GetPatientInsurancesRequest, opts ...grpc.CallOption) (*GetPatientInsurancesResponse, error)
 	UpdatePatientInsurance(ctx context.Context, in *UpdatePatientInsuranceRequest, opts ...grpc.CallOption) (*UpdatePatientInsuranceResponse, error)
@@ -173,46 +164,6 @@ func (c *patientServiceClient) VerifyPatientBiometric(ctx context.Context, in *V
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(VerifyPatientBiometricResponse)
 	err := c.cc.Invoke(ctx, PatientService_VerifyPatientBiometric_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *patientServiceClient) AddPatientAllergy(ctx context.Context, in *AddPatientAllergyRequest, opts ...grpc.CallOption) (*AddPatientAllergyResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AddPatientAllergyResponse)
-	err := c.cc.Invoke(ctx, PatientService_AddPatientAllergy_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *patientServiceClient) GetPatientAllergies(ctx context.Context, in *GetPatientAllergiesRequest, opts ...grpc.CallOption) (*GetPatientAllergiesResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetPatientAllergiesResponse)
-	err := c.cc.Invoke(ctx, PatientService_GetPatientAllergies_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *patientServiceClient) UpdatePatientAllergy(ctx context.Context, in *UpdatePatientAllergyRequest, opts ...grpc.CallOption) (*UpdatePatientAllergyResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdatePatientAllergyResponse)
-	err := c.cc.Invoke(ctx, PatientService_UpdatePatientAllergy_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *patientServiceClient) DeletePatientAllergy(ctx context.Context, in *DeletePatientAllergyRequest, opts ...grpc.CallOption) (*DeletePatientAllergyResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeletePatientAllergyResponse)
-	err := c.cc.Invoke(ctx, PatientService_DeletePatientAllergy_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -402,27 +353,22 @@ type PatientServiceServer interface {
 	UpdatePatient(context.Context, *UpdatePatientRequest) (*UpdatePatientResponse, error)
 	UpdatePatientStatus(context.Context, *UpdatePatientStatusRequest) (*UpdatePatientStatusResponse, error)
 	VerifyPatientBiometric(context.Context, *VerifyPatientBiometricRequest) (*VerifyPatientBiometricResponse, error)
-	// --- 2. ALLERGY ---
-	AddPatientAllergy(context.Context, *AddPatientAllergyRequest) (*AddPatientAllergyResponse, error)
-	GetPatientAllergies(context.Context, *GetPatientAllergiesRequest) (*GetPatientAllergiesResponse, error)
-	UpdatePatientAllergy(context.Context, *UpdatePatientAllergyRequest) (*UpdatePatientAllergyResponse, error)
-	DeletePatientAllergy(context.Context, *DeletePatientAllergyRequest) (*DeletePatientAllergyResponse, error)
-	// --- 3. DOCUMENT ---
+	// --- 2. DOCUMENT ---
 	UploadPatientDocument(context.Context, *UploadPatientDocumentRequest) (*UploadPatientDocumentResponse, error)
 	GetPatientDocuments(context.Context, *GetPatientDocumentsRequest) (*GetPatientDocumentsResponse, error)
 	GetPatientDocumentByID(context.Context, *GetPatientDocumentByIDRequest) (*GetPatientDocumentByIDResponse, error)
 	DeletePatientDocument(context.Context, *DeletePatientDocumentRequest) (*DeletePatientDocumentResponse, error)
-	// --- 4. FAMILY ---
+	// --- 3. FAMILY ---
 	AddPatientFamily(context.Context, *AddPatientFamilyRequest) (*AddPatientFamilyResponse, error)
 	GetPatientFamilies(context.Context, *GetPatientFamiliesRequest) (*GetPatientFamiliesResponse, error)
 	UpdatePatientFamily(context.Context, *UpdatePatientFamilyRequest) (*UpdatePatientFamilyResponse, error)
 	DeletePatientFamily(context.Context, *DeletePatientFamilyRequest) (*DeletePatientFamilyResponse, error)
-	// --- 5. EMERGENCY CONTACT ---
+	// --- 4. EMERGENCY CONTACT ---
 	AddEmergencyContact(context.Context, *AddEmergencyContactRequest) (*AddEmergencyContactResponse, error)
 	GetEmergencyContacts(context.Context, *GetEmergencyContactsRequest) (*GetEmergencyContactsResponse, error)
 	UpdateEmergencyContact(context.Context, *UpdateEmergencyContactRequest) (*UpdateEmergencyContactResponse, error)
 	DeleteEmergencyContact(context.Context, *DeleteEmergencyContactRequest) (*DeleteEmergencyContactResponse, error)
-	// --- 6. INSURANCE ---
+	// --- 5. INSURANCE ---
 	AddPatientInsurance(context.Context, *AddPatientInsuranceRequest) (*AddPatientInsuranceResponse, error)
 	GetPatientInsurances(context.Context, *GetPatientInsurancesRequest) (*GetPatientInsurancesResponse, error)
 	UpdatePatientInsurance(context.Context, *UpdatePatientInsuranceRequest) (*UpdatePatientInsuranceResponse, error)
@@ -461,18 +407,6 @@ func (UnimplementedPatientServiceServer) UpdatePatientStatus(context.Context, *U
 }
 func (UnimplementedPatientServiceServer) VerifyPatientBiometric(context.Context, *VerifyPatientBiometricRequest) (*VerifyPatientBiometricResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method VerifyPatientBiometric not implemented")
-}
-func (UnimplementedPatientServiceServer) AddPatientAllergy(context.Context, *AddPatientAllergyRequest) (*AddPatientAllergyResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method AddPatientAllergy not implemented")
-}
-func (UnimplementedPatientServiceServer) GetPatientAllergies(context.Context, *GetPatientAllergiesRequest) (*GetPatientAllergiesResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetPatientAllergies not implemented")
-}
-func (UnimplementedPatientServiceServer) UpdatePatientAllergy(context.Context, *UpdatePatientAllergyRequest) (*UpdatePatientAllergyResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdatePatientAllergy not implemented")
-}
-func (UnimplementedPatientServiceServer) DeletePatientAllergy(context.Context, *DeletePatientAllergyRequest) (*DeletePatientAllergyResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method DeletePatientAllergy not implemented")
 }
 func (UnimplementedPatientServiceServer) UploadPatientDocument(context.Context, *UploadPatientDocumentRequest) (*UploadPatientDocumentResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UploadPatientDocument not implemented")
@@ -686,78 +620,6 @@ func _PatientService_VerifyPatientBiometric_Handler(srv interface{}, ctx context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PatientServiceServer).VerifyPatientBiometric(ctx, req.(*VerifyPatientBiometricRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PatientService_AddPatientAllergy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddPatientAllergyRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PatientServiceServer).AddPatientAllergy(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PatientService_AddPatientAllergy_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PatientServiceServer).AddPatientAllergy(ctx, req.(*AddPatientAllergyRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PatientService_GetPatientAllergies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetPatientAllergiesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PatientServiceServer).GetPatientAllergies(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PatientService_GetPatientAllergies_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PatientServiceServer).GetPatientAllergies(ctx, req.(*GetPatientAllergiesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PatientService_UpdatePatientAllergy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdatePatientAllergyRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PatientServiceServer).UpdatePatientAllergy(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PatientService_UpdatePatientAllergy_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PatientServiceServer).UpdatePatientAllergy(ctx, req.(*UpdatePatientAllergyRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PatientService_DeletePatientAllergy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeletePatientAllergyRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PatientServiceServer).DeletePatientAllergy(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PatientService_DeletePatientAllergy_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PatientServiceServer).DeletePatientAllergy(ctx, req.(*DeletePatientAllergyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1106,22 +968,6 @@ var PatientService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifyPatientBiometric",
 			Handler:    _PatientService_VerifyPatientBiometric_Handler,
-		},
-		{
-			MethodName: "AddPatientAllergy",
-			Handler:    _PatientService_AddPatientAllergy_Handler,
-		},
-		{
-			MethodName: "GetPatientAllergies",
-			Handler:    _PatientService_GetPatientAllergies_Handler,
-		},
-		{
-			MethodName: "UpdatePatientAllergy",
-			Handler:    _PatientService_UpdatePatientAllergy_Handler,
-		},
-		{
-			MethodName: "DeletePatientAllergy",
-			Handler:    _PatientService_DeletePatientAllergy_Handler,
 		},
 		{
 			MethodName: "UploadPatientDocument",

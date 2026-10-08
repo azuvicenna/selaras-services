@@ -3,7 +3,6 @@ syntax = "proto3";
 package patient.v1;
 
 import "patient/v1/patient.proto";
-import "patient/v1/allergy.proto";
 import "patient/v1/document.proto";
 import "patient/v1/family.proto";
 import "patient/v1/emergency_contact.proto";
@@ -26,31 +25,25 @@ service PatientService {
   rpc UpdatePatientStatus (UpdatePatientStatusRequest) returns (UpdatePatientStatusResponse);
   rpc VerifyPatientBiometric (VerifyPatientBiometricRequest) returns (VerifyPatientBiometricResponse);
 
-  // --- 2. ALLERGY ---
-  rpc AddPatientAllergy (AddPatientAllergyRequest) returns (AddPatientAllergyResponse);
-  rpc GetPatientAllergies (GetPatientAllergiesRequest) returns (GetPatientAllergiesResponse);
-  rpc UpdatePatientAllergy (UpdatePatientAllergyRequest) returns (UpdatePatientAllergyResponse);
-  rpc DeletePatientAllergy (DeletePatientAllergyRequest) returns (DeletePatientAllergyResponse);
-
-  // --- 3. DOCUMENT ---
+  // --- 2. DOCUMENT ---
   rpc UploadPatientDocument (UploadPatientDocumentRequest) returns (UploadPatientDocumentResponse);
   rpc GetPatientDocuments (GetPatientDocumentsRequest) returns (GetPatientDocumentsResponse);
   rpc GetPatientDocumentByID (GetPatientDocumentByIDRequest) returns (GetPatientDocumentByIDResponse);
   rpc DeletePatientDocument (DeletePatientDocumentRequest) returns (DeletePatientDocumentResponse);
 
-  // --- 4. FAMILY ---
+  // --- 3. FAMILY ---
   rpc AddPatientFamily (AddPatientFamilyRequest) returns (AddPatientFamilyResponse);
   rpc GetPatientFamilies (GetPatientFamiliesRequest) returns (GetPatientFamiliesResponse);
   rpc UpdatePatientFamily (UpdatePatientFamilyRequest) returns (UpdatePatientFamilyResponse);
   rpc DeletePatientFamily (DeletePatientFamilyRequest) returns (DeletePatientFamilyResponse);
 
-  // --- 5. EMERGENCY CONTACT ---
+  // --- 4. EMERGENCY CONTACT ---
   rpc AddEmergencyContact (AddEmergencyContactRequest) returns (AddEmergencyContactResponse);
   rpc GetEmergencyContacts (GetEmergencyContactsRequest) returns (GetEmergencyContactsResponse);
   rpc UpdateEmergencyContact (UpdateEmergencyContactRequest) returns (UpdateEmergencyContactResponse);
   rpc DeleteEmergencyContact (DeleteEmergencyContactRequest) returns (DeleteEmergencyContactResponse);
 
-  // --- 6. INSURANCE ---
+  // --- 5. INSURANCE ---
   rpc AddPatientInsurance (AddPatientInsuranceRequest) returns (AddPatientInsuranceResponse);
   rpc GetPatientInsurances (GetPatientInsurancesRequest) returns (GetPatientInsurancesResponse);
   rpc UpdatePatientInsurance (UpdatePatientInsuranceRequest) returns (UpdatePatientInsuranceResponse);
@@ -138,43 +131,7 @@ message VerifyPatientBiometricResponse {
 }
 
 // -----------------------------------------------------------------------------
-// 2. ALLERGY MESSAGES
-// -----------------------------------------------------------------------------
-
-message AddPatientAllergyRequest {
-  PatientAllergy allergy = 1;
-}
-
-message AddPatientAllergyResponse {
-  PatientAllergy allergy = 1;
-}
-
-message GetPatientAllergiesRequest {
-  string patient_id = 1;
-}
-
-message GetPatientAllergiesResponse {
-  repeated PatientAllergy allergies = 1;
-}
-
-message UpdatePatientAllergyRequest {
-  PatientAllergy allergy = 1;
-}
-
-message UpdatePatientAllergyResponse {
-  PatientAllergy allergy = 1;
-}
-
-message DeletePatientAllergyRequest {
-  string id = 1;
-}
-
-message DeletePatientAllergyResponse {
-  bool success = 1;
-}
-
-// -----------------------------------------------------------------------------
-// 3. DOCUMENT MESSAGES
+// 2. DOCUMENT MESSAGES
 // -----------------------------------------------------------------------------
 
 message UploadPatientDocumentRequest {
@@ -213,7 +170,7 @@ message DeletePatientDocumentResponse {
 }
 
 // -----------------------------------------------------------------------------
-// 4. FAMILY MESSAGES
+// 3. FAMILY MESSAGES
 // -----------------------------------------------------------------------------
 
 message AddPatientFamilyRequest {
@@ -249,7 +206,7 @@ message DeletePatientFamilyResponse {
 }
 
 // -----------------------------------------------------------------------------
-// 5. EMERGENCY CONTACT MESSAGES
+// 4. EMERGENCY CONTACT MESSAGES
 // -----------------------------------------------------------------------------
 
 message AddEmergencyContactRequest {
@@ -285,7 +242,7 @@ message DeleteEmergencyContactResponse {
 }
 
 // -----------------------------------------------------------------------------
-// 6. INSURANCE MESSAGES
+// 5. INSURANCE MESSAGES
 // -----------------------------------------------------------------------------
 
 message AddPatientInsuranceRequest {

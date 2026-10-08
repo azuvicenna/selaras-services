@@ -17,7 +17,6 @@ import (
 type PatientHandler struct {
 	patientv1.UnimplementedPatientServiceServer
 	patient   domain.PatientUsecase
-	allergy   domain.AllergyUsecase
 	document  domain.DocumentUsecase
 	family    domain.FamilyUsecase
 	emergency domain.EmergencyContactUsecase
@@ -26,7 +25,6 @@ type PatientHandler struct {
 
 func NewPatientHandler(
 	patient domain.PatientUsecase,
-	allergy domain.AllergyUsecase,
 	document domain.DocumentUsecase,
 	family domain.FamilyUsecase,
 	emergency domain.EmergencyContactUsecase,
@@ -34,7 +32,6 @@ func NewPatientHandler(
 ) *PatientHandler {
 	return &PatientHandler{
 		patient:   patient,
-		allergy:   allergy,
 		document:  document,
 		family:    family,
 		emergency: emergency,

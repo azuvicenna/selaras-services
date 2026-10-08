@@ -30,14 +30,6 @@
       "photoUrl": "https://storage.selaras.id/patients/photos/pat-001.jpg",
       "status": "PATIENT_STATUS_ACTIVE"
     },
-    "allergies": [
-      {
-        "type": "ALLERGY_TYPE_DRUG",
-        "allergen": "Amoxicillin",
-        "severity": "ALLERGY_SEVERITY_MODERATE",
-        "reaction": "Ruam merah dan gatal-gatal pada kulit"
-      }
-    ],
     "documents": [
       {
         "type": "DOCUMENT_TYPE_KTP",
@@ -107,14 +99,6 @@
       "photoUrl": "https://storage.selaras.id/patients/photos/pat-002.jpg",
       "status": "PATIENT_STATUS_ACTIVE"
     },
-    "allergies": [
-      {
-        "type": "ALLERGY_TYPE_FOOD",
-        "allergen": "Udang / Seafood",
-        "severity": "ALLERGY_SEVERITY_SEVERE",
-        "reaction": "Bengkak bibir dan sesak napas ringan"
-      }
-    ],
     "documents": [
       {
         "type": "DOCUMENT_TYPE_KTP",
@@ -179,7 +163,6 @@
       "photoUrl": "https://storage.selaras.id/patients/photos/pat-003.jpg",
       "status": "PATIENT_STATUS_ACTIVE"
     },
-    "allergies": [],
     "documents": [
       {
         "type": "DOCUMENT_TYPE_KTP",
@@ -244,14 +227,6 @@
       "photoUrl": "https://storage.selaras.id/patients/photos/pat-004.jpg",
       "status": "PATIENT_STATUS_ACTIVE"
     },
-    "allergies": [
-      {
-        "type": "ALLERGY_TYPE_ENVIRONMENT",
-        "allergen": "Debu Ruangan / Cold Air",
-        "severity": "ALLERGY_SEVERITY_MILD",
-        "reaction": "Bersin-bersin dan hidung tersumbat"
-      }
-    ],
     "documents": [
       {
         "type": "DOCUMENT_TYPE_KTP",
@@ -316,14 +291,6 @@
       "photoUrl": "https://storage.selaras.id/patients/photos/pat-005.jpg",
       "status": "PATIENT_STATUS_ACTIVE"
     },
-    "allergies": [
-      {
-        "type": "ALLERGY_TYPE_DRUG",
-        "allergen": "NSAID / Aspirin",
-        "severity": "ALLERGY_SEVERITY_MODERATE",
-        "reaction": "Nyeri ulu hati berat dan mual"
-      }
-    ],
     "documents": [
       {
         "type": "DOCUMENT_TYPE_KTP",
