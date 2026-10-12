@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package master.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/master-service/gen/master/v1;masterv1";
+
+message HospitalProfile {
+  string id = 1;
+  string name = 2;
+  string bpjs_facility_code = 3;
+  string kemenkes_facility_code = 4;
+  string tax_identification_number = 5;
+  string address = 6;
+  string contact_email = 7;
+  string contact_phone = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+}

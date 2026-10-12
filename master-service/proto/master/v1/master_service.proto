@@ -1,0 +1,447 @@
+syntax = "proto3";
+
+package master.v1;
+
+import "master/v1/icd.proto";
+import "master/v1/region.proto";
+import "master/v1/department.proto";
+import "master/v1/hospital_profile.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/master-service/gen/master/v1;masterv1";
+
+// =============================================================================
+// SERVICE DEFINITION
+// =============================================================================
+
+service MasterService {
+  // --- 1. ICD-9CM ---
+  rpc CreateICD9CM (CreateICD9CMRequest) returns (CreateICD9CMResponse);
+  rpc GetICD9CMByID (GetICD9CMByIDRequest) returns (GetICD9CMByIDResponse);
+  rpc GetICD9CMByCode (GetICD9CMByCodeRequest) returns (GetICD9CMByCodeResponse);
+  rpc ListICD9CM (ListICD9CMRequest) returns (ListICD9CMResponse);
+  rpc UpdateICD9CM (UpdateICD9CMRequest) returns (UpdateICD9CMResponse);
+  rpc DeleteICD9CM (DeleteICD9CMRequest) returns (DeleteICD9CMResponse);
+
+  // --- 2. ICD-10 ---
+  rpc CreateICD10 (CreateICD10Request) returns (CreateICD10Response);
+  rpc GetICD10ByID (GetICD10ByIDRequest) returns (GetICD10ByIDResponse);
+  rpc GetICD10ByCode (GetICD10ByCodeRequest) returns (GetICD10ByCodeResponse);
+  rpc ListICD10 (ListICD10Request) returns (ListICD10Response);
+  rpc UpdateICD10 (UpdateICD10Request) returns (UpdateICD10Response);
+  rpc DeleteICD10 (DeleteICD10Request) returns (DeleteICD10Response);
+
+  // --- 3. PROVINCE ---
+  rpc CreateProvince (CreateProvinceRequest) returns (CreateProvinceResponse);
+  rpc GetProvinceByCode (GetProvinceByCodeRequest) returns (GetProvinceByCodeResponse);
+  rpc ListProvinces (ListProvincesRequest) returns (ListProvincesResponse);
+  rpc UpdateProvince (UpdateProvinceRequest) returns (UpdateProvinceResponse);
+  rpc DeleteProvince (DeleteProvinceRequest) returns (DeleteProvinceResponse);
+
+  // --- 4. CITY ---
+  rpc CreateCity (CreateCityRequest) returns (CreateCityResponse);
+  rpc GetCityByCode (GetCityByCodeRequest) returns (GetCityByCodeResponse);
+  rpc ListCities (ListCitiesRequest) returns (ListCitiesResponse);
+  rpc UpdateCity (UpdateCityRequest) returns (UpdateCityResponse);
+  rpc DeleteCity (DeleteCityRequest) returns (DeleteCityResponse);
+
+  // --- 5. DISTRICT ---
+  rpc CreateDistrict (CreateDistrictRequest) returns (CreateDistrictResponse);
+  rpc GetDistrictByCode (GetDistrictByCodeRequest) returns (GetDistrictByCodeResponse);
+  rpc ListDistricts (ListDistrictsRequest) returns (ListDistrictsResponse);
+  rpc UpdateDistrict (UpdateDistrictRequest) returns (UpdateDistrictResponse);
+  rpc DeleteDistrict (DeleteDistrictRequest) returns (DeleteDistrictResponse);
+
+  // --- 6. VILLAGE ---
+  rpc CreateVillage (CreateVillageRequest) returns (CreateVillageResponse);
+  rpc GetVillageByCode (GetVillageByCodeRequest) returns (GetVillageByCodeResponse);
+  rpc ListVillages (ListVillagesRequest) returns (ListVillagesResponse);
+  rpc UpdateVillage (UpdateVillageRequest) returns (UpdateVillageResponse);
+  rpc DeleteVillage (DeleteVillageRequest) returns (DeleteVillageResponse);
+
+  // --- 7. DEPARTMENT ---
+  rpc CreateDepartment (CreateDepartmentRequest) returns (CreateDepartmentResponse);
+  rpc GetDepartmentByID (GetDepartmentByIDRequest) returns (GetDepartmentByIDResponse);
+  rpc GetDepartmentByCode (GetDepartmentByCodeRequest) returns (GetDepartmentByCodeResponse);
+  rpc ListDepartments (ListDepartmentsRequest) returns (ListDepartmentsResponse);
+  rpc UpdateDepartment (UpdateDepartmentRequest) returns (UpdateDepartmentResponse);
+  rpc DeleteDepartment (DeleteDepartmentRequest) returns (DeleteDepartmentResponse);
+
+  // --- 8. HOSPITAL PROFILE ---
+  rpc GetHospitalProfile (GetHospitalProfileRequest) returns (GetHospitalProfileResponse);
+  rpc UpsertHospitalProfile (UpsertHospitalProfileRequest) returns (UpsertHospitalProfileResponse);
+  rpc UpdateHospitalProfile (UpdateHospitalProfileRequest) returns (UpdateHospitalProfileResponse);
+}
+
+// =============================================================================
+// REQUEST & RESPONSE MESSAGES
+// =============================================================================
+
+// --- 1. ICD-9CM MESSAGES ---
+message CreateICD9CMRequest {
+  ICD9CM icd9cm = 1;
+}
+
+message CreateICD9CMResponse {
+  ICD9CM icd9cm = 1;
+}
+
+message GetICD9CMByIDRequest {
+  string id = 1;
+}
+
+message GetICD9CMByIDResponse {
+  ICD9CM icd9cm = 1;
+}
+
+message GetICD9CMByCodeRequest {
+  string code = 1;
+}
+
+message GetICD9CMByCodeResponse {
+  ICD9CM icd9cm = 1;
+}
+
+message ListICD9CMRequest {
+  string query = 1;
+  optional bool is_active = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+}
+
+message ListICD9CMResponse {
+  repeated ICD9CM items = 1;
+  int64 total_count = 2;
+}
+
+message UpdateICD9CMRequest {
+  ICD9CM icd9cm = 1;
+}
+
+message UpdateICD9CMResponse {
+  ICD9CM icd9cm = 1;
+}
+
+message DeleteICD9CMRequest {
+  string id = 1;
+}
+
+message DeleteICD9CMResponse {
+  bool success = 1;
+}
+
+// --- 2. ICD-10 MESSAGES ---
+message CreateICD10Request {
+  ICD10 icd10 = 1;
+}
+
+message CreateICD10Response {
+  ICD10 icd10 = 1;
+}
+
+message GetICD10ByIDRequest {
+  string id = 1;
+}
+
+message GetICD10ByIDResponse {
+  ICD10 icd10 = 1;
+}
+
+message GetICD10ByCodeRequest {
+  string code = 1;
+}
+
+message GetICD10ByCodeResponse {
+  ICD10 icd10 = 1;
+}
+
+message ListICD10Request {
+  string query = 1;
+  string category = 2;
+  optional bool is_active = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message ListICD10Response {
+  repeated ICD10 items = 1;
+  int64 total_count = 2;
+}
+
+message UpdateICD10Request {
+  ICD10 icd10 = 1;
+}
+
+message UpdateICD10Response {
+  ICD10 icd10 = 1;
+}
+
+message DeleteICD10Request {
+  string id = 1;
+}
+
+message DeleteICD10Response {
+  bool success = 1;
+}
+
+// --- 3. PROVINCE MESSAGES ---
+message CreateProvinceRequest {
+  Province province = 1;
+}
+
+message CreateProvinceResponse {
+  Province province = 1;
+}
+
+message GetProvinceByCodeRequest {
+  string code = 1;
+}
+
+message GetProvinceByCodeResponse {
+  Province province = 1;
+}
+
+message ListProvincesRequest {
+  string query = 1;
+  optional bool is_active = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+}
+
+message ListProvincesResponse {
+  repeated Province items = 1;
+  int64 total_count = 2;
+}
+
+message UpdateProvinceRequest {
+  Province province = 1;
+}
+
+message UpdateProvinceResponse {
+  Province province = 1;
+}
+
+message DeleteProvinceRequest {
+  string code = 1;
+}
+
+message DeleteProvinceResponse {
+  bool success = 1;
+}
+
+// --- 4. CITY MESSAGES ---
+message CreateCityRequest {
+  City city = 1;
+}
+
+message CreateCityResponse {
+  City city = 1;
+}
+
+message GetCityByCodeRequest {
+  string code = 1;
+}
+
+message GetCityByCodeResponse {
+  City city = 1;
+}
+
+message ListCitiesRequest {
+  string province_code = 1;
+  string query = 2;
+  optional bool is_active = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message ListCitiesResponse {
+  repeated City items = 1;
+  int64 total_count = 2;
+}
+
+message UpdateCityRequest {
+  City city = 1;
+}
+
+message UpdateCityResponse {
+  City city = 1;
+}
+
+message DeleteCityRequest {
+  string code = 1;
+}
+
+message DeleteCityResponse {
+  bool success = 1;
+}
+
+// --- 5. DISTRICT MESSAGES ---
+message CreateDistrictRequest {
+  District district = 1;
+}
+
+message CreateDistrictResponse {
+  District district = 1;
+}
+
+message GetDistrictByCodeRequest {
+  string code = 1;
+}
+
+message GetDistrictByCodeResponse {
+  District district = 1;
+}
+
+message ListDistrictsRequest {
+  string city_code = 1;
+  string query = 2;
+  optional bool is_active = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message ListDistrictsResponse {
+  repeated District items = 1;
+  int64 total_count = 2;
+}
+
+message UpdateDistrictRequest {
+  District district = 1;
+}
+
+message UpdateDistrictResponse {
+  District district = 1;
+}
+
+message DeleteDistrictRequest {
+  string code = 1;
+}
+
+message DeleteDistrictResponse {
+  bool success = 1;
+}
+
+// --- 6. VILLAGE MESSAGES ---
+message CreateVillageRequest {
+  Village village = 1;
+}
+
+message CreateVillageResponse {
+  Village village = 1;
+}
+
+message GetVillageByCodeRequest {
+  string code = 1;
+}
+
+message GetVillageByCodeResponse {
+  Village village = 1;
+}
+
+message ListVillagesRequest {
+  string district_code = 1;
+  string query = 2;
+  string postal_code = 3;
+  optional bool is_active = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+message ListVillagesResponse {
+  repeated Village items = 1;
+  int64 total_count = 2;
+}
+
+message UpdateVillageRequest {
+  Village village = 1;
+}
+
+message UpdateVillageResponse {
+  Village village = 1;
+}
+
+message DeleteVillageRequest {
+  string code = 1;
+}
+
+message DeleteVillageResponse {
+  bool success = 1;
+}
+
+// --- 7. DEPARTMENT MESSAGES ---
+message CreateDepartmentRequest {
+  Department department = 1;
+}
+
+message CreateDepartmentResponse {
+  Department department = 1;
+}
+
+message GetDepartmentByIDRequest {
+  string id = 1;
+}
+
+message GetDepartmentByIDResponse {
+  Department department = 1;
+}
+
+message GetDepartmentByCodeRequest {
+  string code = 1;
+}
+
+message GetDepartmentByCodeResponse {
+  Department department = 1;
+}
+
+message ListDepartmentsRequest {
+  string query = 1;
+  DepartmentType department_type = 2;
+  optional bool is_active = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message ListDepartmentsResponse {
+  repeated Department items = 1;
+  int64 total_count = 2;
+}
+
+message UpdateDepartmentRequest {
+  Department department = 1;
+}
+
+message UpdateDepartmentResponse {
+  Department department = 1;
+}
+
+message DeleteDepartmentRequest {
+  string id = 1;
+}
+
+message DeleteDepartmentResponse {
+  bool success = 1;
+}
+
+// --- 8. HOSPITAL PROFILE MESSAGES ---
+message GetHospitalProfileRequest {
+  string id = 1;
+}
+
+message GetHospitalProfileResponse {
+  HospitalProfile hospital_profile = 1;
+}
+
+message UpsertHospitalProfileRequest {
+  HospitalProfile hospital_profile = 1;
+}
+
+message UpsertHospitalProfileResponse {
+  HospitalProfile hospital_profile = 1;
+}
+
+message UpdateHospitalProfileRequest {
+  HospitalProfile hospital_profile = 1;
+}
+
+message UpdateHospitalProfileResponse {
+  HospitalProfile hospital_profile = 1;
+}

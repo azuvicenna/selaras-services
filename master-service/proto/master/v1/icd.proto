@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package master.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/master-service/gen/master/v1;masterv1";
+
+message ICD9CM {
+  string id = 1;
+  string code = 2;
+  string description = 3;
+  bool is_active = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message ICD10 {
+  string id = 1;
+  string code = 2;
+  string description_id = 3;
+  string description_en = 4;
+  string category = 5;
+  bool is_active = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}

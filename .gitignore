@@ -4,6 +4,8 @@
 # build output
 bin/
 *.exe
+coverage
+coverage/
 coverage.out
 
 # OS

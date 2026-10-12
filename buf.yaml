@@ -2,6 +2,7 @@ version: v2
 modules:
   - path: patient-service/proto
   - path: emr-service/proto
+  - path: master-service/proto
 lint:
   use:
     - STANDARD

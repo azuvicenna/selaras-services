@@ -2,5 +2,6 @@ go 1.26.6
 
 use (
 	./emr-service
+	./master-service
 	./patient-service
 )

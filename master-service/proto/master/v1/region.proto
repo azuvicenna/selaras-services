@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package master.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/master-service/gen/master/v1;masterv1";
+
+message Province {
+  string code = 1;
+  string name = 2;
+  bool is_active = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message City {
+  string code = 1;
+  string province_code = 2;
+  string name = 3;
+  bool is_active = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message District {
+  string code = 1;
+  string city_code = 2;
+  string name = 3;
+  bool is_active = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message Village {
+  string code = 1;
+  string district_code = 2;
+  string name = 3;
+  string postal_code = 4;
+  bool is_active = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}

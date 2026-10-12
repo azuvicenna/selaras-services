@@ -1,0 +1,4 @@
+DROP TABLE IF EXISTS villages;
+DROP TABLE IF EXISTS districts;
+DROP TABLE IF EXISTS cities;
+DROP TABLE IF EXISTS provinces;
