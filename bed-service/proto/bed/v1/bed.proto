@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package bed.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/bed-service/gen/bed/v1;bedv1";
+
+enum BedStatus {
+  BED_STATUS_UNSPECIFIED = 0;
+  BED_STATUS_AVAILABLE = 1;
+  BED_STATUS_OCCUPIED = 2;
+  BED_STATUS_RESERVED = 3;
+  BED_STATUS_CLEANING = 4;
+  BED_STATUS_MAINTENANCE = 5;
+  BED_STATUS_ISOLATION = 6;
+}
+
+message WardClass {
+  string id = 1;
+  string code = 2;
+  string name = 3;
+  string bpjs_equivalent_class = 4;
+  bool is_active = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+message Ward {
+  string id = 1;
+  string code = 2;
+  string name = 3;
+  string department_id = 4;
+  string ward_class_id = 5;
+  int32 floor = 6;
+  int32 capacity = 7;
+  bool is_active = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+}
+
+message Bed {
+  string id = 1;
+  string code = 2;
+  string ward_id = 3;
+  BedStatus status = 4;
+  bool is_active = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+message BedSummaryItem {
+  string ward_class_id = 1;
+  string ward_class_name = 2;
+  string ward_class_code = 3;
+  int32 total_beds = 4;
+  int32 available_beds = 5;
+  int32 occupied_beds = 6;
+  int32 reserved_beds = 7;
+  int32 cleaning_beds = 8;
+  int32 maintenance_beds = 9;
+  int32 isolation_beds = 10;
+}

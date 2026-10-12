@@ -1,0 +1,156 @@
+{
+  "ward_classes": [
+    {
+      "code": "VVIP",
+      "name": "Super VVIP",
+      "bpjs_equivalent_class": "VIP",
+      "is_active": true
+    },
+    {
+      "code": "VIP",
+      "name": "VIP Standard",
+      "bpjs_equivalent_class": "VIP",
+      "is_active": true
+    },
+    {
+      "code": "KL1",
+      "name": "Kelas 1",
+      "bpjs_equivalent_class": "KELAS_1",
+      "is_active": true
+    },
+    {
+      "code": "KL2",
+      "name": "Kelas 2",
+      "bpjs_equivalent_class": "KELAS_2",
+      "is_active": true
+    },
+    {
+      "code": "KL3",
+      "name": "Kelas 3",
+      "bpjs_equivalent_class": "KELAS_3",
+      "is_active": true
+    },
+    {
+      "code": "ICU",
+      "name": "Intensive Care Unit (ICU)",
+      "bpjs_equivalent_class": "ICU",
+      "is_active": true
+    },
+    {
+      "code": "ISOLASI",
+      "name": "Ruang Isolasi Infeksius",
+      "bpjs_equivalent_class": "ISOLASI",
+      "is_active": true
+    }
+  ],
+  "wards": [
+    {
+      "code": "MAWAR-01",
+      "name": "Kamar Mawar 101",
+      "ward_class_code": "VIP",
+      "floor": 2,
+      "capacity": 1,
+      "is_active": true
+    },
+    {
+      "code": "MELATI-01",
+      "name": "Kamar Melati 201",
+      "ward_class_code": "KL1",
+      "floor": 3,
+      "capacity": 2,
+      "is_active": true
+    },
+    {
+      "code": "ANGGREK-01",
+      "name": "Kamar Anggrek 301",
+      "ward_class_code": "KL2",
+      "floor": 4,
+      "capacity": 4,
+      "is_active": true
+    },
+    {
+      "code": "TERATAI-01",
+      "name": "Kamar Teratai 401",
+      "ward_class_code": "KL3",
+      "floor": 5,
+      "capacity": 6,
+      "is_active": true
+    },
+    {
+      "code": "ICU-01",
+      "name": "Ruang ICU Bed 1-4",
+      "ward_class_code": "ICU",
+      "floor": 2,
+      "capacity": 4,
+      "is_active": true
+    }
+  ],
+  "beds": [
+    {
+      "code": "MWR-101-A",
+      "ward_code": "MAWAR-01",
+      "status": 1,
+      "is_active": true
+    },
+    {
+      "code": "MLT-201-A",
+      "ward_code": "MELATI-01",
+      "status": 2,
+      "is_active": true
+    },
+    {
+      "code": "MLT-201-B",
+      "ward_code": "MELATI-01",
+      "status": 1,
+      "is_active": true
+    },
+    {
+      "code": "AGG-301-A",
+      "ward_code": "ANGGREK-01",
+      "status": 2,
+      "is_active": true
+    },
+    {
+      "code": "AGG-301-B",
+      "ward_code": "ANGGREK-01",
+      "status": 1,
+      "is_active": true
+    },
+    {
+      "code": "AGG-301-C",
+      "ward_code": "ANGGREK-01",
+      "status": 4,
+      "is_active": true
+    },
+    {
+      "code": "AGG-301-D",
+      "ward_code": "ANGGREK-01",
+      "status": 1,
+      "is_active": true
+    },
+    {
+      "code": "TRT-401-A",
+      "ward_code": "TERATAI-01",
+      "status": 2,
+      "is_active": true
+    },
+    {
+      "code": "TRT-401-B",
+      "ward_code": "TERATAI-01",
+      "status": 1,
+      "is_active": true
+    },
+    {
+      "code": "ICU-01-A",
+      "ward_code": "ICU-01",
+      "status": 2,
+      "is_active": true
+    },
+    {
+      "code": "ICU-01-B",
+      "ward_code": "ICU-01",
+      "status": 1,
+      "is_active": true
+    }
+  ]
+}

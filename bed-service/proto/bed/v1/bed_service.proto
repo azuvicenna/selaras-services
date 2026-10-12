@@ -1,0 +1,232 @@
+syntax = "proto3";
+
+package bed.v1;
+
+import "bed/v1/bed.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/bed-service/gen/bed/v1;bedv1";
+
+// =============================================================================
+// SERVICE DEFINITION
+// =============================================================================
+
+service BedService {
+  // --- 1. WARD CLASS ---
+  rpc CreateWardClass (CreateWardClassRequest) returns (CreateWardClassResponse);
+  rpc GetWardClassByID (GetWardClassByIDRequest) returns (GetWardClassByIDResponse);
+  rpc GetWardClassByCode (GetWardClassByCodeRequest) returns (GetWardClassByCodeResponse);
+  rpc ListWardClasses (ListWardClassesRequest) returns (ListWardClassesResponse);
+  rpc UpdateWardClass (UpdateWardClassRequest) returns (UpdateWardClassResponse);
+  rpc DeleteWardClass (DeleteWardClassRequest) returns (DeleteWardClassResponse);
+
+  // --- 2. WARD ---
+  rpc CreateWard (CreateWardRequest) returns (CreateWardResponse);
+  rpc GetWardByID (GetWardByIDRequest) returns (GetWardByIDResponse);
+  rpc GetWardByCode (GetWardByCodeRequest) returns (GetWardByCodeResponse);
+  rpc ListWards (ListWardsRequest) returns (ListWardsResponse);
+  rpc UpdateWard (UpdateWardRequest) returns (UpdateWardResponse);
+  rpc DeleteWard (DeleteWardRequest) returns (DeleteWardResponse);
+
+  // --- 3. BED CORE & OPERATIONS ---
+  rpc CreateBed (CreateBedRequest) returns (CreateBedResponse);
+  rpc GetBedByID (GetBedByIDRequest) returns (GetBedByIDResponse);
+  rpc GetBedByCode (GetBedByCodeRequest) returns (GetBedByCodeResponse);
+  rpc ListBeds (ListBedsRequest) returns (ListBedsResponse);
+  rpc UpdateBed (UpdateBedRequest) returns (UpdateBedResponse);
+  rpc DeleteBed (DeleteBedRequest) returns (DeleteBedResponse);
+  rpc UpdateBedStatus (UpdateBedStatusRequest) returns (UpdateBedStatusResponse);
+  rpc GetBedSummary (GetBedSummaryRequest) returns (GetBedSummaryResponse);
+}
+
+// =============================================================================
+// REQUEST & RESPONSE MESSAGES
+// =============================================================================
+
+// --- 1. WARD CLASS MESSAGES ---
+message CreateWardClassRequest {
+  WardClass ward_class = 1;
+}
+
+message CreateWardClassResponse {
+  WardClass ward_class = 1;
+}
+
+message GetWardClassByIDRequest {
+  string id = 1;
+}
+
+message GetWardClassByIDResponse {
+  WardClass ward_class = 1;
+}
+
+message GetWardClassByCodeRequest {
+  string code = 1;
+}
+
+message GetWardClassByCodeResponse {
+  WardClass ward_class = 1;
+}
+
+message ListWardClassesRequest {
+  string query = 1;
+  optional bool is_active = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+}
+
+message ListWardClassesResponse {
+  repeated WardClass items = 1;
+  int64 total_count = 2;
+}
+
+message UpdateWardClassRequest {
+  WardClass ward_class = 1;
+}
+
+message UpdateWardClassResponse {
+  WardClass ward_class = 1;
+}
+
+message DeleteWardClassRequest {
+  string id = 1;
+}
+
+message DeleteWardClassResponse {
+  bool success = 1;
+}
+
+// --- 2. WARD MESSAGES ---
+message CreateWardRequest {
+  Ward ward = 1;
+}
+
+message CreateWardResponse {
+  Ward ward = 1;
+}
+
+message GetWardByIDRequest {
+  string id = 1;
+}
+
+message GetWardByIDResponse {
+  Ward ward = 1;
+}
+
+message GetWardByCodeRequest {
+  string code = 1;
+}
+
+message GetWardByCodeResponse {
+  Ward ward = 1;
+}
+
+message ListWardsRequest {
+  string query = 1;
+  string ward_class_id = 2;
+  string department_id = 3;
+  optional int32 floor = 4;
+  optional bool is_active = 5;
+  int32 limit = 6;
+  int32 offset = 7;
+}
+
+message ListWardsResponse {
+  repeated Ward items = 1;
+  int64 total_count = 2;
+}
+
+message UpdateWardRequest {
+  Ward ward = 1;
+}
+
+message UpdateWardResponse {
+  Ward ward = 1;
+}
+
+message DeleteWardRequest {
+  string id = 1;
+}
+
+message DeleteWardResponse {
+  bool success = 1;
+}
+
+// --- 3. BED MESSAGES ---
+message CreateBedRequest {
+  Bed bed = 1;
+}
+
+message CreateBedResponse {
+  Bed bed = 1;
+}
+
+message GetBedByIDRequest {
+  string id = 1;
+}
+
+message GetBedByIDResponse {
+  Bed bed = 1;
+}
+
+message GetBedByCodeRequest {
+  string ward_id = 1;
+  string code = 2;
+}
+
+message GetBedByCodeResponse {
+  Bed bed = 1;
+}
+
+message ListBedsRequest {
+  string query = 1;
+  string ward_id = 2;
+  BedStatus status = 3;
+  optional bool is_active = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+message ListBedsResponse {
+  repeated Bed items = 1;
+  int64 total_count = 2;
+}
+
+message UpdateBedRequest {
+  Bed bed = 1;
+}
+
+message UpdateBedResponse {
+  Bed bed = 1;
+}
+
+message DeleteBedRequest {
+  string id = 1;
+}
+
+message DeleteBedResponse {
+  bool success = 1;
+}
+
+message UpdateBedStatusRequest {
+  string id = 1;
+  BedStatus status = 2;
+}
+
+message UpdateBedStatusResponse {
+  bool success = 1;
+}
+
+message GetBedSummaryRequest {
+  string ward_class_id = 1;
+}
+
+message GetBedSummaryResponse {
+  repeated BedSummaryItem items = 1;
+  int32 total_beds = 2;
+  int32 available_beds = 3;
+  int32 occupied_beds = 4;
+  int32 reserved_beds = 5;
+  int32 cleaning_beds = 6;
+  int32 maintenance_beds = 7;
+  int32 isolation_beds = 8;
+}

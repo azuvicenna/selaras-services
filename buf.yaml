@@ -3,6 +3,7 @@ modules:
   - path: patient-service/proto
   - path: emr-service/proto
   - path: master-service/proto
+  - path: bed-service/proto
 lint:
   use:
     - STANDARD
