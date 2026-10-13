@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package admission.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/admission-service/gen/admission/v1;admissionv1";
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+enum DayOfWeek {
+  DAY_OF_WEEK_UNSPECIFIED = 0;
+  DAY_OF_WEEK_MONDAY = 1;
+  DAY_OF_WEEK_TUESDAY = 2;
+  DAY_OF_WEEK_WEDNESDAY = 3;
+  DAY_OF_WEEK_THURSDAY = 4;
+  DAY_OF_WEEK_FRIDAY = 5;
+  DAY_OF_WEEK_SATURDAY = 6;
+  DAY_OF_WEEK_SUNDAY = 7;
+}
+
+// =============================================================================
+// DOMAIN MODEL
+// =============================================================================
+
+message Schedule {
+  string id = 1;
+  string practitioner_id = 2;
+  string department_id = 3;
+  DayOfWeek day_of_week = 4;
+  string start_time = 5;
+  string end_time = 6;
+  int32 quota = 7;
+  bool is_active = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+}

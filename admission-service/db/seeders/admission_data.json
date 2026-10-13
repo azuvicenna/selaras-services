@@ -1,0 +1,73 @@
+{
+  "schedules": [
+    {
+      "practitioner_id": "01J9B1X2K3M4N5P6Q7R8S9T0U1",
+      "department_id": "01J9B2Y3Z4A5B6C7D8E9F0G1H2",
+      "day_of_week": 1,
+      "start_time": "08:00",
+      "end_time": "12:00",
+      "quota": 20,
+      "is_active": true
+    },
+    {
+      "practitioner_id": "01J9B1X2K3M4N5P6Q7R8S9T0U1",
+      "department_id": "01J9B2Y3Z4A5B6C7D8E9F0G1H2",
+      "day_of_week": 3,
+      "start_time": "13:00",
+      "end_time": "16:00",
+      "quota": 15,
+      "is_active": true
+    },
+    {
+      "practitioner_id": "01J9B3C4D5E6F7G8H9I0J1K2L3",
+      "department_id": "01J9B4M5N6P7Q8R9S0T1U2V3W4",
+      "day_of_week": 2,
+      "start_time": "09:00",
+      "end_time": "13:00",
+      "quota": 25,
+      "is_active": true
+    }
+  ],
+  "appointments": [
+    {
+      "booking_code": "APT-20261014-0001",
+      "patient_id": "01J9A01B2C3D4E5F6G7H8J9K0L",
+      "practitioner_id": "01J9B1X2K3M4N5P6Q7R8S9T0U1",
+      "department_id": "01J9B2Y3Z4A5B6C7D8E9F0G1H2",
+      "appointment_date": "2026-10-14",
+      "queue_number": 1,
+      "status": 1,
+      "notes": "Kontrol rutin tekanan darah"
+    },
+    {
+      "booking_code": "APT-20261014-0002",
+      "patient_id": "01J9A11B2C3D4E5F6G7H8J9K0M",
+      "practitioner_id": "01J9B1X2K3M4N5P6Q7R8S9T0U1",
+      "department_id": "01J9B2Y3Z4A5B6C7D8E9F0G1H2",
+      "appointment_date": "2026-10-14",
+      "queue_number": 2,
+      "status": 2,
+      "notes": "Keluhan pusing berputar"
+    }
+  ],
+  "admissions": [
+    {
+      "admission_number": "ADM-20261014-0001",
+      "patient_id": "01J9A01B2C3D4E5F6G7H8J9K0L",
+      "admission_type": 1,
+      "status": 1,
+      "department_id": "01J9B2Y3Z4A5B6C7D8E9F0G1H2",
+      "practitioner_id": "01J9B1X2K3M4N5P6Q7R8S9T0U1",
+      "notes": "Pendaftaran poli rawat jalan penyakit dalam"
+    },
+    {
+      "admission_number": "ADM-20261014-0002",
+      "patient_id": "01J9A22B2C3D4E5F6G7H8J9K0N",
+      "admission_type": 3,
+      "status": 2,
+      "department_id": "01J9B4M5N6P7Q8R9S0T1U2V3W4",
+      "practitioner_id": "01J9B3C4D5E6F7G8H9I0J1K2L3",
+      "notes": "Pasien IGD kecelakaan lalu lintas ringan"
+    }
+  ]
+}

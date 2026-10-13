@@ -4,6 +4,7 @@ modules:
   - path: emr-service/proto
   - path: master-service/proto
   - path: bed-service/proto
+  - path: admission-service/proto
 lint:
   use:
     - STANDARD

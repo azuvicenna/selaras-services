@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package admission.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/admission-service/gen/admission/v1;admissionv1";
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+enum AppointmentStatus {
+  APPOINTMENT_STATUS_UNSPECIFIED = 0;
+  APPOINTMENT_STATUS_BOOKED = 1;
+  APPOINTMENT_STATUS_CONFIRMED = 2;
+  APPOINTMENT_STATUS_CHECKED_IN = 3;
+  APPOINTMENT_STATUS_CANCELLED = 4;
+  APPOINTMENT_STATUS_COMPLETED = 5;
+}
+
+// =============================================================================
+// DOMAIN MODEL
+// =============================================================================
+
+message Appointment {
+  string id = 1;
+  string booking_code = 2;
+  string patient_id = 3;
+  string practitioner_id = 4;
+  string department_id = 5;
+  string schedule_id = 6;
+  string appointment_date = 7;
+  int32 queue_number = 8;
+  AppointmentStatus status = 9;
+  string notes = 10;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
+}

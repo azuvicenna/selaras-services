@@ -1,0 +1,233 @@
+syntax = "proto3";
+
+package admission.v1;
+
+import "admission/v1/admission.proto";
+import "admission/v1/appointment.proto";
+import "admission/v1/schedule.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/admission-service/gen/admission/v1;admissionv1";
+
+// =============================================================================
+// SERVICE DEFINITION
+// =============================================================================
+
+service AdmissionService {
+  // --- 1. SCHEDULE (JADWAL PRAKTIK & KUOTA DOKTER) ---
+  rpc CreateSchedule (CreateScheduleRequest) returns (CreateScheduleResponse);
+  rpc GetScheduleByID (GetScheduleByIDRequest) returns (GetScheduleByIDResponse);
+  rpc ListSchedules (ListSchedulesRequest) returns (ListSchedulesResponse);
+  rpc UpdateSchedule (UpdateScheduleRequest) returns (UpdateScheduleResponse);
+  rpc DeleteSchedule (DeleteScheduleRequest) returns (DeleteScheduleResponse);
+
+  // --- 2. APPOINTMENT (JANJI TEMU / BOOKING) ---
+  rpc CreateAppointment (CreateAppointmentRequest) returns (CreateAppointmentResponse);
+  rpc GetAppointmentByID (GetAppointmentByIDRequest) returns (GetAppointmentByIDResponse);
+  rpc GetAppointmentByCode (GetAppointmentByCodeRequest) returns (GetAppointmentByCodeResponse);
+  rpc ListAppointments (ListAppointmentsRequest) returns (ListAppointmentsResponse);
+  rpc UpdateAppointment (UpdateAppointmentRequest) returns (UpdateAppointmentResponse);
+  rpc UpdateAppointmentStatus (UpdateAppointmentStatusRequest) returns (UpdateAppointmentStatusResponse);
+  rpc DeleteAppointment (DeleteAppointmentRequest) returns (DeleteAppointmentResponse);
+
+  // --- 3. ADMISSION (PENDAFTARAN / ADMISI PASIEN) ---
+  rpc CreateAdmission (CreateAdmissionRequest) returns (CreateAdmissionResponse);
+  rpc GetAdmissionByID (GetAdmissionByIDRequest) returns (GetAdmissionByIDResponse);
+  rpc GetAdmissionByNumber (GetAdmissionByNumberRequest) returns (GetAdmissionByNumberResponse);
+  rpc ListAdmissions (ListAdmissionsRequest) returns (ListAdmissionsResponse);
+  rpc UpdateAdmission (UpdateAdmissionRequest) returns (UpdateAdmissionResponse);
+  rpc UpdateAdmissionStatus (UpdateAdmissionStatusRequest) returns (UpdateAdmissionStatusResponse);
+  rpc DeleteAdmission (DeleteAdmissionRequest) returns (DeleteAdmissionResponse);
+}
+
+// =============================================================================
+// REQUEST & RESPONSE MESSAGES
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// 1. SCHEDULE MESSAGES
+// -----------------------------------------------------------------------------
+
+message CreateScheduleRequest {
+  Schedule schedule = 1;
+}
+
+message CreateScheduleResponse {
+  Schedule schedule = 1;
+}
+
+message GetScheduleByIDRequest {
+  string id = 1;
+}
+
+message GetScheduleByIDResponse {
+  Schedule schedule = 1;
+}
+
+message ListSchedulesRequest {
+  string practitioner_id = 1;
+  string department_id = 2;
+  DayOfWeek day_of_week = 3;
+  optional bool is_active = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+message ListSchedulesResponse {
+  repeated Schedule items = 1;
+  int64 total_count = 2;
+}
+
+message UpdateScheduleRequest {
+  Schedule schedule = 1;
+}
+
+message UpdateScheduleResponse {
+  Schedule schedule = 1;
+}
+
+message DeleteScheduleRequest {
+  string id = 1;
+}
+
+message DeleteScheduleResponse {
+  bool success = 1;
+}
+
+// -----------------------------------------------------------------------------
+// 2. APPOINTMENT MESSAGES
+// -----------------------------------------------------------------------------
+
+message CreateAppointmentRequest {
+  Appointment appointment = 1;
+}
+
+message CreateAppointmentResponse {
+  Appointment appointment = 1;
+}
+
+message GetAppointmentByIDRequest {
+  string id = 1;
+}
+
+message GetAppointmentByIDResponse {
+  Appointment appointment = 1;
+}
+
+message GetAppointmentByCodeRequest {
+  string booking_code = 1;
+}
+
+message GetAppointmentByCodeResponse {
+  Appointment appointment = 1;
+}
+
+message ListAppointmentsRequest {
+  string patient_id = 1;
+  string practitioner_id = 2;
+  string department_id = 3;
+  string appointment_date = 4;
+  AppointmentStatus status = 5;
+  int32 limit = 6;
+  int32 offset = 7;
+}
+
+message ListAppointmentsResponse {
+  repeated Appointment items = 1;
+  int64 total_count = 2;
+}
+
+message UpdateAppointmentRequest {
+  Appointment appointment = 1;
+}
+
+message UpdateAppointmentResponse {
+  Appointment appointment = 1;
+}
+
+message UpdateAppointmentStatusRequest {
+  string id = 1;
+  AppointmentStatus status = 2;
+}
+
+message UpdateAppointmentStatusResponse {
+  Appointment appointment = 1;
+}
+
+message DeleteAppointmentRequest {
+  string id = 1;
+}
+
+message DeleteAppointmentResponse {
+  bool success = 1;
+}
+
+// -----------------------------------------------------------------------------
+// 3. ADMISSION MESSAGES
+// -----------------------------------------------------------------------------
+
+message CreateAdmissionRequest {
+  Admission admission = 1;
+}
+
+message CreateAdmissionResponse {
+  Admission admission = 1;
+}
+
+message GetAdmissionByIDRequest {
+  string id = 1;
+}
+
+message GetAdmissionByIDResponse {
+  Admission admission = 1;
+}
+
+message GetAdmissionByNumberRequest {
+  string admission_number = 1;
+}
+
+message GetAdmissionByNumberResponse {
+  Admission admission = 1;
+}
+
+message ListAdmissionsRequest {
+  string patient_id = 1;
+  string department_id = 2;
+  AdmissionType admission_type = 3;
+  AdmissionStatus status = 4;
+  string start_date = 5;
+  string end_date = 6;
+  int32 limit = 7;
+  int32 offset = 8;
+}
+
+message ListAdmissionsResponse {
+  repeated Admission items = 1;
+  int64 total_count = 2;
+}
+
+message UpdateAdmissionRequest {
+  Admission admission = 1;
+}
+
+message UpdateAdmissionResponse {
+  Admission admission = 1;
+}
+
+message UpdateAdmissionStatusRequest {
+  string id = 1;
+  AdmissionStatus status = 2;
+  google.protobuf.Timestamp discharge_date = 3;
+}
+
+message UpdateAdmissionStatusResponse {
+  Admission admission = 1;
+}
+
+message DeleteAdmissionRequest {
+  string id = 1;
+}
+
+message DeleteAdmissionResponse {
+  bool success = 1;
+}

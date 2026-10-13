@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package admission.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/admission-service/gen/admission/v1;admissionv1";
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+enum AdmissionType {
+  ADMISSION_TYPE_UNSPECIFIED = 0;
+  ADMISSION_TYPE_OUTPATIENT = 1;
+  ADMISSION_TYPE_INPATIENT = 2;
+  ADMISSION_TYPE_EMERGENCY = 3;
+}
+
+enum AdmissionStatus {
+  ADMISSION_STATUS_UNSPECIFIED = 0;
+  ADMISSION_STATUS_REGISTERED = 1;
+  ADMISSION_STATUS_ADMITTED = 2;
+  ADMISSION_STATUS_DISCHARGED = 3;
+  ADMISSION_STATUS_CANCELLED = 4;
+}
+
+// =============================================================================
+// DOMAIN MODEL
+// =============================================================================
+
+message Admission {
+  string id = 1;
+  string admission_number = 2;
+  string patient_id = 3;
+  optional string appointment_id = 4;
+  AdmissionType admission_type = 5;
+  AdmissionStatus status = 6;
+  string department_id = 7;
+  string practitioner_id = 8;
+  google.protobuf.Timestamp admission_date = 9;
+  google.protobuf.Timestamp discharge_date = 10;
+  optional string ward_id = 11;
+  optional string bed_id = 12;
+  string notes = 13;
+  google.protobuf.Timestamp created_at = 14;
+  google.protobuf.Timestamp updated_at = 15;
+}
