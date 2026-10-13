@@ -6,6 +6,7 @@ use (
 	./bed-service
 	./billing-service
 	./emr-service
+	./laboratory-service
 	./master-service
 	./patient-service
 	./pharmacy-service

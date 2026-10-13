@@ -9,6 +9,7 @@ modules:
   - path: auth-service/proto
   - path: billing-service/proto
   - path: pharmacy-service/proto
+  - path: laboratory-service/proto
 lint:
   use:
     - STANDARD

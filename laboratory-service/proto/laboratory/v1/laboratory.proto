@@ -1,0 +1,169 @@
+syntax = "proto3";
+
+package laboratory.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/laboratory-service/gen/laboratory/v1;laboratoryv1";
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+enum LabCategory {
+  LAB_CATEGORY_UNSPECIFIED = 0;
+  LAB_CATEGORY_HEMATOLOGY = 1;
+  LAB_CATEGORY_CLINICAL_CHEMISTRY = 2;
+  LAB_CATEGORY_URINALYSIS = 3;
+  LAB_CATEGORY_IMMUNOSEROLOGY = 4;
+  LAB_CATEGORY_MICROBIOLOGY = 5;
+  LAB_CATEGORY_PARASITOLOGY = 6;
+  LAB_CATEGORY_BLOOD_GAS = 7;
+  LAB_CATEGORY_TOXICOLOGY = 8;
+  LAB_CATEGORY_OTHER = 9;
+}
+
+enum SpecimenType {
+  SPECIMEN_TYPE_UNSPECIFIED = 0;
+  SPECIMEN_TYPE_WHOLE_BLOOD = 1;
+  SPECIMEN_TYPE_SERUM = 2;
+  SPECIMEN_TYPE_PLASMA = 3;
+  SPECIMEN_TYPE_URINE = 4;
+  SPECIMEN_TYPE_STOOL = 5;
+  SPECIMEN_TYPE_SPUTUM = 6;
+  SPECIMEN_TYPE_SWAB = 7;
+  SPECIMEN_TYPE_CSF = 8;
+  SPECIMEN_TYPE_OTHER = 9;
+}
+
+enum LabPriority {
+  LAB_PRIORITY_UNSPECIFIED = 0;
+  LAB_PRIORITY_ROUTINE = 1;
+  LAB_PRIORITY_URGENT = 2;
+  LAB_PRIORITY_STAT = 3; // Cito
+}
+
+enum OrderStatus {
+  ORDER_STATUS_UNSPECIFIED = 0;
+  ORDER_STATUS_ORDERED = 1;
+  ORDER_STATUS_SAMPLE_COLLECTED = 2;
+  ORDER_STATUS_IN_PROGRESS = 3;
+  ORDER_STATUS_COMPLETED = 4;
+  ORDER_STATUS_CANCELLED = 5;
+}
+
+enum SpecimenStatus {
+  SPECIMEN_STATUS_UNSPECIFIED = 0;
+  SPECIMEN_STATUS_COLLECTED = 1;
+  SPECIMEN_STATUS_RECEIVED = 2;
+  SPECIMEN_STATUS_REJECTED = 3;
+}
+
+enum ResultFlag {
+  RESULT_FLAG_UNSPECIFIED = 0;
+  RESULT_FLAG_NORMAL = 1;
+  RESULT_FLAG_LOW = 2;
+  RESULT_FLAG_HIGH = 3;
+  RESULT_FLAG_CRITICAL_LOW = 4;
+  RESULT_FLAG_CRITICAL_HIGH = 5;
+  RESULT_FLAG_ABNORMAL = 6;
+}
+
+// =============================================================================
+// DOMAIN MODELS
+// =============================================================================
+
+message LabTest {
+  string id = 1;
+  string code = 2;
+  string name = 3;
+  LabCategory category = 4;
+  string loinc_code = 5;
+  SpecimenType specimen_type = 6;
+  string unit = 7;
+  string reference_range_male = 8;
+  string reference_range_female = 9;
+  double ref_low = 10;
+  double ref_high = 11;
+  double critical_low = 12;
+  double critical_high = 13;
+  double price = 14;
+  bool is_active = 15;
+  google.protobuf.Timestamp created_at = 16;
+  google.protobuf.Timestamp updated_at = 17;
+}
+
+message LabOrderItem {
+  string id = 1;
+  string order_id = 2;
+  string test_id = 3;
+  string test_code = 4;
+  string test_name = 5;
+  double price = 6;
+  string notes = 7;
+}
+
+message LabOrder {
+  string id = 1;
+  string order_number = 2;
+  string encounter_id = 3;
+  string patient_id = 4;
+  string patient_name = 5;
+  string patient_gender = 6;
+  string patient_dob = 7;
+  string doctor_id = 8;
+  string doctor_name = 9;
+  string clinical_notes = 10;
+  LabPriority priority = 11;
+  OrderStatus status = 12;
+  double total_price = 13;
+  repeated LabOrderItem items = 14;
+  google.protobuf.Timestamp created_at = 15;
+  google.protobuf.Timestamp updated_at = 16;
+}
+
+message LabSpecimen {
+  string id = 1;
+  string order_id = 2;
+  string specimen_number = 3;
+  SpecimenType specimen_type = 4;
+  SpecimenStatus status = 5;
+  string collector_id = 6;
+  string collector_name = 7;
+  string notes = 8;
+  google.protobuf.Timestamp collected_at = 9;
+  google.protobuf.Timestamp received_at = 10;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
+}
+
+message LabResultItem {
+  string id = 1;
+  string order_id = 2;
+  string test_id = 3;
+  string test_name = 4;
+  string loinc_code = 5;
+  string result_value = 6;
+  double numeric_value = 7;
+  string reference_range = 8;
+  string unit = 9;
+  ResultFlag flag = 10;
+  string notes = 11;
+}
+
+message LabResult {
+  string id = 1;
+  string order_id = 2;
+  string order_number = 3;
+  string patient_id = 4;
+  string analyst_id = 5;
+  string analyst_name = 6;
+  string pathologist_id = 7;
+  string pathologist_name = 8;
+  bool is_verified = 9;
+  string overall_notes = 10;
+  repeated LabResultItem items = 11;
+  google.protobuf.Timestamp verified_at = 12;
+  google.protobuf.Timestamp created_at = 13;
+  google.protobuf.Timestamp updated_at = 14;
+}

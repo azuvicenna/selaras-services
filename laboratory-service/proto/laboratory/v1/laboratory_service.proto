@@ -1,0 +1,244 @@
+syntax = "proto3";
+
+package laboratory.v1;
+
+import "laboratory/v1/laboratory.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/laboratory-service/gen/laboratory/v1;laboratoryv1";
+
+// =============================================================================
+// SERVICE DEFINITION
+// =============================================================================
+
+service LaboratoryService {
+  // Master Pemeriksaan Lab
+  rpc CreateLabTest (CreateLabTestRequest) returns (CreateLabTestResponse);
+  rpc GetLabTestByID (GetLabTestByIDRequest) returns (GetLabTestByIDResponse);
+  rpc GetLabTestByCode (GetLabTestByCodeRequest) returns (GetLabTestByCodeResponse);
+  rpc ListLabTests (ListLabTestsRequest) returns (ListLabTestsResponse);
+  rpc UpdateLabTest (UpdateLabTestRequest) returns (UpdateLabTestResponse);
+  rpc DeleteLabTest (DeleteLabTestRequest) returns (DeleteLabTestResponse);
+
+  // Order Pemeriksaan Lab
+  rpc CreateLabOrder (CreateLabOrderRequest) returns (CreateLabOrderResponse);
+  rpc GetLabOrderByID (GetLabOrderByIDRequest) returns (GetLabOrderByIDResponse);
+  rpc ListLabOrders (ListLabOrdersRequest) returns (ListLabOrdersResponse);
+  rpc UpdateLabOrderStatus (UpdateLabOrderStatusRequest) returns (UpdateLabOrderStatusResponse);
+
+  // Spesimen / Sampel Lab
+  rpc CollectSpecimen (CollectSpecimenRequest) returns (CollectSpecimenResponse);
+  rpc GetSpecimenByOrderID (GetSpecimenByOrderIDRequest) returns (GetSpecimenByOrderIDResponse);
+  rpc UpdateSpecimenStatus (UpdateSpecimenStatusRequest) returns (UpdateSpecimenStatusResponse);
+
+  // Hasil Uji Lab & Verifikasi Sp.PK
+  rpc SaveLabResult (SaveLabResultRequest) returns (SaveLabResultResponse);
+  rpc GetLabResultByOrderID (GetLabResultByOrderIDRequest) returns (GetLabResultByOrderIDResponse);
+  rpc VerifyLabResult (VerifyLabResultRequest) returns (VerifyLabResultResponse);
+}
+
+// =============================================================================
+// REQUEST & RESPONSE MESSAGES
+// =============================================================================
+
+// Master LabTest
+message CreateLabTestRequest {
+  string code = 1;
+  string name = 2;
+  LabCategory category = 3;
+  string loinc_code = 4;
+  SpecimenType specimen_type = 5;
+  string unit = 6;
+  string reference_range_male = 7;
+  string reference_range_female = 8;
+  double ref_low = 9;
+  double ref_high = 10;
+  double critical_low = 11;
+  double critical_high = 12;
+  double price = 13;
+}
+
+message CreateLabTestResponse {
+  LabTest test = 1;
+}
+
+message GetLabTestByIDRequest {
+  string id = 1;
+}
+
+message GetLabTestByIDResponse {
+  LabTest test = 1;
+}
+
+message GetLabTestByCodeRequest {
+  string code = 1;
+}
+
+message GetLabTestByCodeResponse {
+  LabTest test = 1;
+}
+
+message ListLabTestsRequest {
+  string query = 1; // code or name
+  LabCategory category = 2;
+  optional bool is_active = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message ListLabTestsResponse {
+  repeated LabTest tests = 1;
+  int64 total = 2;
+}
+
+message UpdateLabTestRequest {
+  string id = 1;
+  string name = 2;
+  LabCategory category = 3;
+  string loinc_code = 4;
+  SpecimenType specimen_type = 5;
+  string unit = 6;
+  string reference_range_male = 7;
+  string reference_range_female = 8;
+  double ref_low = 9;
+  double ref_high = 10;
+  double critical_low = 11;
+  double critical_high = 12;
+  double price = 13;
+  bool is_active = 14;
+}
+
+message UpdateLabTestResponse {
+  LabTest test = 1;
+}
+
+message DeleteLabTestRequest {
+  string id = 1;
+}
+
+message DeleteLabTestResponse {
+  bool success = 1;
+}
+
+// Order Lab
+message CreateLabOrderItemInput {
+  string test_id = 1;
+  string notes = 2;
+}
+
+message CreateLabOrderRequest {
+  string encounter_id = 1;
+  string patient_id = 2;
+  string patient_name = 3;
+  string patient_gender = 4;
+  string patient_dob = 5;
+  string doctor_id = 6;
+  string doctor_name = 7;
+  string clinical_notes = 8;
+  LabPriority priority = 9;
+  repeated CreateLabOrderItemInput items = 10;
+}
+
+message CreateLabOrderResponse {
+  LabOrder order = 1;
+}
+
+message GetLabOrderByIDRequest {
+  string id = 1;
+}
+
+message GetLabOrderByIDResponse {
+  LabOrder order = 1;
+}
+
+message ListLabOrdersRequest {
+  string patient_id = 1;
+  string encounter_id = 2;
+  OrderStatus status = 3;
+  LabPriority priority = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+message ListLabOrdersResponse {
+  repeated LabOrder orders = 1;
+  int64 total = 2;
+}
+
+message UpdateLabOrderStatusRequest {
+  string id = 1;
+  OrderStatus status = 2;
+}
+
+message UpdateLabOrderStatusResponse {
+  LabOrder order = 1;
+}
+
+// Spesimen Lab
+message CollectSpecimenRequest {
+  string order_id = 1;
+  SpecimenType specimen_type = 2;
+  string collector_id = 3;
+  string collector_name = 4;
+  string notes = 5;
+}
+
+message CollectSpecimenResponse {
+  LabSpecimen specimen = 1;
+}
+
+message GetSpecimenByOrderIDRequest {
+  string order_id = 1;
+}
+
+message GetSpecimenByOrderIDResponse {
+  repeated LabSpecimen specimens = 1;
+}
+
+message UpdateSpecimenStatusRequest {
+  string id = 1;
+  SpecimenStatus status = 2;
+  string notes = 3;
+}
+
+message UpdateSpecimenStatusResponse {
+  LabSpecimen specimen = 1;
+}
+
+// Hasil Lab & Verifikasi
+message SaveLabResultItemInput {
+  string test_id = 1;
+  string result_value = 2;
+  double numeric_value = 3;
+  string notes = 4;
+}
+
+message SaveLabResultRequest {
+  string order_id = 1;
+  string analyst_id = 2;
+  string analyst_name = 3;
+  string overall_notes = 4;
+  repeated SaveLabResultItemInput items = 5;
+}
+
+message SaveLabResultResponse {
+  LabResult result = 1;
+}
+
+message GetLabResultByOrderIDRequest {
+  string order_id = 1;
+}
+
+message GetLabResultByOrderIDResponse {
+  LabResult result = 1;
+}
+
+message VerifyLabResultRequest {
+  string order_id = 1;
+  string pathologist_id = 2;
+  string pathologist_name = 3;
+  string notes = 4;
+}
+
+message VerifyLabResultResponse {
+  LabResult result = 1;
+}
