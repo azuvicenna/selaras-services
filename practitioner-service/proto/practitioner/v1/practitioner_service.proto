@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+package practitioner.v1;
+
+import "practitioner/v1/practitioner.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/practitioner-service/gen/practitioner/v1;practitionerv1";
+
+// =============================================================================
+// SERVICE DEFINITION
+// =============================================================================
+
+service PractitionerService {
+  rpc CreatePractitioner (CreatePractitionerRequest) returns (CreatePractitionerResponse);
+  rpc GetPractitionerByID (GetPractitionerByIDRequest) returns (GetPractitionerByIDResponse);
+  rpc GetPractitionerByNIK (GetPractitionerByNIKRequest) returns (GetPractitionerByNIKResponse);
+  rpc GetPractitionerBySIP (GetPractitionerBySIPRequest) returns (GetPractitionerBySIPResponse);
+  rpc ListPractitioners (ListPractitionersRequest) returns (ListPractitionersResponse);
+  rpc UpdatePractitioner (UpdatePractitionerRequest) returns (UpdatePractitionerResponse);
+  rpc UpdatePractitionerStatus (UpdatePractitionerStatusRequest) returns (UpdatePractitionerStatusResponse);
+  rpc DeletePractitioner (DeletePractitionerRequest) returns (DeletePractitionerResponse);
+}
+
+// =============================================================================
+// REQUEST & RESPONSE MESSAGES
+// =============================================================================
+
+message CreatePractitionerRequest {
+  Practitioner practitioner = 1;
+}
+
+message CreatePractitionerResponse {
+  Practitioner practitioner = 1;
+}
+
+message GetPractitionerByIDRequest {
+  string id = 1;
+}
+
+message GetPractitionerByIDResponse {
+  Practitioner practitioner = 1;
+}
+
+message GetPractitionerByNIKRequest {
+  string nik = 1;
+}
+
+message GetPractitionerByNIKResponse {
+  Practitioner practitioner = 1;
+}
+
+message GetPractitionerBySIPRequest {
+  string sip_number = 1;
+}
+
+message GetPractitionerBySIPResponse {
+  Practitioner practitioner = 1;
+}
+
+message ListPractitionersRequest {
+  string query = 1;
+  PractitionerType practitioner_type = 2;
+  string department_id = 3;
+  optional bool is_active = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+message ListPractitionersResponse {
+  repeated Practitioner items = 1;
+  int64 total_count = 2;
+}
+
+message UpdatePractitionerRequest {
+  Practitioner practitioner = 1;
+}
+
+message UpdatePractitionerResponse {
+  Practitioner practitioner = 1;
+}
+
+message UpdatePractitionerStatusRequest {
+  string id = 1;
+  bool is_active = 2;
+}
+
+message UpdatePractitionerStatusResponse {
+  Practitioner practitioner = 1;
+}
+
+message DeletePractitionerRequest {
+  string id = 1;
+}
+
+message DeletePractitionerResponse {
+  bool success = 1;
+}

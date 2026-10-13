@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package practitioner.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/practitioner-service/gen/practitioner/v1;practitionerv1";
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+enum Gender {
+  GENDER_UNSPECIFIED = 0;
+  GENDER_MALE = 1;
+  GENDER_FEMALE = 2;
+}
+
+enum PractitionerType {
+  PRACTITIONER_TYPE_UNSPECIFIED = 0;
+  PRACTITIONER_TYPE_DOCTOR = 1;
+  PRACTITIONER_TYPE_SPECIALIST = 2;
+  PRACTITIONER_TYPE_NURSE = 3;
+  PRACTITIONER_TYPE_MIDWIFE = 4;
+  PRACTITIONER_TYPE_PHARMACIST = 5;
+  PRACTITIONER_TYPE_RADIOGRAPHER = 6;
+  PRACTITIONER_TYPE_LAB_TECHNICIAN = 7;
+  PRACTITIONER_TYPE_NUTRITIONIST = 8;
+  PRACTITIONER_TYPE_PHYSIOTHERAPIST = 9;
+  PRACTITIONER_TYPE_OTHER = 10;
+}
+
+// =============================================================================
+// DOMAIN MODEL
+// =============================================================================
+
+message Practitioner {
+  string id = 1;
+  string nik = 2;
+  string name = 3;
+  Gender gender = 4;
+  string birth_date = 5;
+  string phone = 6;
+  string email = 7;
+  PractitionerType practitioner_type = 8;
+  string specialization = 9;
+  string sip_number = 10;
+  string sip_expiry_date = 11;
+  string str_number = 12;
+  string str_expiry_date = 13;
+  string department_id = 14;
+  string ihs_number = 15;
+  bool is_active = 16;
+  google.protobuf.Timestamp created_at = 17;
+  google.protobuf.Timestamp updated_at = 18;
+}

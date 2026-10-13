@@ -6,4 +6,5 @@ use (
 	./emr-service
 	./master-service
 	./patient-service
+	./practitioner-service
 )
