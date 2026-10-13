@@ -1,0 +1,249 @@
+syntax = "proto3";
+
+package billing.v1;
+
+import "billing/v1/billing.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/billing-service/gen/billing/v1;billingv1";
+
+// =============================================================================
+// SERVICE DEFINITION
+// =============================================================================
+
+service BillingService {
+  // Master Tarif
+  rpc CreateTariff (CreateTariffRequest) returns (CreateTariffResponse);
+  rpc GetTariffByID (GetTariffByIDRequest) returns (GetTariffByIDResponse);
+  rpc ListTariffs (ListTariffsRequest) returns (ListTariffsResponse);
+  rpc UpdateTariff (UpdateTariffRequest) returns (UpdateTariffResponse);
+  rpc DeleteTariff (DeleteTariffRequest) returns (DeleteTariffResponse);
+
+  // Invoice & Tagihan Pasien
+  rpc CreateInvoice (CreateInvoiceRequest) returns (CreateInvoiceResponse);
+  rpc AddItemToInvoice (AddItemToInvoiceRequest) returns (AddItemToInvoiceResponse);
+  rpc RemoveItemFromInvoice (RemoveItemFromInvoiceRequest) returns (RemoveItemFromInvoiceResponse);
+  rpc GetInvoiceByID (GetInvoiceByIDRequest) returns (GetInvoiceByIDResponse);
+  rpc GetInvoiceByEncounterID (GetInvoiceByEncounterIDRequest) returns (GetInvoiceByEncounterIDResponse);
+  rpc ListInvoices (ListInvoicesRequest) returns (ListInvoicesResponse);
+  rpc CancelInvoice (CancelInvoiceRequest) returns (CancelInvoiceResponse);
+
+  // Kasir & Pembayaran
+  rpc ProcessPayment (ProcessPaymentRequest) returns (ProcessPaymentResponse);
+  rpc GetPaymentByID (GetPaymentByIDRequest) returns (GetPaymentByIDResponse);
+  rpc ListPaymentsByInvoiceID (ListPaymentsByInvoiceIDRequest) returns (ListPaymentsByInvoiceIDResponse);
+
+  // Deposit Pasien
+  rpc TopUpDeposit (TopUpDepositRequest) returns (TopUpDepositResponse);
+  rpc GetDepositBalance (GetDepositBalanceRequest) returns (GetDepositBalanceResponse);
+  rpc ListDepositsByPatientID (ListDepositsByPatientIDRequest) returns (ListDepositsByPatientIDResponse);
+}
+
+// =============================================================================
+// REQUEST & RESPONSE MESSAGES
+// =============================================================================
+
+// Tariff
+message CreateTariffRequest {
+  string code = 1;
+  string name = 2;
+  ItemCategory category = 3;
+  string class_id = 4;
+  double amount = 5;
+  string description = 6;
+}
+
+message CreateTariffResponse {
+  Tariff tariff = 1;
+}
+
+message GetTariffByIDRequest {
+  string id = 1;
+}
+
+message GetTariffByIDResponse {
+  Tariff tariff = 1;
+}
+
+message ListTariffsRequest {
+  string query = 1;
+  ItemCategory category = 2;
+  string class_id = 3;
+  optional bool is_active = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+message ListTariffsResponse {
+  repeated Tariff tariffs = 1;
+  int64 total = 2;
+}
+
+message UpdateTariffRequest {
+  string id = 1;
+  string name = 2;
+  ItemCategory category = 3;
+  string class_id = 4;
+  double amount = 5;
+  string description = 6;
+  bool is_active = 7;
+}
+
+message UpdateTariffResponse {
+  Tariff tariff = 1;
+}
+
+message DeleteTariffRequest {
+  string id = 1;
+}
+
+message DeleteTariffResponse {
+  bool success = 1;
+}
+
+// Invoice
+message CreateInvoiceItemInput {
+  string tariff_id = 1;
+  string item_name = 2;
+  ItemCategory category = 3;
+  int32 quantity = 4;
+  double unit_price = 5;
+  double discount_amount = 6;
+  string notes = 7;
+}
+
+message CreateInvoiceRequest {
+  string encounter_id = 1;
+  string patient_id = 2;
+  string patient_name = 3;
+  string notes = 4;
+  repeated CreateInvoiceItemInput items = 5;
+}
+
+message CreateInvoiceResponse {
+  Invoice invoice = 1;
+}
+
+message AddItemToInvoiceRequest {
+  string invoice_id = 1;
+  CreateInvoiceItemInput item = 2;
+}
+
+message AddItemToInvoiceResponse {
+  Invoice invoice = 1;
+}
+
+message RemoveItemFromInvoiceRequest {
+  string invoice_id = 1;
+  string item_id = 2;
+}
+
+message RemoveItemFromInvoiceResponse {
+  Invoice invoice = 1;
+}
+
+message GetInvoiceByIDRequest {
+  string id = 1;
+}
+
+message GetInvoiceByIDResponse {
+  Invoice invoice = 1;
+}
+
+message GetInvoiceByEncounterIDRequest {
+  string encounter_id = 1;
+}
+
+message GetInvoiceByEncounterIDResponse {
+  Invoice invoice = 1;
+}
+
+message ListInvoicesRequest {
+  string query = 1; // invoice_number, patient_name, patient_id
+  InvoiceStatus status = 2;
+  string patient_id = 3;
+  string encounter_id = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+message ListInvoicesResponse {
+  repeated Invoice invoices = 1;
+  int64 total = 2;
+}
+
+message CancelInvoiceRequest {
+  string id = 1;
+  string reason = 2;
+}
+
+message CancelInvoiceResponse {
+  Invoice invoice = 1;
+}
+
+// Payment
+message ProcessPaymentItemInput {
+  PaymentMethod method = 1;
+  double amount = 2;
+  string reference_number = 3;
+  string notes = 4;
+}
+
+message ProcessPaymentRequest {
+  string invoice_id = 1;
+  string cashier_id = 2;
+  string cashier_name = 3;
+  repeated ProcessPaymentItemInput payment_items = 4;
+}
+
+message ProcessPaymentResponse {
+  Payment payment = 1;
+  Invoice invoice = 2;
+}
+
+message GetPaymentByIDRequest {
+  string id = 1;
+}
+
+message GetPaymentByIDResponse {
+  Payment payment = 1;
+}
+
+message ListPaymentsByInvoiceIDRequest {
+  string invoice_id = 1;
+}
+
+message ListPaymentsByInvoiceIDResponse {
+  repeated Payment payments = 1;
+}
+
+// Deposit
+message TopUpDepositRequest {
+  string patient_id = 1;
+  string encounter_id = 2;
+  double amount = 3;
+  PaymentMethod payment_method = 4;
+  string reference_number = 5;
+  string notes = 6;
+  string cashier_id = 7;
+}
+
+message TopUpDepositResponse {
+  Deposit deposit = 1;
+  DepositBalance balance = 2;
+}
+
+message GetDepositBalanceRequest {
+  string patient_id = 1;
+}
+
+message GetDepositBalanceResponse {
+  DepositBalance balance = 1;
+}
+
+message ListDepositsByPatientIDRequest {
+  string patient_id = 1;
+}
+
+message ListDepositsByPatientIDResponse {
+  repeated Deposit deposits = 1;
+}

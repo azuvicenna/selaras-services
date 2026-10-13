@@ -4,6 +4,7 @@ use (
 	./admission-service
 	./auth-service
 	./bed-service
+	./billing-service
 	./emr-service
 	./master-service
 	./patient-service

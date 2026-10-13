@@ -1,0 +1,84 @@
+{
+  "tariffs": [
+    {
+      "code": "REG-01",
+      "name": "Pendaftaran Pasien Baru / Lama",
+      "category": 1,
+      "class_id": "ALL",
+      "amount": 25000,
+      "description": "Biaya administrasi dan pencatatan rekam medis"
+    },
+    {
+      "code": "KONS-01",
+      "name": "Konsultasi Dokter Umum",
+      "category": 2,
+      "class_id": "ALL",
+      "amount": 60000,
+      "description": "Jasa pemeriksaan dan konsultasi dokter umum"
+    },
+    {
+      "code": "KONS-02",
+      "name": "Konsultasi Dokter Spesialis",
+      "category": 2,
+      "class_id": "ALL",
+      "amount": 150000,
+      "description": "Jasa pemeriksaan dan konsultasi dokter spesialis"
+    },
+    {
+      "code": "KAMAR-K3",
+      "name": "Akomodasi Kamar Rawat Inap Kelas 3",
+      "category": 7,
+      "class_id": "KELAS_3",
+      "amount": 150000,
+      "description": "Sewa kamar rawat inap kelas 3 per malam"
+    },
+    {
+      "code": "KAMAR-K1",
+      "name": "Akomodasi Kamar Rawat Inap Kelas 1",
+      "category": 7,
+      "class_id": "KELAS_1",
+      "amount": 400000,
+      "description": "Sewa kamar rawat inap kelas 1 per malam"
+    },
+    {
+      "code": "KAMAR-VIP",
+      "name": "Akomodasi Kamar Rawat Inap VIP",
+      "category": 7,
+      "class_id": "VIP",
+      "amount": 850000,
+      "description": "Sewa kamar rawat inap VIP per malam"
+    },
+    {
+      "code": "LAB-DL",
+      "name": "Pemeriksaan Darah Lengkap (Hematologi)",
+      "category": 5,
+      "class_id": "ALL",
+      "amount": 95000,
+      "description": "Pemeriksaan laboratorium hematologi rutin"
+    },
+    {
+      "code": "RAD-THX",
+      "name": "Foto Rontgen Thorax PA",
+      "category": 6,
+      "class_id": "ALL",
+      "amount": 175000,
+      "description": "Pemeriksaan radiologi rontgen dada"
+    },
+    {
+      "code": "TND-JHT",
+      "name": "Tindakan Penjahitan Luka (Hecting)",
+      "category": 3,
+      "class_id": "ALL",
+      "amount": 120000,
+      "description": "Tindakan bedah minor penjahitan luka"
+    },
+    {
+      "code": "ADM-RI",
+      "name": "Administrasi Pasien Rawat Inap",
+      "category": 8,
+      "class_id": "ALL",
+      "amount": 50000,
+      "description": "Biaya administrasi pengelolaan rawat inap"
+    }
+  ]
+}

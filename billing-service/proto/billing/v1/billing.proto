@@ -1,0 +1,141 @@
+syntax = "proto3";
+
+package billing.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/billing-service/gen/billing/v1;billingv1";
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+enum InvoiceStatus {
+  INVOICE_STATUS_UNSPECIFIED = 0;
+  INVOICE_STATUS_DRAFT = 1;
+  INVOICE_STATUS_UNPAID = 2;
+  INVOICE_STATUS_PARTIALLY_PAID = 3;
+  INVOICE_STATUS_PAID = 4;
+  INVOICE_STATUS_CANCELLED = 5;
+  INVOICE_STATUS_REFUNDED = 6;
+}
+
+enum PaymentMethod {
+  PAYMENT_METHOD_UNSPECIFIED = 0;
+  PAYMENT_METHOD_CASH = 1;
+  PAYMENT_METHOD_DEBIT_CARD = 2;
+  PAYMENT_METHOD_CREDIT_CARD = 3;
+  PAYMENT_METHOD_QRIS = 4;
+  PAYMENT_METHOD_BANK_TRANSFER = 5;
+  PAYMENT_METHOD_BPJS = 6;
+  PAYMENT_METHOD_INSURANCE = 7;
+  PAYMENT_METHOD_DEPOSIT = 8;
+}
+
+enum ItemCategory {
+  ITEM_CATEGORY_UNSPECIFIED = 0;
+  ITEM_CATEGORY_REGISTRATION = 1;
+  ITEM_CATEGORY_CONSULTATION = 2;
+  ITEM_CATEGORY_PROCEDURE = 3;
+  ITEM_CATEGORY_MEDICATION = 4;
+  ITEM_CATEGORY_LABORATORY = 5;
+  ITEM_CATEGORY_RADIOLOGY = 6;
+  ITEM_CATEGORY_ROOM = 7;
+  ITEM_CATEGORY_ADMINISTRATION = 8;
+  ITEM_CATEGORY_OTHER = 9;
+}
+
+enum DepositType {
+  DEPOSIT_TYPE_UNSPECIFIED = 0;
+  DEPOSIT_TYPE_TOPUP = 1;
+  DEPOSIT_TYPE_USAGE = 2;
+  DEPOSIT_TYPE_REFUND = 3;
+}
+
+// =============================================================================
+// DOMAIN MODELS
+// =============================================================================
+
+message Tariff {
+  string id = 1;
+  string code = 2;
+  string name = 3;
+  ItemCategory category = 4;
+  string class_id = 5; // e.g. "ALL", "VIP", "KELAS_1", "KELAS_2", "KELAS_3"
+  double amount = 6;
+  string description = 7;
+  bool is_active = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+}
+
+message InvoiceItem {
+  string id = 1;
+  string invoice_id = 2;
+  string tariff_id = 3;
+  string item_name = 4;
+  ItemCategory category = 5;
+  int32 quantity = 6;
+  double unit_price = 7;
+  double discount_amount = 8;
+  double subtotal = 9;
+  string notes = 10;
+  google.protobuf.Timestamp created_at = 11;
+}
+
+message Invoice {
+  string id = 1;
+  string invoice_number = 2;
+  string encounter_id = 3;
+  string patient_id = 4;
+  string patient_name = 5;
+  InvoiceStatus status = 6;
+  double total_amount = 7;
+  double discount_amount = 8;
+  double paid_amount = 9;
+  double balance_amount = 10;
+  string notes = 11;
+  repeated InvoiceItem items = 12;
+  google.protobuf.Timestamp created_at = 13;
+  google.protobuf.Timestamp updated_at = 14;
+}
+
+message PaymentItem {
+  string id = 1;
+  string payment_id = 2;
+  PaymentMethod method = 3;
+  double amount = 4;
+  string reference_number = 5;
+  string notes = 6;
+}
+
+message Payment {
+  string id = 1;
+  string receipt_number = 2;
+  string invoice_id = 3;
+  string cashier_id = 4;
+  string cashier_name = 5;
+  double total_paid = 6;
+  repeated PaymentItem items = 7;
+  google.protobuf.Timestamp paid_at = 8;
+  google.protobuf.Timestamp created_at = 9;
+}
+
+message Deposit {
+  string id = 1;
+  string patient_id = 2;
+  string encounter_id = 3;
+  DepositType deposit_type = 4;
+  double amount = 5;
+  PaymentMethod payment_method = 6;
+  string reference_number = 7;
+  string notes = 8;
+  string cashier_id = 9;
+  google.protobuf.Timestamp created_at = 10;
+}
+
+message DepositBalance {
+  string patient_id = 1;
+  double total_balance = 2;
+  google.protobuf.Timestamp updated_at = 3;
+}

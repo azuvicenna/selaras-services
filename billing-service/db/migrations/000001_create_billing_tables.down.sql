@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS deposit_balances;
+DROP TABLE IF EXISTS deposits;
+DROP TABLE IF EXISTS payment_items;
+DROP TABLE IF EXISTS payments;
+DROP TABLE IF EXISTS invoice_items;
+DROP TABLE IF EXISTS invoices;
+DROP TABLE IF EXISTS tariffs;
