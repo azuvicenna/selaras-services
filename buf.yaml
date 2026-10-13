@@ -10,6 +10,7 @@ modules:
   - path: billing-service/proto
   - path: pharmacy-service/proto
   - path: laboratory-service/proto
+  - path: radiology-service/proto
 lint:
   use:
     - STANDARD

@@ -1,0 +1,139 @@
+syntax = "proto3";
+
+package radiology.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/radiology-service/gen/radiology/v1;radiologyv1";
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+enum Modality {
+  MODALITY_UNSPECIFIED = 0;
+  MODALITY_XR = 1;
+  MODALITY_CT = 2;
+  MODALITY_MRI = 3;
+  MODALITY_USG = 4;
+  MODALITY_MAMMO = 5;
+  MODALITY_FLUORO = 6;
+  MODALITY_DEXA = 7;
+  MODALITY_ANGIO = 8;
+  MODALITY_OTHER = 9;
+}
+
+enum BodySite {
+  BODY_SITE_UNSPECIFIED = 0;
+  BODY_SITE_HEAD = 1;
+  BODY_SITE_NECK = 2;
+  BODY_SITE_CHEST = 3;
+  BODY_SITE_ABDOMEN = 4;
+  BODY_SITE_PELVIS = 5;
+  BODY_SITE_SPINE = 6;
+  BODY_SITE_UPPER_EXTREMITY = 7;
+  BODY_SITE_LOWER_EXTREMITY = 8;
+  BODY_SITE_WHOLE_BODY = 9;
+  BODY_SITE_OTHER = 10;
+}
+
+enum RadiologyPriority {
+  RADIOLOGY_PRIORITY_UNSPECIFIED = 0;
+  RADIOLOGY_PRIORITY_ROUTINE = 1;
+  RADIOLOGY_PRIORITY_URGENT = 2;
+  RADIOLOGY_PRIORITY_STAT = 3; // Cito
+}
+
+enum OrderStatus {
+  ORDER_STATUS_UNSPECIFIED = 0;
+  ORDER_STATUS_ORDERED = 1;
+  ORDER_STATUS_SCHEDULED = 2;
+  ORDER_STATUS_EXAMINED = 3;
+  ORDER_STATUS_COMPLETED = 4;
+  ORDER_STATUS_CANCELLED = 5;
+}
+
+// =============================================================================
+// DOMAIN MODELS
+// =============================================================================
+
+message RadiologyExam {
+  string id = 1;
+  string code = 2;
+  string name = 3;
+  Modality modality = 4;
+  BodySite body_site = 5;
+  string loinc_code = 6;
+  bool requires_contrast = 7;
+  double price = 8;
+  string preparation_instructions = 9;
+  bool is_active = 10;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
+}
+
+message RadiologyOrderItem {
+  string id = 1;
+  string order_id = 2;
+  string exam_id = 3;
+  string exam_code = 4;
+  string exam_name = 5;
+  Modality modality = 6;
+  double price = 7;
+  string notes = 8;
+}
+
+message RadiologyOrder {
+  string id = 1;
+  string order_number = 2;
+  string encounter_id = 3;
+  string patient_id = 4;
+  string patient_name = 5;
+  string patient_gender = 6;
+  string patient_dob = 7;
+  string doctor_id = 8;
+  string doctor_name = 9;
+  string clinical_indication = 10;
+  RadiologyPriority priority = 11;
+  OrderStatus status = 12;
+  double total_price = 13;
+  repeated RadiologyOrderItem items = 14;
+  google.protobuf.Timestamp created_at = 15;
+  google.protobuf.Timestamp updated_at = 16;
+}
+
+message RadiologyProcedure {
+  string id = 1;
+  string order_id = 2;
+  string room_or_device = 3;
+  string radiographer_id = 4;
+  string radiographer_name = 5;
+  string contrast_agent_used = 6;
+  int32 series_count = 7;
+  int32 instance_count = 8;
+  string dicom_study_uid = 9;
+  string pacs_viewer_url = 10;
+  string notes = 11;
+  google.protobuf.Timestamp scheduled_at = 12;
+  google.protobuf.Timestamp performed_at = 13;
+  google.protobuf.Timestamp created_at = 14;
+  google.protobuf.Timestamp updated_at = 15;
+}
+
+message RadiologyReport {
+  string id = 1;
+  string order_id = 2;
+  string order_number = 3;
+  string patient_id = 4;
+  string radiologist_id = 5;
+  string radiologist_name = 6;
+  string clinical_history = 7;
+  string findings = 8;
+  string impression = 9;
+  string recommendation = 10;
+  bool is_critical = 11;
+  bool is_verified = 12;
+  google.protobuf.Timestamp verified_at = 13;
+  google.protobuf.Timestamp created_at = 14;
+  google.protobuf.Timestamp updated_at = 15;
+}

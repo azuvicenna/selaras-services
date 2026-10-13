@@ -1,0 +1,240 @@
+syntax = "proto3";
+
+package radiology.v1;
+
+import "google/protobuf/timestamp.proto";
+import "radiology/v1/radiology.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/radiology-service/gen/radiology/v1;radiologyv1";
+
+// =============================================================================
+// SERVICE DEFINITION
+// =============================================================================
+
+service RadiologyService {
+  // Master Pemeriksaan Radiologi (Exam Catalog)
+  rpc CreateRadiologyExam (CreateRadiologyExamRequest) returns (CreateRadiologyExamResponse);
+  rpc GetRadiologyExamByID (GetRadiologyExamByIDRequest) returns (GetRadiologyExamByIDResponse);
+  rpc GetRadiologyExamByCode (GetRadiologyExamByCodeRequest) returns (GetRadiologyExamByCodeResponse);
+  rpc ListRadiologyExams (ListRadiologyExamsRequest) returns (ListRadiologyExamsResponse);
+  rpc UpdateRadiologyExam (UpdateRadiologyExamRequest) returns (UpdateRadiologyExamResponse);
+  rpc DeleteRadiologyExam (DeleteRadiologyExamRequest) returns (DeleteRadiologyExamResponse);
+
+  // Order Pemeriksaan Radiologi
+  rpc CreateRadiologyOrder (CreateRadiologyOrderRequest) returns (CreateRadiologyOrderResponse);
+  rpc GetRadiologyOrderByID (GetRadiologyOrderByIDRequest) returns (GetRadiologyOrderByIDResponse);
+  rpc ListRadiologyOrders (ListRadiologyOrdersRequest) returns (ListRadiologyOrdersResponse);
+  rpc UpdateRadiologyOrderStatus (UpdateRadiologyOrderStatusRequest) returns (UpdateRadiologyOrderStatusResponse);
+
+  // Penjadwalan & Pelaksanaan Prosedur Radiologi
+  rpc ScheduleRadiologyProcedure (ScheduleRadiologyProcedureRequest) returns (ScheduleRadiologyProcedureResponse);
+  rpc RecordRadiologyProcedure (RecordRadiologyProcedureRequest) returns (RecordRadiologyProcedureResponse);
+  rpc GetRadiologyProcedureByOrderID (GetRadiologyProcedureByOrderIDRequest) returns (GetRadiologyProcedureByOrderIDResponse);
+
+  // Ekspertise & Pelaporan Radiologi (Sp.Rad)
+  rpc SaveRadiologyReport (SaveRadiologyReportRequest) returns (SaveRadiologyReportResponse);
+  rpc GetRadiologyReportByOrderID (GetRadiologyReportByOrderIDRequest) returns (GetRadiologyReportByOrderIDResponse);
+  rpc VerifyRadiologyReport (VerifyRadiologyReportRequest) returns (VerifyRadiologyReportResponse);
+}
+
+// =============================================================================
+// REQUEST & RESPONSE MESSAGES
+// =============================================================================
+
+// Master RadiologyExam
+message CreateRadiologyExamRequest {
+  string code = 1;
+  string name = 2;
+  Modality modality = 3;
+  BodySite body_site = 4;
+  string loinc_code = 5;
+  bool requires_contrast = 6;
+  double price = 7;
+  string preparation_instructions = 8;
+}
+
+message CreateRadiologyExamResponse {
+  RadiologyExam exam = 1;
+}
+
+message GetRadiologyExamByIDRequest {
+  string id = 1;
+}
+
+message GetRadiologyExamByIDResponse {
+  RadiologyExam exam = 1;
+}
+
+message GetRadiologyExamByCodeRequest {
+  string code = 1;
+}
+
+message GetRadiologyExamByCodeResponse {
+  RadiologyExam exam = 1;
+}
+
+message ListRadiologyExamsRequest {
+  string query = 1; // code or name
+  Modality modality = 2;
+  BodySite body_site = 3;
+  optional bool is_active = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+message ListRadiologyExamsResponse {
+  repeated RadiologyExam exams = 1;
+  int64 total = 2;
+}
+
+message UpdateRadiologyExamRequest {
+  string id = 1;
+  string name = 2;
+  Modality modality = 3;
+  BodySite body_site = 4;
+  string loinc_code = 5;
+  bool requires_contrast = 6;
+  double price = 7;
+  string preparation_instructions = 8;
+  bool is_active = 9;
+}
+
+message UpdateRadiologyExamResponse {
+  RadiologyExam exam = 1;
+}
+
+message DeleteRadiologyExamRequest {
+  string id = 1;
+}
+
+message DeleteRadiologyExamResponse {
+  bool success = 1;
+}
+
+// Order Radiologi
+message CreateRadiologyOrderItemInput {
+  string exam_id = 1;
+  string notes = 2;
+}
+
+message CreateRadiologyOrderRequest {
+  string encounter_id = 1;
+  string patient_id = 2;
+  string patient_name = 3;
+  string patient_gender = 4;
+  string patient_dob = 5;
+  string doctor_id = 6;
+  string doctor_name = 7;
+  string clinical_indication = 8;
+  RadiologyPriority priority = 9;
+  repeated CreateRadiologyOrderItemInput items = 10;
+}
+
+message CreateRadiologyOrderResponse {
+  RadiologyOrder order = 1;
+}
+
+message GetRadiologyOrderByIDRequest {
+  string id = 1;
+}
+
+message GetRadiologyOrderByIDResponse {
+  RadiologyOrder order = 1;
+}
+
+message ListRadiologyOrdersRequest {
+  string patient_id = 1;
+  string encounter_id = 2;
+  OrderStatus status = 3;
+  RadiologyPriority priority = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+message ListRadiologyOrdersResponse {
+  repeated RadiologyOrder orders = 1;
+  int64 total = 2;
+}
+
+message UpdateRadiologyOrderStatusRequest {
+  string id = 1;
+  OrderStatus status = 2;
+}
+
+message UpdateRadiologyOrderStatusResponse {
+  RadiologyOrder order = 1;
+}
+
+// Penjadwalan & Pelaksanaan Prosedur Radiologi
+message ScheduleRadiologyProcedureRequest {
+  string order_id = 1;
+  string room_or_device = 2;
+  string radiographer_id = 3;
+  string radiographer_name = 4;
+  google.protobuf.Timestamp scheduled_at = 5;
+  string notes = 6;
+}
+
+message ScheduleRadiologyProcedureResponse {
+  RadiologyProcedure procedure = 1;
+}
+
+message RecordRadiologyProcedureRequest {
+  string order_id = 1;
+  string room_or_device = 2;
+  string radiographer_id = 3;
+  string radiographer_name = 4;
+  string contrast_agent_used = 5;
+  int32 series_count = 6;
+  int32 instance_count = 7;
+  string dicom_study_uid = 8;
+  string pacs_viewer_url = 9;
+  string notes = 10;
+  google.protobuf.Timestamp performed_at = 11;
+}
+
+message RecordRadiologyProcedureResponse {
+  RadiologyProcedure procedure = 1;
+}
+
+message GetRadiologyProcedureByOrderIDRequest {
+  string order_id = 1;
+}
+
+message GetRadiologyProcedureByOrderIDResponse {
+  RadiologyProcedure procedure = 1;
+}
+
+// Ekspertise & Pelaporan Radiologi
+message SaveRadiologyReportRequest {
+  string order_id = 1;
+  string radiologist_id = 2;
+  string radiologist_name = 3;
+  string clinical_history = 4;
+  string findings = 5;
+  string impression = 6;
+  string recommendation = 7;
+  bool is_critical = 8;
+}
+
+message SaveRadiologyReportResponse {
+  RadiologyReport report = 1;
+}
+
+message GetRadiologyReportByOrderIDRequest {
+  string order_id = 1;
+}
+
+message GetRadiologyReportByOrderIDResponse {
+  RadiologyReport report = 1;
+}
+
+message VerifyRadiologyReportRequest {
+  string order_id = 1;
+  string radiologist_id = 2;
+  string radiologist_name = 3;
+}
+
+message VerifyRadiologyReportResponse {
+  RadiologyReport report = 1;
+}

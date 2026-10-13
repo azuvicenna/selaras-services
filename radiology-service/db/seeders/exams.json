@@ -1,0 +1,164 @@
+{
+  "exams": [
+    {
+      "code": "XR-THORAX-PA",
+      "name": "Foto Thorax PA",
+      "modality": 1,
+      "body_site": 3,
+      "loinc_code": "36643-5",
+      "requires_contrast": false,
+      "price": 150000,
+      "preparation_instructions": "Lepaskan kalung dan benda logam di area dada."
+    },
+    {
+      "code": "XR-THORAX-AP-PA",
+      "name": "Foto Thorax AP/PA",
+      "modality": 1,
+      "body_site": 3,
+      "loinc_code": "36642-7",
+      "requires_contrast": false,
+      "price": 175000,
+      "preparation_instructions": "Lepaskan perhiasan dan pakaian berkancing logam."
+    },
+    {
+      "code": "XR-ABDOMEN-3POS",
+      "name": "Foto Abdomen 3 Posisi (AP, LLD, Erect)",
+      "modality": 1,
+      "body_site": 4,
+      "loinc_code": "36640-1",
+      "requires_contrast": false,
+      "price": 300000,
+      "preparation_instructions": "Puasa 4-6 jam sebelum pemeriksaan jika memungkinkan."
+    },
+    {
+      "code": "XR-CRANIUM-AP-LAT",
+      "name": "Foto Kepala / Cranium AP/Lat",
+      "modality": 1,
+      "body_site": 1,
+      "loinc_code": "36641-9",
+      "requires_contrast": false,
+      "price": 200000,
+      "preparation_instructions": "Lepaskan anting, jepit rambut, kacamata, dan gigi palsu."
+    },
+    {
+      "code": "XR-GENU-AP-LAT",
+      "name": "Foto Genu (Lutut) Dextra/Sinistra AP/Lat",
+      "modality": 1,
+      "body_site": 8,
+      "loinc_code": "36644-3",
+      "requires_contrast": false,
+      "price": 180000,
+      "preparation_instructions": "Gunakan pakaian longgar yang memudahkan inspeksi lutut."
+    },
+    {
+      "code": "XR-LUMBAL-AP-LAT",
+      "name": "Foto Vertebra Lumbosacral AP/Lat",
+      "modality": 1,
+      "body_site": 6,
+      "loinc_code": "36645-0",
+      "requires_contrast": false,
+      "price": 250000,
+      "preparation_instructions": "Puasa dan minum obat pencahar malam sebelumnya jika diinstruksikan dokter."
+    },
+    {
+      "code": "CT-BRAIN-NC",
+      "name": "CT Scan Kepala Non-Kontras",
+      "modality": 2,
+      "body_site": 1,
+      "loinc_code": "24725-4",
+      "requires_contrast": false,
+      "price": 1200000,
+      "preparation_instructions": "Lepaskan gigi palsu dan benda logam di area kepala."
+    },
+    {
+      "code": "CT-BRAIN-C",
+      "name": "CT Scan Kepala dengan Kontras IV",
+      "modality": 2,
+      "body_site": 1,
+      "loinc_code": "24726-2",
+      "requires_contrast": true,
+      "price": 1800000,
+      "preparation_instructions": "Puasa 4-6 jam sebelum pemeriksaan. Lampirkan hasil laboratorium fungsi ginjal (Ureum & Kreatinin) terbaru."
+    },
+    {
+      "code": "CT-THORAX-C",
+      "name": "CT Scan Thorax dengan Kontras",
+      "modality": 2,
+      "body_site": 3,
+      "loinc_code": "24727-0",
+      "requires_contrast": true,
+      "price": 2200000,
+      "preparation_instructions": "Puasa 4-6 jam, pastikan fungsi ginjal normal, pasang akses infus 18G/20G."
+    },
+    {
+      "code": "CT-ABDOMEN-3PHASE",
+      "name": "CT Scan Abdomen 3 Fase (Triphasic)",
+      "modality": 2,
+      "body_site": 4,
+      "loinc_code": "24728-8",
+      "requires_contrast": true,
+      "price": 2800000,
+      "preparation_instructions": "Puasa 6 jam, minum kontras oral sesuai jadwal yang diberikan oleh petugas radiologi."
+    },
+    {
+      "code": "USG-ABDOMEN-FULL",
+      "name": "USG Abdomen Lengkap / Upper-Lower",
+      "modality": 4,
+      "body_site": 4,
+      "loinc_code": "24729-6",
+      "requires_contrast": false,
+      "price": 350000,
+      "preparation_instructions": "Puasa makan 6 jam sebelum pemeriksaan. Minum air putih dan tahan kencing hingga kandung kemih terisi penuh."
+    },
+    {
+      "code": "USG-MAMMAE",
+      "name": "USG Payudara / Mammae Bilateral",
+      "modality": 4,
+      "body_site": 3,
+      "loinc_code": "24730-4",
+      "requires_contrast": false,
+      "price": 300000,
+      "preparation_instructions": "Hindari pemakaian body lotion, bedak, atau deodoran di sekitar payudara dan ketiak."
+    },
+    {
+      "code": "USG-THYROID",
+      "name": "USG Kelenjar Tiroid / Colli",
+      "modality": 4,
+      "body_site": 2,
+      "loinc_code": "24731-2",
+      "requires_contrast": false,
+      "price": 280000,
+      "preparation_instructions": "Gunakan pakaian tanpa kerah tinggi atau lepaskan aksesoris leher."
+    },
+    {
+      "code": "MRI-BRAIN-NC",
+      "name": "MRI Kepala / Brain Tanpa Kontras",
+      "modality": 3,
+      "body_site": 1,
+      "loinc_code": "24732-0",
+      "requires_contrast": false,
+      "price": 2500000,
+      "preparation_instructions": "Wajib lepas seluruh benda logam. Informasikan bila memiliki alat pacu jantung, stent, atau implan koklea."
+    },
+    {
+      "code": "MRI-LUMBOSACRAL",
+      "name": "MRI Vertebra Lumbosacral",
+      "modality": 3,
+      "body_site": 6,
+      "loinc_code": "24733-8",
+      "requires_contrast": false,
+      "price": 2700000,
+      "preparation_instructions": "Lepaskan seluruh logam, kenakan pakaian pasien rumah sakit, informasikan jika memiliki rasa takut ruang sempit."
+    },
+    {
+      "code": "MAMMO-BILATERAL",
+      "name": "Mammografi Digital Bilateral (Craniocaudal & MLO)",
+      "modality": 5,
+      "body_site": 3,
+      "loinc_code": "24734-6",
+      "requires_contrast": false,
+      "price": 450000,
+      "preparation_instructions": "Paling baik dilakukan 7-10 hari setelah menstruasi dimulai. Jangan gunakan bedak, deodoran, atau minyak wangi."
+    }
+  ]
+}

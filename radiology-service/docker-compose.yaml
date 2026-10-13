@@ -1,0 +1,57 @@
+services:
+  db:
+    image: postgres:18-alpine
+    container_name: radiology-db
+    environment:
+      POSTGRES_USER: ${DB_USER:-radiology}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-change-me}
+      POSTGRES_DB: ${DB_NAME:-radiology_db}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - radiology-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-radiology} -d ${DB_NAME:-radiology_db}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  migration:
+    image: migrate/migrate:v4.18.2
+    container_name: radiology-migration
+    volumes:
+      - ./db/migrations:/migrations
+    command:
+      - -path=/migrations
+      - -database=postgres://${DB_USER:-radiology}:${DB_PASSWORD:-change-me}@db:5432/${DB_NAME:-radiology_db}?sslmode=disable
+      - up
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  app:
+    build: .
+    container_name: radiology-service
+    restart: on-failure
+    depends_on:
+      db:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: ${DB_USER:-radiology}
+      DB_PASSWORD: ${DB_PASSWORD:-change-me}
+      DB_NAME: ${DB_NAME:-radiology_db}
+      DB_MAX_CONNS: ${DB_MAX_CONNS:-25}
+      DB_MIN_CONNS: ${DB_MIN_CONNS:-5}
+      GRPC_PORT: ${GRPC_PORT:-50061}
+      METRICS_PORT: ${METRICS_PORT:-9102}
+    ports:
+      - "${GRPC_PORT:-50061}:${GRPC_PORT:-50061}"
+      - "${METRICS_PORT:-9102}:${METRICS_PORT:-9102}"
+
+volumes:
+  radiology-db-data:

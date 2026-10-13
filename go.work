@@ -11,4 +11,5 @@ use (
 	./patient-service
 	./pharmacy-service
 	./practitioner-service
+	./radiology-service
 )
