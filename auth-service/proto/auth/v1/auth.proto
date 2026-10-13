@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package auth.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/auth-service/gen/auth/v1;authv1";
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+enum Role {
+  ROLE_UNSPECIFIED = 0;
+  ROLE_SUPERADMIN = 1;
+  ROLE_ADMIN = 2;
+  ROLE_DOCTOR = 3;
+  ROLE_NURSE = 4;
+  ROLE_PHARMACIST = 5;
+  ROLE_ADMISSION = 6;
+  ROLE_CASHIER = 7;
+  ROLE_LAB_TECHNICIAN = 8;
+  ROLE_RADIOGRAPHER = 9;
+  ROLE_NUTRITIONIST = 10;
+  ROLE_PHYSIOTHERAPIST = 11;
+  ROLE_OTHER = 12;
+}
+
+// =============================================================================
+// DOMAIN MODELS
+// =============================================================================
+
+message User {
+  string id = 1;
+  string username = 2;
+  string email = 3;
+  string full_name = 4;
+  Role role = 5;
+  string practitioner_id = 6;
+  bool is_active = 7;
+  google.protobuf.Timestamp last_login_at = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+}
+
+message TokenPair {
+  string access_token = 1;
+  string refresh_token = 2;
+  int64 expires_in = 3;
+  string token_type = 4;
+}

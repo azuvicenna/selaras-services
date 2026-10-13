@@ -1,0 +1,76 @@
+{
+  "users": [
+    {
+      "username": "superadmin",
+      "email": "superadmin@selaras-hospital.id",
+      "password": "Password123!",
+      "full_name": "Super Administrator SIMRS",
+      "role": 1,
+      "practitioner_id": "",
+      "is_active": true
+    },
+    {
+      "username": "admin",
+      "email": "admin@selaras-hospital.id",
+      "password": "Password123!",
+      "full_name": "Administrator IT Selaras",
+      "role": 2,
+      "practitioner_id": "",
+      "is_active": true
+    },
+    {
+      "username": "dr.budi",
+      "email": "dr.budi@selaras-hospital.id",
+      "password": "Password123!",
+      "full_name": "dr. Budi Santoso, Sp.PD",
+      "role": 3,
+      "practitioner_id": "",
+      "is_active": true
+    },
+    {
+      "username": "nurse.rina",
+      "email": "rina.nurse@selaras-hospital.id",
+      "password": "Password123!",
+      "full_name": "Ns. Rina Kusuma, S.Kep",
+      "role": 4,
+      "practitioner_id": "",
+      "is_active": true
+    },
+    {
+      "username": "admission1",
+      "email": "admission@selaras-hospital.id",
+      "password": "Password123!",
+      "full_name": "Staf Admisi Pendaftaran",
+      "role": 6,
+      "practitioner_id": "",
+      "is_active": true
+    },
+    {
+      "username": "cashier1",
+      "email": "kasir@selaras-hospital.id",
+      "password": "Password123!",
+      "full_name": "Staf Kasir Pembayaran",
+      "role": 7,
+      "practitioner_id": "",
+      "is_active": true
+    },
+    {
+      "username": "dewi.gizi",
+      "email": "dewi.gizi@selaras-hospital.id",
+      "password": "Password123!",
+      "full_name": "Dewi Sartika, S.Gz, RD",
+      "role": 10,
+      "practitioner_id": "",
+      "is_active": true
+    },
+    {
+      "username": "bambang.fisio",
+      "email": "bambang.fisio@selaras-hospital.id",
+      "password": "Password123!",
+      "full_name": "Bambang Irawan, S.Ft, Ftr",
+      "role": 11,
+      "practitioner_id": "",
+      "is_active": true
+    }
+  ]
+}

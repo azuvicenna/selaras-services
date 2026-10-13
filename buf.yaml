@@ -6,6 +6,7 @@ modules:
   - path: bed-service/proto
   - path: admission-service/proto
   - path: practitioner-service/proto
+  - path: auth-service/proto
 lint:
   use:
     - STANDARD

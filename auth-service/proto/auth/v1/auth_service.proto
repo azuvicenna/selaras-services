@@ -1,0 +1,153 @@
+syntax = "proto3";
+
+package auth.v1;
+
+import "auth/v1/auth.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/auth-service/gen/auth/v1;authv1";
+
+// =============================================================================
+// SERVICE DEFINITION
+// =============================================================================
+
+service AuthService {
+  // Captcha
+  rpc GenerateCaptcha (GenerateCaptchaRequest) returns (GenerateCaptchaResponse);
+
+  // Authentication (No self-registration)
+  rpc Login (LoginRequest) returns (LoginResponse);
+  rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse);
+  rpc ValidateToken (ValidateTokenRequest) returns (ValidateTokenResponse);
+  rpc Logout (LogoutRequest) returns (LogoutResponse);
+
+  // User Management (Admin & Staff Management)
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+  rpc GetUserByID (GetUserByIDRequest) returns (GetUserByIDResponse);
+  rpc GetUserByUsername (GetUserByUsernameRequest) returns (GetUserByUsernameResponse);
+  rpc ListUsers (ListUsersRequest) returns (ListUsersResponse);
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
+  rpc ChangePassword (ChangePasswordRequest) returns (ChangePasswordResponse);
+  rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordResponse);
+}
+
+// =============================================================================
+// REQUEST & RESPONSE MESSAGES
+// =============================================================================
+
+message GenerateCaptchaRequest {}
+
+message GenerateCaptchaResponse {
+  string captcha_id = 1;
+  string captcha_image = 2; // Data URI: data:image/png;base64,...
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+  string captcha_id = 3;
+  string captcha_code = 4;
+}
+
+message LoginResponse {
+  User user = 1;
+  TokenPair tokens = 2;
+}
+
+message RefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+message RefreshTokenResponse {
+  TokenPair tokens = 1;
+}
+
+message ValidateTokenRequest {
+  string token = 1;
+}
+
+message ValidateTokenResponse {
+  bool is_valid = 1;
+  User user = 2;
+}
+
+message LogoutRequest {
+  string refresh_token = 1;
+}
+
+message LogoutResponse {
+  bool success = 1;
+}
+
+message CreateUserRequest {
+  string username = 1;
+  string email = 2;
+  string password = 3;
+  string full_name = 4;
+  Role role = 5;
+  string practitioner_id = 6;
+}
+
+message CreateUserResponse {
+  User user = 1;
+}
+
+message GetUserByIDRequest {
+  string id = 1;
+}
+
+message GetUserByIDResponse {
+  User user = 1;
+}
+
+message GetUserByUsernameRequest {
+  string username = 1;
+}
+
+message GetUserByUsernameResponse {
+  User user = 1;
+}
+
+message ListUsersRequest {
+  string query = 1;
+  Role role = 2;
+  optional bool is_active = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message ListUsersResponse {
+  repeated User users = 1;
+  int64 total = 2;
+}
+
+message UpdateUserRequest {
+  string id = 1;
+  string full_name = 2;
+  string email = 3;
+  Role role = 4;
+  string practitioner_id = 5;
+  bool is_active = 6;
+}
+
+message UpdateUserResponse {
+  User user = 1;
+}
+
+message ChangePasswordRequest {
+  string user_id = 1;
+  string old_password = 2;
+  string new_password = 3;
+}
+
+message ChangePasswordResponse {
+  bool success = 1;
+}
+
+message ResetPasswordRequest {
+  string user_id = 1;
+  string new_password = 2;
+}
+
+message ResetPasswordResponse {
+  bool success = 1;
+}

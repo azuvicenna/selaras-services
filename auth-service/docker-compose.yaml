@@ -1,0 +1,61 @@
+services:
+  db:
+    image: postgres:18-alpine
+    container_name: auth-db
+    environment:
+      POSTGRES_USER: ${DB_USER:-auth}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-change-me}
+      POSTGRES_DB: ${DB_NAME:-auth_db}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-auth} -d ${DB_NAME:-auth_db}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  migration:
+    image: migrate/migrate:v4.18.2
+    container_name: auth-migration
+    volumes:
+      - ./db/migrations:/migrations
+    command:
+      - -path=/migrations
+      - -database=postgres://${DB_USER:-auth}:${DB_PASSWORD:-change-me}@db:5432/${DB_NAME:-auth_db}?sslmode=disable
+      - up
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  app:
+    build: .
+    container_name: auth-service
+    restart: on-failure
+    depends_on:
+      db:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: ${DB_USER:-auth}
+      DB_PASSWORD: ${DB_PASSWORD:-change-me}
+      DB_NAME: ${DB_NAME:-auth_db}
+      DB_MAX_CONNS: ${DB_MAX_CONNS:-25}
+      DB_MIN_CONNS: ${DB_MIN_CONNS:-5}
+      GRPC_PORT: ${GRPC_PORT:-50057}
+      METRICS_PORT: ${METRICS_PORT:-9098}
+      JWT_SECRET: ${JWT_SECRET:-selaras-hospital-jwt-secret-key-32bytes!}
+      JWT_ACCESS_EXPIRY: ${JWT_ACCESS_EXPIRY:-15m}
+      JWT_REFRESH_EXPIRY: ${JWT_REFRESH_EXPIRY:-168h}
+      CAPTCHA_EXPIRY: ${CAPTCHA_EXPIRY:-5m}
+    ports:
+      - "${GRPC_PORT:-50057}:${GRPC_PORT:-50057}"
+      - "${METRICS_PORT:-9098}:${METRICS_PORT:-9098}"
+
+volumes:
+  auth-db-data:
