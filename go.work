@@ -8,5 +8,6 @@ use (
 	./emr-service
 	./master-service
 	./patient-service
+	./pharmacy-service
 	./practitioner-service
 )

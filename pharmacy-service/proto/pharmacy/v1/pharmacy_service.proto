@@ -1,0 +1,221 @@
+syntax = "proto3";
+
+package pharmacy.v1;
+
+import "pharmacy/v1/pharmacy.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/pharmacy-service/gen/pharmacy/v1;pharmacyv1";
+
+// =============================================================================
+// SERVICE DEFINITION
+// =============================================================================
+
+service PharmacyService {
+  // Master Obat & Alkes
+  rpc CreateMedication (CreateMedicationRequest) returns (CreateMedicationResponse);
+  rpc GetMedicationByID (GetMedicationByIDRequest) returns (GetMedicationByIDResponse);
+  rpc GetMedicationByKFA (GetMedicationByKFARequest) returns (GetMedicationByKFAResponse);
+  rpc ListMedications (ListMedicationsRequest) returns (ListMedicationsResponse);
+  rpc UpdateMedication (UpdateMedicationRequest) returns (UpdateMedicationResponse);
+  rpc DeleteMedication (DeleteMedicationRequest) returns (DeleteMedicationResponse);
+
+  // Manajemen Stok & Inventori
+  rpc AddStock (AddStockRequest) returns (AddStockResponse);
+  rpc AdjustStock (AdjustStockRequest) returns (AdjustStockResponse);
+  rpc GetStockByID (GetStockByIDRequest) returns (GetStockByIDResponse);
+  rpc ListStocks (ListStocksRequest) returns (ListStocksResponse);
+  rpc ListStockMovements (ListStockMovementsRequest) returns (ListStockMovementsResponse);
+
+  // Pelayanan Resep & Dispensing
+  rpc CreateDispense (CreateDispenseRequest) returns (CreateDispenseResponse);
+  rpc GetDispenseByID (GetDispenseByIDRequest) returns (GetDispenseByIDResponse);
+  rpc ListDispenses (ListDispensesRequest) returns (ListDispensesResponse);
+  rpc UpdateDispenseStatus (UpdateDispenseStatusRequest) returns (UpdateDispenseStatusResponse);
+}
+
+// =============================================================================
+// REQUEST & RESPONSE MESSAGES
+// =============================================================================
+
+// Medication
+message CreateMedicationRequest {
+  string kfa_code = 1;
+  string name = 2;
+  MedicationForm form = 3;
+  string strength = 4;
+  string unit = 5;
+  string package_unit = 6;
+  int32 conversion_factor = 7;
+  double selling_price = 8;
+  double purchase_price = 9;
+  int32 min_stock = 10;
+}
+
+message CreateMedicationResponse {
+  Medication medication = 1;
+}
+
+message GetMedicationByIDRequest {
+  string id = 1;
+}
+
+message GetMedicationByIDResponse {
+  Medication medication = 1;
+}
+
+message GetMedicationByKFARequest {
+  string kfa_code = 1;
+}
+
+message GetMedicationByKFAResponse {
+  Medication medication = 1;
+}
+
+message ListMedicationsRequest {
+  string query = 1; // kfa_code or name
+  MedicationForm form = 2;
+  optional bool is_active = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message ListMedicationsResponse {
+  repeated Medication medications = 1;
+  int64 total = 2;
+}
+
+message UpdateMedicationRequest {
+  string id = 1;
+  string name = 2;
+  MedicationForm form = 3;
+  string strength = 4;
+  string unit = 5;
+  string package_unit = 6;
+  int32 conversion_factor = 7;
+  double selling_price = 8;
+  double purchase_price = 9;
+  int32 min_stock = 10;
+  bool is_active = 11;
+}
+
+message UpdateMedicationResponse {
+  Medication medication = 1;
+}
+
+message DeleteMedicationRequest {
+  string id = 1;
+}
+
+message DeleteMedicationResponse {
+  bool success = 1;
+}
+
+// Stock
+message AddStockRequest {
+  string medication_id = 1;
+  string batch_number = 2;
+  string expiry_date = 3; // YYYY-MM-DD
+  int32 quantity = 4;
+  string location = 5;
+  string notes = 6;
+}
+
+message AddStockResponse {
+  Stock stock = 1;
+}
+
+message AdjustStockRequest {
+  string stock_id = 1;
+  int32 new_quantity = 2;
+  string reason = 3;
+}
+
+message AdjustStockResponse {
+  Stock stock = 1;
+}
+
+message GetStockByIDRequest {
+  string id = 1;
+}
+
+message GetStockByIDResponse {
+  Stock stock = 1;
+}
+
+message ListStocksRequest {
+  string medication_id = 1;
+  string location = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+}
+
+message ListStocksResponse {
+  repeated Stock stocks = 1;
+  int64 total = 2;
+}
+
+message ListStockMovementsRequest {
+  string medication_id = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+}
+
+message ListStockMovementsResponse {
+  repeated StockMovement movements = 1;
+  int64 total = 2;
+}
+
+// Dispense
+message CreateDispenseItemInput {
+  string medication_id = 1;
+  string batch_number = 2;
+  int32 quantity = 3;
+  double unit_price = 4;
+  string dosage_instruction = 5;
+  string notes = 6;
+}
+
+message CreateDispenseRequest {
+  string prescription_id = 1;
+  string encounter_id = 2;
+  string patient_id = 3;
+  string patient_name = 4;
+  string pharmacist_id = 5;
+  string notes = 6;
+  repeated CreateDispenseItemInput items = 7;
+}
+
+message CreateDispenseResponse {
+  MedicationDispense dispense = 1;
+}
+
+message GetDispenseByIDRequest {
+  string id = 1;
+}
+
+message GetDispenseByIDResponse {
+  MedicationDispense dispense = 1;
+}
+
+message ListDispensesRequest {
+  string patient_id = 1;
+  string encounter_id = 2;
+  DispenseStatus status = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message ListDispensesResponse {
+  repeated MedicationDispense dispenses = 1;
+  int64 total = 2;
+}
+
+message UpdateDispenseStatusRequest {
+  string id = 1;
+  DispenseStatus status = 2;
+  string notes = 3;
+}
+
+message UpdateDispenseStatusResponse {
+  MedicationDispense dispense = 1;
+}

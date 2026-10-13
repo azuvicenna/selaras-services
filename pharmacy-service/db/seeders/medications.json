@@ -1,0 +1,148 @@
+{
+  "medications": [
+    {
+      "kfa_code": "93000101",
+      "name": "Paracetamol 500 mg Tablet",
+      "form": 1,
+      "strength": "500 mg",
+      "unit": "Tablet",
+      "package_unit": "Strip",
+      "conversion_factor": 10,
+      "selling_price": 5000,
+      "purchase_price": 3000,
+      "min_stock": 100
+    },
+    {
+      "kfa_code": "93000201",
+      "name": "Amoxicillin 500 mg Kapsul",
+      "form": 2,
+      "strength": "500 mg",
+      "unit": "Kapsul",
+      "package_unit": "Strip",
+      "conversion_factor": 10,
+      "selling_price": 8500,
+      "purchase_price": 5000,
+      "min_stock": 100
+    },
+    {
+      "kfa_code": "93000301",
+      "name": "Cefixime 200 mg Kapsul",
+      "form": 2,
+      "strength": "200 mg",
+      "unit": "Kapsul",
+      "package_unit": "Strip",
+      "conversion_factor": 10,
+      "selling_price": 25000,
+      "purchase_price": 18000,
+      "min_stock": 50
+    },
+    {
+      "kfa_code": "93000401",
+      "name": "Ibuprofen 400 mg Tablet",
+      "form": 1,
+      "strength": "400 mg",
+      "unit": "Tablet",
+      "package_unit": "Strip",
+      "conversion_factor": 10,
+      "selling_price": 6000,
+      "purchase_price": 3500,
+      "min_stock": 80
+    },
+    {
+      "kfa_code": "93000501",
+      "name": "Cetirizine 10 mg Tablet",
+      "form": 1,
+      "strength": "10 mg",
+      "unit": "Tablet",
+      "package_unit": "Strip",
+      "conversion_factor": 10,
+      "selling_price": 7000,
+      "purchase_price": 4000,
+      "min_stock": 50
+    },
+    {
+      "kfa_code": "93000601",
+      "name": "Omeprazole 20 mg Kapsul",
+      "form": 2,
+      "strength": "20 mg",
+      "unit": "Kapsul",
+      "package_unit": "Strip",
+      "conversion_factor": 10,
+      "selling_price": 12000,
+      "purchase_price": 7500,
+      "min_stock": 100
+    },
+    {
+      "kfa_code": "93000701",
+      "name": "Amlodipine 5 mg Tablet",
+      "form": 1,
+      "strength": "5 mg",
+      "unit": "Tablet",
+      "package_unit": "Strip",
+      "conversion_factor": 10,
+      "selling_price": 4500,
+      "purchase_price": 2500,
+      "min_stock": 100
+    },
+    {
+      "kfa_code": "93000801",
+      "name": "Metformin 500 mg Tablet",
+      "form": 1,
+      "strength": "500 mg",
+      "unit": "Tablet",
+      "package_unit": "Strip",
+      "conversion_factor": 10,
+      "selling_price": 5500,
+      "purchase_price": 3000,
+      "min_stock": 100
+    },
+    {
+      "kfa_code": "93000901",
+      "name": "Paracetamol Sirup 120 mg/5 ml",
+      "form": 3,
+      "strength": "120 mg/5 ml",
+      "unit": "Botol",
+      "package_unit": "Botol",
+      "conversion_factor": 1,
+      "selling_price": 15000,
+      "purchase_price": 9500,
+      "min_stock": 30
+    },
+    {
+      "kfa_code": "93001001",
+      "name": "Ringer Lactate Infus 500 ml",
+      "form": 6,
+      "strength": "500 ml",
+      "unit": "Kolf",
+      "package_unit": "Karton",
+      "conversion_factor": 20,
+      "selling_price": 18000,
+      "purchase_price": 11000,
+      "min_stock": 100
+    },
+    {
+      "kfa_code": "93001101",
+      "name": "Salbutamol Inhaler 100 mcg",
+      "form": 8,
+      "strength": "100 mcg/puff",
+      "unit": "Canister",
+      "package_unit": "Dus",
+      "conversion_factor": 1,
+      "selling_price": 85000,
+      "purchase_price": 65000,
+      "min_stock": 20
+    },
+    {
+      "kfa_code": "93001201",
+      "name": "Ondansetron Injeksi 4 mg/2 ml",
+      "form": 4,
+      "strength": "4 mg/2 ml",
+      "unit": "Ampul",
+      "package_unit": "Dus",
+      "conversion_factor": 5,
+      "selling_price": 22000,
+      "purchase_price": 14000,
+      "min_stock": 50
+    }
+  ]
+}
