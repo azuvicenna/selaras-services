@@ -1,0 +1,9 @@
+.git
+.gitignore
+.env
+.env.*
+*.exe
+bin/
+coverage/
+deploy/
+tests/

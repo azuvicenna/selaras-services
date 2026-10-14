@@ -1,0 +1,197 @@
+syntax = "proto3";
+
+package document.v1;
+
+import "document/v1/document.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/azuvicenna/selaras-services/document-service/gen/document/v1;documentv1";
+
+// =============================================================================
+// SERVICE DEFINITION
+// =============================================================================
+
+service DocumentService {
+  // Manajemen Template Dokumen (Typst)
+  rpc CreateDocumentTemplate (CreateDocumentTemplateRequest) returns (CreateDocumentTemplateResponse);
+  rpc GetDocumentTemplateByID (GetDocumentTemplateByIDRequest) returns (GetDocumentTemplateByIDResponse);
+  rpc GetDocumentTemplateByCode (GetDocumentTemplateByCodeRequest) returns (GetDocumentTemplateByCodeResponse);
+  rpc ListDocumentTemplates (ListDocumentTemplatesRequest) returns (ListDocumentTemplatesResponse);
+  rpc UpdateDocumentTemplate (UpdateDocumentTemplateRequest) returns (UpdateDocumentTemplateResponse);
+  rpc DeleteDocumentTemplate (DeleteDocumentTemplateRequest) returns (DeleteDocumentTemplateResponse);
+
+  // Manajemen Dokumen & Persuratan Medis
+  rpc CreateDocument (CreateDocumentRequest) returns (CreateDocumentResponse);
+  rpc GetDocumentByID (GetDocumentByIDRequest) returns (GetDocumentByIDResponse);
+  rpc GetDocumentByNumber (GetDocumentByNumberRequest) returns (GetDocumentByNumberResponse);
+  rpc ListDocuments (ListDocumentsRequest) returns (ListDocumentsResponse);
+  rpc UpdateDocumentStatus (UpdateDocumentStatusRequest) returns (UpdateDocumentStatusResponse);
+
+  // Typst PDF Rendering Engine
+  rpc GenerateDocumentPDF (GenerateDocumentPDFRequest) returns (GenerateDocumentPDFResponse);
+  rpc PreviewDocument (PreviewDocumentRequest) returns (PreviewDocumentResponse);
+
+  // Verifikasi Dokumen & Keabsahan TTE
+  rpc VerifyDocument (VerifyDocumentRequest) returns (VerifyDocumentResponse);
+}
+
+// =============================================================================
+// REQUEST & RESPONSE MESSAGES
+// =============================================================================
+
+// Templates
+message CreateDocumentTemplateRequest {
+  string code = 1;
+  string name = 2;
+  DocumentType type = 3;
+  string typst_content = 4;
+}
+
+message CreateDocumentTemplateResponse {
+  DocumentTemplate template = 1;
+}
+
+message GetDocumentTemplateByIDRequest {
+  string id = 1;
+}
+
+message GetDocumentTemplateByIDResponse {
+  DocumentTemplate template = 1;
+}
+
+message GetDocumentTemplateByCodeRequest {
+  string code = 1;
+}
+
+message GetDocumentTemplateByCodeResponse {
+  DocumentTemplate template = 1;
+}
+
+message ListDocumentTemplatesRequest {
+  string query = 1;
+  DocumentType type = 2;
+  optional bool is_active = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message ListDocumentTemplatesResponse {
+  repeated DocumentTemplate templates = 1;
+  int64 total = 2;
+}
+
+message UpdateDocumentTemplateRequest {
+  string id = 1;
+  string name = 2;
+  DocumentType type = 3;
+  string typst_content = 4;
+  bool is_active = 5;
+}
+
+message UpdateDocumentTemplateResponse {
+  DocumentTemplate template = 1;
+}
+
+message DeleteDocumentTemplateRequest {
+  string id = 1;
+}
+
+message DeleteDocumentTemplateResponse {
+  bool success = 1;
+}
+
+// Documents
+message CreateDocumentRequest {
+  DocumentType type = 1;
+  string title = 2;
+  string encounter_id = 3;
+  string patient_id = 4;
+  string patient_name = 5;
+  string patient_gender = 6;
+  string patient_dob = 7;
+  string doctor_id = 8;
+  string doctor_name = 9;
+  string doctor_sip = 10;
+  string template_code = 11;
+  string payload_json = 12;
+  bool issue_immediately = 13; // if true, sets status to ISSUED, generates doc number & QR
+  google.protobuf.Timestamp valid_until = 14;
+}
+
+message CreateDocumentResponse {
+  MedicalDocument document = 1;
+}
+
+message GetDocumentByIDRequest {
+  string id = 1;
+}
+
+message GetDocumentByIDResponse {
+  MedicalDocument document = 1;
+}
+
+message GetDocumentByNumberRequest {
+  string document_number = 1;
+}
+
+message GetDocumentByNumberResponse {
+  MedicalDocument document = 1;
+}
+
+message ListDocumentsRequest {
+  string patient_id = 1;
+  string encounter_id = 2;
+  DocumentType type = 3;
+  DocumentStatus status = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+message ListDocumentsResponse {
+  repeated MedicalDocument documents = 1;
+  int64 total = 2;
+}
+
+message UpdateDocumentStatusRequest {
+  string id = 1;
+  DocumentStatus status = 2;
+}
+
+message UpdateDocumentStatusResponse {
+  MedicalDocument document = 1;
+}
+
+// Typst PDF Rendering
+message GenerateDocumentPDFRequest {
+  string document_id = 1;
+}
+
+message GenerateDocumentPDFResponse {
+  bytes pdf_content = 1;
+  string content_type = 2; // "application/pdf"
+  string filename = 3;
+}
+
+message PreviewDocumentRequest {
+  DocumentType type = 1;
+  string template_code = 2;
+  string typst_source = 3;
+  string payload_json = 4;
+}
+
+message PreviewDocumentResponse {
+  bytes pdf_content = 1;
+  string content_type = 2;
+}
+
+// Verification
+message VerifyDocumentRequest {
+  string token = 1;
+  string document_number = 2;
+}
+
+message VerifyDocumentResponse {
+  bool is_valid = 1;
+  MedicalDocument document = 2;
+  string message = 3;
+}
