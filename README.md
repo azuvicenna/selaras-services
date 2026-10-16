@@ -116,13 +116,32 @@ Akses Dashboard Infrastruktur:
 go work sync
 ```
 
-### 3. Kompilasi Protobuf (Jika melakukan perubahan kontrak API)
+### 3. Eksekusi Migrasi Database & Seeding Sekaligus
+Sistem dilengkapi dengan **Unified Migration Runner** untuk mengeksekusi migrasi ke-12 database PostgreSQL secara otomatis:
+```bash
+# Migrasi seluruh 12 database ke versi terbaru
+make migrate-all
+# Atau via PowerShell (Windows):
+.\scripts\migrate.ps1 up
+# Atau via Bash (Linux/macOS):
+./scripts/migrate.sh up
+
+# Cek status migrasi seluruh 12 database
+make migrate-status
+# Atau: .\scripts\migrate.ps1 status
+
+# Seeding data master awal (ICD-10, users, poli, bed, tarif, dll.)
+make seed-all
+# Atau: .\scripts\migrate.ps1 seed
+```
+
+### 4. Kompilasi Protobuf (Jika melakukan perubahan kontrak API)
 ```bash
 make proto
 # Atau: buf generate
 ```
 
-### 4. Menjalankan Service di Komputer Lokal
+### 5. Menjalankan Service di Komputer Lokal
 Setiap service memiliki file `.env.example`. Salin menjadi `.env` lalu jalankan secara mandiri:
 ```bash
 cd auth-service
@@ -136,7 +155,7 @@ make compose-apps
 # Atau: docker compose --profile apps up -d --build
 ```
 
-### 5. Menjalankan Pengujian (Testing) & Lint
+### 6. Menjalankan Pengujian (Testing) & Lint
 ```bash
 # Menjalankan seluruh unit & integration tests di 12 services
 make test

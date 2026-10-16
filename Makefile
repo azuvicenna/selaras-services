@@ -24,3 +24,21 @@ compose-apps:
 
 compose-down:
 	docker compose down
+
+migrate-all:
+	go run ./scripts/migrator -action=up
+
+migrate-down:
+	go run ./scripts/migrator -action=down
+
+migrate-status:
+	go run ./scripts/migrator -action=status
+
+migrate-reset:
+	go run ./scripts/migrator -action=reset
+
+seed-all:
+	go run ./scripts/migrator -action=seed
+
+compose-migrate:
+	docker compose --profile tools run --rm migration-runner

@@ -93,6 +93,22 @@ services:
       timeout: 5s
       retries: 5
 
+  migration-runner:
+    profiles: ["apps", "tools"]
+    build:
+      context: .
+      dockerfile: ./scripts/migrator/Dockerfile
+    container_name: selaras-migration-runner
+    restart: "no"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_SSLMODE: disable
+    command: ["-action=up", "-db-host=postgres"]
+
   # =========================================================================
   # CORE MICROSERVICES (Profile: apps)
   # Jalankan semua service sekaligus dengan: docker compose --profile apps up -d

@@ -19,4 +19,5 @@ use (
 	./practitioner-service
 	./radiology-service
 	./satusehat-worker
+	./scripts/migrator
 )
