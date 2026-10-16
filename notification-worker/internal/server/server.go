@@ -176,10 +176,10 @@ func (s *Server) handleGenericNotify(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Publish to Kafka topic
-	if err := s.producer.Publish(r.Context(), s.cfg.KafkaTopic, &msg); err != nil {
+	// Publish to RabbitMQ
+	if err := s.producer.Publish(r.Context(), s.cfg.RabbitMQRoutingKey, &msg); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		_ = json.NewEncoder(w).Encode(map[string]string{"error": "failed to publish to kafka: " + err.Error()})
+		_ = json.NewEncoder(w).Encode(map[string]string{"error": "failed to publish to rabbitmq: " + err.Error()})
 		return
 	}
 
@@ -187,6 +187,6 @@ func (s *Server) handleGenericNotify(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(map[string]any{
 		"status":     "queued",
 		"message_id": msg.ID,
-		"topic":      s.cfg.KafkaTopic,
+		"queue":      s.cfg.RabbitMQQueue,
 	})
 }

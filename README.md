@@ -80,7 +80,7 @@
 | 15 | [**`b2b-gateway`**](./b2b-gateway) | HTTP `8082` | `9092` | - | Enterprise B2B Gateway (Asuransi Swasta & MCU) | ✅ Selesai |
 | 16 | [**`satusehat-worker`**](./satusehat-worker) | HTTP `8085` | `9095` | - | SATUSEHAT FHIR R4 & RabbitMQ Consumer | ✅ Selesai |
 | 17 | [**`bpjs-worker`**](./bpjs-worker) | HTTP `8086` | `9096` | - | BPJS VClaim 2.0, Antrean, Aplicares Consumer | ✅ Selesai |
-| 18 | [**`notification-worker`**](./notification-worker) | HTTP `8087` | `9097` | - | WhatsApp & Email via Apache Kafka | ✅ Selesai |
+| 18 | [**`notification-worker`**](./notification-worker) | HTTP `8087` | `9097` | - | WhatsApp & Email via RabbitMQ Consumer | ✅ Selesai |
 
 ---
 

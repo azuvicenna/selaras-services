@@ -1,16 +1,17 @@
-# Notification Worker Microservice (Apache Kafka)
+# Notification Worker Microservice (RabbitMQ)
 
-Worker asinkron untuk pengiriman notifikasi rumah sakit berskala tinggi (*high-throughput event streaming*) menggunakan **Apache Kafka**. Mendukung multi-channel: **WhatsApp** dan **Email (HTML templating)**.
+Worker asinkron untuk pengiriman notifikasi rumah sakit berskala tinggi menggunakan **RabbitMQ**. Mendukung multi-channel: **WhatsApp** dan **Email (HTML templating)**.
 
 ---
 
 ## 🛠️ Fitur Utama
 
-- **Apache Kafka Event-Driven Architecture**:
-  - Topik utama: `hospital.notifications`
-  - Consumer Group: `notification-worker-group`
-  - Dead Letter Queue (DLQ): `hospital.notifications.dlq`
-  - Automatic offset management, concurrency worker pool, dan retry backoff policy.
+- **RabbitMQ Event-Driven & Task Queue Architecture**:
+  - Exchange: `notification.exchange` (topic)
+  - Queue utama: `notification.send`
+  - Routing Key: `notification.#`
+  - Dead Letter Queue (DLQ): `notification.send.dlq` (native via `x-dead-letter-exchange`)
+  - Concurrency worker pool dan automatic acknowledgement (ACK/NACK).
 - **Multi-Channel Notification Providers**:
   - **WhatsApp**: Mendukung Mock Provider (untuk development/testing) dan HTTP Gateway Provider (kompatibel dengan Meta WhatsApp Business Cloud API, Fonnte, Wablas, dan generic webhooks).
   - **Email**: Mendukung Mock Provider dan SMTP Provider dengan output HTML responsive dan styled card.
@@ -25,10 +26,10 @@ Worker asinkron untuk pengiriman notifikasi rumah sakit berskala tinggi (*high-t
   - `CUSTOM`: Pesan teks bebas kustom.
 - **Observability & REST APIs**:
   - `GET /healthz` - Health check status service.
-  - `GET /metrics` - Prometheus metrics (`notification_sent_total`, `notification_duration_seconds`, `kafka_messages_processed_total`, `notification_worker_up`).
+  - `GET /metrics` - Prometheus metrics (`notification_sent_total`, `notification_duration_seconds`, `notification_queue_messages_total`, `notification_worker_up`).
   - `POST /api/v1/notify/whatsapp` - Pengiriman WhatsApp langsung.
   - `POST /api/v1/notify/email` - Pengiriman Email langsung.
-  - `POST /api/v1/notify` - Publish event ke Kafka topic (`hospital.notifications`), atau kirim langsung dengan parameter `?direct=true`.
+  - `POST /api/v1/notify` - Publish event ke antrean RabbitMQ (`notification.send`), atau kirim langsung dengan parameter `?direct=true`.
 
 ---
 
@@ -36,7 +37,7 @@ Worker asinkron untuk pengiriman notifikasi rumah sakit berskala tinggi (*high-t
 
 ### 1. Menjalankan Langsung (Local Go)
 
-Pastikan Kafka berjalan (misal via Docker Compose), lalu:
+Pastikan RabbitMQ berjalan (misal via Docker Compose), lalu:
 
 ```bash
 cd notification-worker
@@ -53,47 +54,24 @@ docker compose --profile apps up -d notification-worker
 
 ---
 
-## 📬 Format Event Message Kafka (`hospital.notifications`)
+## 📬 Format Pesan Antrean RabbitMQ (`notification.send`)
 
-Pesan dikirimkan dalam format JSON ke Kafka topic `hospital.notifications`:
+### Contoh Payload JSON
 
-### 1. Pengingat Janji Temu (WhatsApp)
 ```json
 {
   "id": "notif-001",
   "channel": "WHATSAPP",
-  "recipient": "+6281234567890",
+  "recipient": "+628123456789",
   "type": "APPOINTMENT_REMINDER",
+  "subject": "Pengingat Janji Temu Poliklinik",
   "data": {
     "patient_name": "Budi Santoso",
-    "practitioner_name": "dr. Andi Wijaya, Sp.PD",
-    "poli_name": "Poli Penyakit Dalam",
-    "schedule_time": "Senin, 19 Oktober 2026, 09:00 WIB",
+    "doctor_name": "dr. Siti Rahma, Sp.A",
+    "clinic_name": "Poli Anak",
+    "appointment_date": "18 Oktober 2026",
+    "appointment_time": "09:00 WIB",
     "queue_number": "A-012"
   }
 }
-```
-
-### 2. Bukti Pembayaran Tagihan (Email HTML)
-```json
-{
-  "id": "notif-002",
-  "channel": "EMAIL",
-  "recipient": "pasien@example.com",
-  "type": "BILLING_INVOICE",
-  "data": {
-    "patient_name": "Citra Dewi",
-    "invoice_number": "INV-20261016-0045",
-    "amount": "750.000"
-  }
-}
-```
-
----
-
-## 🧪 Menjalankan Unit Tests
-
-```bash
-cd notification-worker
-go test -v -count=1 ./...
 ```

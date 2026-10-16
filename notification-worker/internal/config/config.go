@@ -3,7 +3,6 @@ package config
 import (
 	"os"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -11,15 +10,12 @@ type Config struct {
 	HTTPPort    string
 	MetricsPort string
 
-	// Apache Kafka Settings
-	KafkaBrokers       []string
-	KafkaTopic         string
-	KafkaConsumerGroup string
-	KafkaDLQTopic      string
-	KafkaMaxRetries    int
-	KafkaMinBytes      int
-	KafkaMaxBytes      int
-	KafkaMaxWait       time.Duration
+	// RabbitMQ Settings
+	RabbitMQURL        string
+	RabbitMQQueue      string
+	RabbitMQExchange   string
+	RabbitMQRoutingKey string
+	RabbitMQDLQ        string
 
 	// WhatsApp Gateway Settings
 	WhatsAppProvider string // "mock", "http"
@@ -41,25 +37,16 @@ type Config struct {
 }
 
 func Load() *Config {
-	brokersStr := getEnv("KAFKA_BROKERS", "localhost:9092")
-	brokers := strings.Split(brokersStr, ",")
-	for i := range brokers {
-		brokers[i] = strings.TrimSpace(brokers[i])
-	}
-
 	timeoutSec := getEnvAsInt("REQUEST_TIMEOUT_SEC", 30)
 
 	return &Config{
 		HTTPPort:           getEnv("HTTP_PORT", "8087"),
 		MetricsPort:        getEnv("METRICS_PORT", "9097"),
-		KafkaBrokers:       brokers,
-		KafkaTopic:         getEnv("KAFKA_TOPIC", "hospital.notifications"),
-		KafkaConsumerGroup: getEnv("KAFKA_CONSUMER_GROUP", "notification-worker-group"),
-		KafkaDLQTopic:      getEnv("KAFKA_DLQ_TOPIC", "hospital.notifications.dlq"),
-		KafkaMaxRetries:    getEnvAsInt("KAFKA_MAX_RETRIES", 3),
-		KafkaMinBytes:      getEnvAsInt("KAFKA_MIN_BYTES", 10e3), // 10KB
-		KafkaMaxBytes:      getEnvAsInt("KAFKA_MAX_BYTES", 10e6), // 10MB
-		KafkaMaxWait:       time.Duration(getEnvAsInt("KAFKA_MAX_WAIT_MS", 1000)) * time.Millisecond,
+		RabbitMQURL:        getEnv("RABBITMQ_URL", "amqp://selaras:selaras123@localhost:5672/"),
+		RabbitMQQueue:      getEnv("RABBITMQ_QUEUE", "notification.send"),
+		RabbitMQExchange:   getEnv("RABBITMQ_EXCHANGE", "notification.exchange"),
+		RabbitMQRoutingKey: getEnv("RABBITMQ_ROUTING_KEY", "notification.#"),
+		RabbitMQDLQ:        getEnv("RABBITMQ_DLQ", "notification.send.dlq"),
 
 		WhatsAppProvider: getEnv("WHATSAPP_PROVIDER", "mock"),
 		WhatsAppAPIURL:   getEnv("WHATSAPP_API_URL", "https://api.fonnte.com/send"),

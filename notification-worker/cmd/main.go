@@ -30,11 +30,11 @@ func main() {
 
 	// 2. Load configuration
 	cfg := config.Load()
-	logger.Info("Starting notification-worker service (Apache Kafka)",
+	logger.Info("Starting notification-worker service (RabbitMQ)",
 		slog.String("http_port", cfg.HTTPPort),
-		slog.Any("kafka_brokers", cfg.KafkaBrokers),
-		slog.String("kafka_topic", cfg.KafkaTopic),
-		slog.String("kafka_group", cfg.KafkaConsumerGroup),
+		slog.String("rabbitmq_url", cfg.RabbitMQURL),
+		slog.String("rabbitmq_queue", cfg.RabbitMQQueue),
+		slog.String("rabbitmq_exchange", cfg.RabbitMQExchange),
 		slog.String("whatsapp_provider", cfg.WhatsAppProvider),
 		slog.String("email_provider", cfg.EmailProvider),
 	)
@@ -65,23 +65,28 @@ func main() {
 	renderer := template.NewRenderer()
 	proc := processor.NewProcessor(renderer, waProvider, emailProvider, logger)
 
-	// 6. Initialize Kafka Producer & Consumer
-	kafkaProd := producer.NewKafkaProducer(cfg)
-	defer kafkaProd.Close()
+	// 6. Initialize RabbitMQ Producer & Consumer
+	rmqProd, err := producer.NewRabbitMQProducer(cfg)
+	if err != nil {
+		logger.Warn("RabbitMQ producer initialized with warning (will retry on connect)", slog.String("error", err.Error()))
+	}
+	if rmqProd != nil {
+		defer rmqProd.Close()
+	}
 
-	kafkaConsumer := consumer.NewKafkaConsumer(cfg, proc, kafkaProd, logger)
+	rmqConsumer := consumer.NewRabbitMQConsumer(cfg, proc, rmqProd, logger)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	go func() {
-		if err := kafkaConsumer.Start(ctx); err != nil {
-			logger.Warn("Failed to start Kafka consumer initially", slog.String("error", err.Error()))
+		if err := rmqConsumer.Start(ctx); err != nil {
+			logger.Warn("Failed to start RabbitMQ consumer initially", slog.String("error", err.Error()))
 		}
 	}()
 
 	// 7. Start HTTP Server (Health, Metrics, APIs)
-	srv := server.NewServer(cfg, proc, kafkaProd, logger)
+	srv := server.NewServer(cfg, proc, rmqProd, logger)
 	go func() {
 		if err := srv.Start(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			logger.Error("HTTP server failed", slog.String("error", err.Error()))
@@ -99,9 +104,9 @@ func main() {
 	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer shutdownCancel()
 
-	// Stop Kafka Consumer
-	if err := kafkaConsumer.Stop(); err != nil {
-		logger.Error("Error stopping Kafka consumer", slog.String("error", err.Error()))
+	// Stop RabbitMQ Consumer
+	if err := rmqConsumer.Stop(); err != nil {
+		logger.Error("Error stopping RabbitMQ consumer", slog.String("error", err.Error()))
 	}
 
 	// Shutdown HTTP Server

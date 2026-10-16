@@ -7,13 +7,17 @@ services:
       dockerfile: notification-worker/Dockerfile
     container_name: selaras-notification-worker
     restart: on-failure
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
     environment:
       HTTP_PORT: "8087"
       METRICS_PORT: "9097"
-      KAFKA_BROKERS: kafka:29092
-      KAFKA_TOPIC: hospital.notifications
-      KAFKA_CONSUMER_GROUP: notification-worker-group
-      KAFKA_DLQ_TOPIC: hospital.notifications.dlq
+      RABBITMQ_URL: amqp://selaras:selaras123@rabbitmq:5672/
+      RABBITMQ_QUEUE: notification.send
+      RABBITMQ_EXCHANGE: notification.exchange
+      RABBITMQ_ROUTING_KEY: notification.#
+      RABBITMQ_DLQ: notification.send.dlq
       WHATSAPP_PROVIDER: mock
       EMAIL_PROVIDER: mock
       WORKER_CONCURRENCY: "5"

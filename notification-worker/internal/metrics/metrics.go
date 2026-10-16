@@ -23,10 +23,10 @@ var (
 		[]string{"channel"},
 	)
 
-	KafkaMessagesTotal = promauto.NewCounterVec(
+	QueueMessagesTotal = promauto.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "kafka_messages_processed_total",
-			Help: "Total number of notification messages processed from Kafka",
+			Name: "notification_queue_messages_total",
+			Help: "Total number of notification messages processed from RabbitMQ",
 		},
 		[]string{"status"},
 	)
@@ -44,8 +44,8 @@ func RecordNotification(channel, notifType, status string, duration float64) {
 	NotificationDuration.WithLabelValues(channel).Observe(duration)
 }
 
-func RecordKafkaMessage(status string) {
-	KafkaMessagesTotal.WithLabelValues(status).Inc()
+func RecordQueueMessage(status string) {
+	QueueMessagesTotal.WithLabelValues(status).Inc()
 }
 
 func SetWorkerUp(up bool) {
