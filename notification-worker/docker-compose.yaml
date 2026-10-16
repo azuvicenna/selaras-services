@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  notification-worker:
+    build:
+      context: ..
+      dockerfile: notification-worker/Dockerfile
+    container_name: selaras-notification-worker
+    restart: on-failure
+    environment:
+      HTTP_PORT: "8087"
+      METRICS_PORT: "9097"
+      KAFKA_BROKERS: kafka:29092
+      KAFKA_TOPIC: hospital.notifications
+      KAFKA_CONSUMER_GROUP: notification-worker-group
+      KAFKA_DLQ_TOPIC: hospital.notifications.dlq
+      WHATSAPP_PROVIDER: mock
+      EMAIL_PROVIDER: mock
+      WORKER_CONCURRENCY: "5"
+    ports:
+      - "8087:8087"
+    networks:
+      - selaras-network
+
+networks:
+  selaras-network:
+    external: true

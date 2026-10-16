@@ -11,6 +11,7 @@ use (
 	./emr-service
 	./laboratory-service
 	./master-service
+	./notification-worker
 	./patient-service
 	./pharmacy-service
 	./practitioner-service
