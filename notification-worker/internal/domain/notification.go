@@ -34,7 +34,7 @@ const (
 	TemplateCustom                 TemplateType = "CUSTOM"
 )
 
-// NotificationMessage is the event payload transmitted over Kafka.
+// NotificationMessage is the event payload transmitted over RabbitMQ.
 type NotificationMessage struct {
 	ID          string         `json:"id"`
 	Channel     ChannelType    `json:"channel"`
