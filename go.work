@@ -4,6 +4,7 @@ use (
 	./admission-service
 	./auth-service
 	./bed-service
+	./bff-mobile
 	./bff-web
 	./billing-service
 	./bpjs-worker

@@ -76,9 +76,10 @@
 | 11 | [**`radiology-service`**](./radiology-service) | `50061` | `9102` | `radiology_db` (`radiology`) | DICOM / PACS URLs | ✅ Selesai |
 | 12 | [**`document-service`**](./document-service) | `50062` | `9103` | `document_db` (`document`) | `medical-documents` + Typst CLI | ✅ Selesai |
 | 13 | [**`bff-web`**](./bff-web) | HTTP `8080` | `9090` | - | Konsumsi gRPC 12 Services + Swagger UI | ✅ Selesai |
-| 14 | [**`satusehat-worker`**](./satusehat-worker) | HTTP `8085` | `9095` | - | SATUSEHAT FHIR R4 & RabbitMQ Consumer | ✅ Selesai |
-| 15 | [**`bpjs-worker`**](./bpjs-worker) | HTTP `8086` | `9096` | - | BPJS VClaim 2.0, Antrean, Aplicares Consumer | ✅ Selesai |
-| 16 | [**`notification-worker`**](./notification-worker) | HTTP `8087` | `9097` | - | WhatsApp & Email via Apache Kafka | ✅ Selesai |
+| 14 | [**`bff-mobile`**](./bff-mobile) | HTTP `8081` | `9091` | - | Mobile Backend-For-Frontend, Komposit & Swagger UI | ✅ Selesai |
+| 15 | [**`satusehat-worker`**](./satusehat-worker) | HTTP `8085` | `9095` | - | SATUSEHAT FHIR R4 & RabbitMQ Consumer | ✅ Selesai |
+| 16 | [**`bpjs-worker`**](./bpjs-worker) | HTTP `8086` | `9096` | - | BPJS VClaim 2.0, Antrean, Aplicares Consumer | ✅ Selesai |
+| 17 | [**`notification-worker`**](./notification-worker) | HTTP `8087` | `9097` | - | WhatsApp & Email via Apache Kafka | ✅ Selesai |
 
 ---
 
