@@ -2,23 +2,37 @@ package usecase
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"log/slog"
 	"strings"
 	"time"
 
 	"github.com/oklog/ulid/v2"
 
 	"github.com/azuvicenna/selaras-services/bed-service/internal/domain"
+	"github.com/azuvicenna/selaras-services/bed-service/internal/event"
 )
 
 var _ domain.BedUsecase = (*BedUsecaseImpl)(nil)
 
 type BedUsecaseImpl struct {
-	repo domain.BedRepository
+	repo      domain.BedRepository
+	publisher event.EventPublisher
 }
 
 func NewBedUsecase(repo domain.BedRepository) *BedUsecaseImpl {
-	return &BedUsecaseImpl{repo: repo}
+	return &BedUsecaseImpl{
+		repo:      repo,
+		publisher: event.NewNoopPublisher(),
+	}
+}
+
+func (u *BedUsecaseImpl) WithEventPublisher(p event.EventPublisher) *BedUsecaseImpl {
+	if p != nil {
+		u.publisher = p
+	}
+	return u
 }
 
 func (u *BedUsecaseImpl) CreateBed(ctx context.Context, item domain.Bed) (*domain.Bed, error) {
@@ -121,7 +135,43 @@ func (u *BedUsecaseImpl) UpdateBedStatus(ctx context.Context, id string, status 
 		return fmt.Errorf("%w: invalid bed status", domain.ErrInvalidInput)
 	}
 
-	return u.repo.UpdateStatus(ctx, id, status, time.Now())
+	now := time.Now()
+	if err := u.repo.UpdateStatus(ctx, id, status, now); err != nil {
+		return err
+	}
+
+	if u.publisher != nil {
+		pubCtx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+		defer cancel()
+
+		tersedia := 0
+		if status == domain.BedStatusAvailable {
+			tersedia = 1
+		}
+
+		aplicaresPayload, _ := json.Marshal(event.AplicaresBedPayload{
+			KodeKelas:          "KL1",
+			KodeRuang:          id,
+			NamaRuang:          "Ruang Rawat Inap",
+			Kapasitas:          1,
+			Tersedia:           tersedia,
+			TersediaPriaWanita:  tersedia,
+		})
+
+		task := event.BPJSTask{
+			TaskID:     ulid.Make().String(),
+			Action:     "APLICARES_SYNC_BED",
+			ResourceID: id,
+			Payload:    aplicaresPayload,
+			Timestamp:  now,
+		}
+
+		if err := u.publisher.Publish(pubCtx, "bpjs.exchange", "bpjs.aplicares.bed", task); err != nil {
+			slog.Warn("Failed to publish bpjs aplicares bed update event", slog.String("bed_id", id), slog.String("error", err.Error()))
+		}
+	}
+
+	return nil
 }
 
 func (u *BedUsecaseImpl) GetBedSummary(ctx context.Context, wardClassID string) (*domain.BedSummary, error) {

@@ -2,14 +2,17 @@ package usecase
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"log/slog"
 	"strings"
 	"time"
 
 	"github.com/oklog/ulid/v2"
 
 	"github.com/azuvicenna/selaras-services/admission-service/internal/domain"
+	"github.com/azuvicenna/selaras-services/admission-service/internal/event"
 )
 
 var _ domain.AppointmentUsecase = (*AppointmentUsecaseImpl)(nil)
@@ -17,13 +20,22 @@ var _ domain.AppointmentUsecase = (*AppointmentUsecaseImpl)(nil)
 type AppointmentUsecaseImpl struct {
 	repo         domain.AppointmentRepository
 	scheduleRepo domain.ScheduleRepository
+	publisher    event.EventPublisher
 }
 
 func NewAppointmentUsecase(repo domain.AppointmentRepository, scheduleRepo domain.ScheduleRepository) *AppointmentUsecaseImpl {
 	return &AppointmentUsecaseImpl{
 		repo:         repo,
 		scheduleRepo: scheduleRepo,
+		publisher:    event.NewNoopPublisher(),
 	}
+}
+
+func (u *AppointmentUsecaseImpl) WithEventPublisher(p event.EventPublisher) *AppointmentUsecaseImpl {
+	if p != nil {
+		u.publisher = p
+	}
+	return u
 }
 
 func (u *AppointmentUsecaseImpl) CreateAppointment(ctx context.Context, item domain.Appointment) (*domain.Appointment, error) {
@@ -103,6 +115,7 @@ func (u *AppointmentUsecaseImpl) CreateAppointment(ctx context.Context, item dom
 		if err := u.repo.Create(ctx, &item); err != nil {
 			return nil, err
 		}
+		u.publishAppointmentEvents(item)
 		return &item, nil
 	}
 
@@ -116,6 +129,7 @@ func (u *AppointmentUsecaseImpl) CreateAppointment(ctx context.Context, item dom
 
 		err = u.repo.Create(ctx, &item)
 		if err == nil {
+			u.publishAppointmentEvents(item)
 			return &item, nil
 		}
 
@@ -127,6 +141,61 @@ func (u *AppointmentUsecaseImpl) CreateAppointment(ctx context.Context, item dom
 	}
 
 	return nil, fmt.Errorf("%w: failed to allocate queue number after %d attempts", domain.ErrAlreadyExists, maxAttempts)
+}
+
+func (u *AppointmentUsecaseImpl) publishAppointmentEvents(item domain.Appointment) {
+	if u.publisher == nil {
+		return
+	}
+
+	pubCtx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	now := time.Now()
+
+	// 1. Publish notification message to notification-worker
+	recipient := item.PatientID
+	if recipient == "" {
+		recipient = "+6281234567890"
+	}
+	notifMsg := event.NotificationMessage{
+		ID:          ulid.Make().String(),
+		Channel:     "WHATSAPP",
+		Recipient:   recipient,
+		Type:        "APPOINTMENT_REMINDER",
+		ReferenceID: item.ID,
+		Data: map[string]any{
+			"booking_code":     item.BookingCode,
+			"patient_id":       item.PatientID,
+			"appointment_date": item.AppointmentDate,
+			"queue_number":     fmt.Sprintf("%d", item.QueueNumber),
+			"practitioner_id":  item.PractitionerID,
+			"department_id":    item.DepartmentID,
+		},
+		CreatedAt: now,
+	}
+
+	if err := u.publisher.Publish(pubCtx, "notification.exchange", "notification.appointment.created", notifMsg); err != nil {
+		slog.Warn("Failed to publish appointment notification event", slog.String("booking_code", item.BookingCode), slog.String("error", err.Error()))
+	}
+
+	// 2. Publish to BPJS Antrean (Task ID 1: Mulai waktu tunggu admisi)
+	antreanPayload, _ := json.Marshal(map[string]any{
+		"kodebooking": item.BookingCode,
+		"taskid":      1,
+		"waktu":       now.UnixMilli(),
+	})
+	bpjsMsg := event.BPJSTask{
+		TaskID:     ulid.Make().String(),
+		Action:     "ANTREAN_UPDATE",
+		ResourceID: item.ID,
+		Payload:    antreanPayload,
+		Timestamp:  now,
+	}
+
+	if err := u.publisher.Publish(pubCtx, "bpjs.exchange", "bpjs.antrean.create", bpjsMsg); err != nil {
+		slog.Warn("Failed to publish bpjs antrean event", slog.String("booking_code", item.BookingCode), slog.String("error", err.Error()))
+	}
 }
 
 func (u *AppointmentUsecaseImpl) GetAppointmentByID(ctx context.Context, id string) (*domain.Appointment, error) {

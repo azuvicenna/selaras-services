@@ -354,4 +354,39 @@ func TestBedUsecase(t *testing.T) {
 	if err != nil || summary.TotalBeds != 1 || summary.OccupiedBeds != 1 {
 		t.Fatalf("summary failed: %+v", summary)
 	}
+
+	// 6. Event publishing on status update
+	pub := &fakeEventPublisher{}
+	eventUc := NewBedUsecase(repo).WithEventPublisher(pub)
+	if err := eventUc.UpdateBedStatus(ctx, created.ID, domain.BedStatusAvailable); err != nil {
+		t.Fatalf("update status with publisher failed: %v", err)
+	}
+	if len(pub.events) != 1 {
+		t.Fatalf("expected 1 published event, got %d", len(pub.events))
+	}
+	if pub.events[0].exchange != "bpjs.exchange" {
+		t.Errorf("expected bpjs.exchange, got %s", pub.events[0].exchange)
+	}
+	if pub.events[0].routingKey != "bpjs.aplicares.bed" {
+		t.Errorf("expected bpjs.aplicares.bed, got %s", pub.events[0].routingKey)
+	}
+}
+
+type publishedRecord struct {
+	exchange   string
+	routingKey string
+	payload    any
+}
+
+type fakeEventPublisher struct {
+	events []publishedRecord
+}
+
+func (f *fakeEventPublisher) Publish(_ context.Context, exchange, routingKey string, payload any) error {
+	f.events = append(f.events, publishedRecord{exchange: exchange, routingKey: routingKey, payload: payload})
+	return nil
+}
+
+func (f *fakeEventPublisher) Close() error {
+	return nil
 }

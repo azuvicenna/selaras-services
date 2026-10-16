@@ -188,6 +188,54 @@ func TestAppointmentUsecase_Create(t *testing.T) {
 			t.Errorf("expected ErrInvalidInput for past date, got: %v", err)
 		}
 	})
+
+	t.Run("publishes notification and bpjs events on create", func(t *testing.T) {
+		r := newMockAppointmentRepo()
+		s := newMockScheduleRepo()
+		pub := &fakeEventPublisher{}
+		customUc := NewAppointmentUsecase(r, s).WithEventPublisher(pub)
+
+		item, err := customUc.CreateAppointment(ctx, domain.Appointment{
+			PatientID:       "PAT99",
+			PractitionerID:  "DOC01",
+			DepartmentID:    "POLI01",
+			AppointmentDate: futureDate,
+		})
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if item == nil {
+			t.Fatalf("expected created appointment")
+		}
+		if len(pub.events) != 2 {
+			t.Fatalf("expected 2 published events, got %d", len(pub.events))
+		}
+		if pub.events[0].exchange != "notification.exchange" {
+			t.Errorf("expected notification.exchange, got %s", pub.events[0].exchange)
+		}
+		if pub.events[1].exchange != "bpjs.exchange" {
+			t.Errorf("expected bpjs.exchange, got %s", pub.events[1].exchange)
+		}
+	})
+}
+
+type publishedRecord struct {
+	exchange   string
+	routingKey string
+	payload    any
+}
+
+type fakeEventPublisher struct {
+	events []publishedRecord
+}
+
+func (f *fakeEventPublisher) Publish(_ context.Context, exchange, routingKey string, payload any) error {
+	f.events = append(f.events, publishedRecord{exchange: exchange, routingKey: routingKey, payload: payload})
+	return nil
+}
+
+func (f *fakeEventPublisher) Close() error {
+	return nil
 }
 
 func TestAppointmentUsecase_CRUD_And_StateMachine(t *testing.T) {

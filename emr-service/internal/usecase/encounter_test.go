@@ -166,6 +166,48 @@ func TestFinishEncounter(t *testing.T) {
 			t.Fatalf("unexpected finish result: %+v", res)
 		}
 	})
+
+	t.Run("publishes satusehat and bpjs events on finish", func(t *testing.T) {
+		repo := &fakeEncounterRepo{}
+		pub := &fakeEventPublisher{}
+		uc := usecase.NewEncounterUsecase(repo).WithEventPublisher(pub)
+
+		res, err := uc.FinishEncounter(ctx, "01ENC", domain.DischargeDispositionHome)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if res == nil {
+			t.Fatalf("expected finish result")
+		}
+		if len(pub.events) != 2 {
+			t.Fatalf("expected 2 published events, got %d", len(pub.events))
+		}
+		if pub.events[0].exchange != "satusehat.exchange" {
+			t.Errorf("expected satusehat.exchange, got %s", pub.events[0].exchange)
+		}
+		if pub.events[1].exchange != "bpjs.exchange" {
+			t.Errorf("expected bpjs.exchange, got %s", pub.events[1].exchange)
+		}
+	})
+}
+
+type publishedRecord struct {
+	exchange   string
+	routingKey string
+	payload    any
+}
+
+type fakeEventPublisher struct {
+	events []publishedRecord
+}
+
+func (f *fakeEventPublisher) Publish(_ context.Context, exchange, routingKey string, payload any) error {
+	f.events = append(f.events, publishedRecord{exchange: exchange, routingKey: routingKey, payload: payload})
+	return nil
+}
+
+func (f *fakeEventPublisher) Close() error {
+	return nil
 }
 
 func TestListPatientEncountersLimits(t *testing.T) {

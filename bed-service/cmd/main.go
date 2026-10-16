@@ -21,6 +21,7 @@ import (
 
 	bedv1 "github.com/azuvicenna/selaras-services/bed-service/gen/bed/v1"
 	"github.com/azuvicenna/selaras-services/bed-service/internal/config"
+	"github.com/azuvicenna/selaras-services/bed-service/internal/event"
 	"github.com/azuvicenna/selaras-services/bed-service/internal/handler"
 	"github.com/azuvicenna/selaras-services/bed-service/internal/middleware"
 	"github.com/azuvicenna/selaras-services/bed-service/internal/repository"
@@ -72,10 +73,25 @@ func run() error {
 	wardRepo := repository.NewWardRepository(pool)
 	bedRepo := repository.NewBedRepository(pool)
 
+	// 2b. Inisialisasi RabbitMQ Event Publisher (Non-blocking & Fallback ke No-op)
+	var eventPublisher event.EventPublisher
+	if cfg.RabbitMQURL != "" {
+		pub, err := event.NewRabbitMQPublisher(cfg.RabbitMQURL, slog.Default())
+		if err != nil {
+			slog.Warn("failed to initialize rabbitmq publisher, falling back to no-op", "error", err)
+			eventPublisher = event.NewNoopPublisher()
+		} else {
+			defer eventPublisher.Close()
+			eventPublisher = pub
+		}
+	} else {
+		eventPublisher = event.NewNoopPublisher()
+	}
+
 	// 3. Inisialisasi Usecases
 	wardClassUC := usecase.NewWardClassUsecase(wardClassRepo)
 	wardUC := usecase.NewWardUsecase(wardRepo)
-	bedUC := usecase.NewBedUsecase(bedRepo)
+	bedUC := usecase.NewBedUsecase(bedRepo).WithEventPublisher(eventPublisher)
 
 	// 4. Inisialisasi Handler & Injeksi Seluruh Usecase
 	bedHandler := handler.NewBedHandler(

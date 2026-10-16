@@ -21,6 +21,7 @@ import (
 
 	billingv1 "github.com/azuvicenna/selaras-services/billing-service/gen/billing/v1"
 	"github.com/azuvicenna/selaras-services/billing-service/internal/config"
+	"github.com/azuvicenna/selaras-services/billing-service/internal/event"
 	"github.com/azuvicenna/selaras-services/billing-service/internal/handler"
 	"github.com/azuvicenna/selaras-services/billing-service/internal/middleware"
 	"github.com/azuvicenna/selaras-services/billing-service/internal/repository"
@@ -100,12 +101,27 @@ func run() error {
 	paymentRepo := repository.NewPaymentRepository(pool)
 	depositRepo := repository.NewDepositRepository(pool)
 
+	// Inisialisasi RabbitMQ Event Publisher (Non-blocking & Fallback ke No-op)
+	var eventPublisher event.EventPublisher
+	if cfg.RabbitMQURL != "" {
+		pub, err := event.NewRabbitMQPublisher(cfg.RabbitMQURL, slog.Default())
+		if err != nil {
+			slog.Warn("failed to initialize rabbitmq publisher, falling back to no-op", "error", err)
+			eventPublisher = event.NewNoopPublisher()
+		} else {
+			defer eventPublisher.Close()
+			eventPublisher = pub
+		}
+	} else {
+		eventPublisher = event.NewNoopPublisher()
+	}
+
 	billingUsecase := usecase.NewBillingUsecase(
 		tariffRepo,
 		invoiceRepo,
 		paymentRepo,
 		depositRepo,
-	)
+	).WithEventPublisher(eventPublisher)
 
 	billingHandler := handler.NewBillingHandler(billingUsecase)
 

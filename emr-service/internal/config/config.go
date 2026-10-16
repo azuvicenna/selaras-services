@@ -21,6 +21,7 @@ type Config struct {
 	StorageUseSSL    bool
 
 	PatientServiceAddr string
+	RabbitMQURL        string
 }
 
 func Load() Config {
@@ -45,6 +46,7 @@ func Load() Config {
 		StorageUseSSL:    os.Getenv("STORAGE_USE_SSL") == "true",
 
 		PatientServiceAddr: os.Getenv("PATIENT_SERVICE_ADDR"),
+		RabbitMQURL:        getEnv("RABBITMQ_URL", ""),
 	}
 }
 

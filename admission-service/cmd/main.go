@@ -21,6 +21,7 @@ import (
 
 	admissionv1 "github.com/azuvicenna/selaras-services/admission-service/gen/admission/v1"
 	"github.com/azuvicenna/selaras-services/admission-service/internal/config"
+	"github.com/azuvicenna/selaras-services/admission-service/internal/event"
 	"github.com/azuvicenna/selaras-services/admission-service/internal/handler"
 	"github.com/azuvicenna/selaras-services/admission-service/internal/middleware"
 	"github.com/azuvicenna/selaras-services/admission-service/internal/repository"
@@ -72,9 +73,24 @@ func run() error {
 	appointmentRepo := repository.NewAppointmentRepository(pool)
 	admissionRepo := repository.NewAdmissionRepository(pool)
 
+	// 2b. Inisialisasi RabbitMQ Event Publisher (Non-blocking & Fallback ke No-op)
+	var eventPublisher event.EventPublisher
+	if cfg.RabbitMQURL != "" {
+		pub, err := event.NewRabbitMQPublisher(cfg.RabbitMQURL, slog.Default())
+		if err != nil {
+			slog.Warn("failed to initialize rabbitmq publisher, falling back to no-op", "error", err)
+			eventPublisher = event.NewNoopPublisher()
+		} else {
+			defer eventPublisher.Close()
+			eventPublisher = pub
+		}
+	} else {
+		eventPublisher = event.NewNoopPublisher()
+	}
+
 	// 3. Inisialisasi Usecases
 	scheduleUC := usecase.NewScheduleUsecase(scheduleRepo)
-	appointmentUC := usecase.NewAppointmentUsecase(appointmentRepo, scheduleRepo)
+	appointmentUC := usecase.NewAppointmentUsecase(appointmentRepo, scheduleRepo).WithEventPublisher(eventPublisher)
 	admissionUC := usecase.NewAdmissionUsecase(admissionRepo, appointmentRepo)
 
 	// 4. Inisialisasi Handler & Injeksi Seluruh Usecase

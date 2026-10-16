@@ -2,11 +2,14 @@ package usecase
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"log/slog"
 	"strings"
 	"time"
 
 	"github.com/azuvicenna/selaras-services/emr-service/internal/domain"
+	"github.com/azuvicenna/selaras-services/emr-service/internal/event"
 	"github.com/oklog/ulid/v2"
 )
 
@@ -18,6 +21,7 @@ const (
 type EncounterUsecaseImpl struct {
 	repo            domain.EncounterRepository
 	patientVerifier domain.PatientVerifier
+	publisher       event.EventPublisher
 }
 
 func NewEncounterUsecase(repo domain.EncounterRepository, verifiers ...domain.PatientVerifier) *EncounterUsecaseImpl {
@@ -28,7 +32,15 @@ func NewEncounterUsecase(repo domain.EncounterRepository, verifiers ...domain.Pa
 	return &EncounterUsecaseImpl{
 		repo:            repo,
 		patientVerifier: verifier,
+		publisher:       event.NewNoopPublisher(),
 	}
+}
+
+func (u *EncounterUsecaseImpl) WithEventPublisher(p event.EventPublisher) *EncounterUsecaseImpl {
+	if p != nil {
+		u.publisher = p
+	}
+	return u
 }
 
 func (u *EncounterUsecaseImpl) StartEncounter(ctx context.Context, enc domain.Encounter) (*domain.Encounter, error) {
@@ -110,7 +122,50 @@ func (u *EncounterUsecaseImpl) FinishEncounter(ctx context.Context, id string, d
 	}
 
 	now := time.Now()
-	return u.repo.Finish(ctx, id, disposition, now, now)
+	finished, err := u.repo.Finish(ctx, id, disposition, now, now)
+	if err != nil {
+		return nil, err
+	}
+
+	if u.publisher != nil {
+		pubCtx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+		defer cancel()
+
+		// 1. Publish to SATUSEHAT worker
+		satusehatMsg := event.SatusehatSyncTask{
+			TaskID:       ulid.Make().String(),
+			ResourceType: "Encounter",
+			ResourceID:   finished.ID,
+			Action:       "CREATE",
+			Timestamp:    now,
+		}
+		if err := u.publisher.Publish(pubCtx, "satusehat.exchange", "satusehat.sync.encounter.finished", satusehatMsg); err != nil {
+			slog.Warn("Failed to publish satusehat sync event", slog.String("encounter_id", finished.ID), slog.String("error", err.Error()))
+		}
+
+		// 2. Publish to BPJS Antrean (Task ID 5: Selesai Pelayanan Poli / Farmasi)
+		bookingCode := finished.SEPNumber
+		if bookingCode == "" {
+			bookingCode = finished.ID
+		}
+		antreanPayload, _ := json.Marshal(map[string]any{
+			"kodebooking": bookingCode,
+			"taskid":      5,
+			"waktu":       now.UnixMilli(),
+		})
+		bpjsMsg := event.BPJSTask{
+			TaskID:     ulid.Make().String(),
+			Action:     "ANTREAN_UPDATE",
+			ResourceID: finished.ID,
+			Payload:    antreanPayload,
+			Timestamp:  now,
+		}
+		if err := u.publisher.Publish(pubCtx, "bpjs.exchange", "bpjs.antrean.update", bpjsMsg); err != nil {
+			slog.Warn("Failed to publish bpjs antrean event", slog.String("encounter_id", finished.ID), slog.String("error", err.Error()))
+		}
+	}
+
+	return finished, nil
 }
 
 func validateEncounterInput(enc domain.Encounter) error {

@@ -13,6 +13,7 @@ type Config struct {
 	DBMinConns  int32
 	GRPCPort    string
 	MetricsPort string
+	RabbitMQURL string
 }
 
 func Load() Config {
@@ -30,6 +31,7 @@ func Load() Config {
 		DBMinConns:  getEnvInt32("DB_MIN_CONNS", 5),
 		GRPCPort:    getEnv("GRPC_PORT", "50058"),
 		MetricsPort: getEnv("METRICS_PORT", "9099"),
+		RabbitMQURL: getEnv("RABBITMQ_URL", ""),
 	}
 }
 

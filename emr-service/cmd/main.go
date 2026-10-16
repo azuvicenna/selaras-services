@@ -23,6 +23,7 @@ import (
 	"github.com/azuvicenna/selaras-services/emr-service/internal/client"
 	"github.com/azuvicenna/selaras-services/emr-service/internal/config"
 	"github.com/azuvicenna/selaras-services/emr-service/internal/domain"
+	"github.com/azuvicenna/selaras-services/emr-service/internal/event"
 	"github.com/azuvicenna/selaras-services/emr-service/internal/handler"
 	"github.com/azuvicenna/selaras-services/emr-service/internal/middleware"
 	"github.com/azuvicenna/selaras-services/emr-service/internal/repository"
@@ -94,8 +95,23 @@ func run() error {
 		patientVerifier = patientClient
 	}
 
+	// 2c. Inisialisasi RabbitMQ Event Publisher (Non-blocking & Fallback ke No-op)
+	var eventPublisher event.EventPublisher
+	if cfg.RabbitMQURL != "" {
+		pub, err := event.NewRabbitMQPublisher(cfg.RabbitMQURL, slog.Default())
+		if err != nil {
+			slog.Warn("failed to initialize rabbitmq publisher, falling back to no-op", "error", err)
+			eventPublisher = event.NewNoopPublisher()
+		} else {
+			defer eventPublisher.Close()
+			eventPublisher = pub
+		}
+	} else {
+		eventPublisher = event.NewNoopPublisher()
+	}
+
 	// 3. Inisialisasi Usecases
-	encounterUC := usecase.NewEncounterUsecase(encounterRepo, patientVerifier)
+	encounterUC := usecase.NewEncounterUsecase(encounterRepo, patientVerifier).WithEventPublisher(eventPublisher)
 	observationUC := usecase.NewObservationUsecase(observationRepo, encounterRepo)
 	clinicalNoteUC := usecase.NewClinicalNoteUsecase(clinicalNoteRepo, encounterRepo)
 	conditionUC := usecase.NewConditionUsecase(conditionRepo, encounterRepo)

@@ -163,6 +163,8 @@ services:
         condition: service_healthy
       minio:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     environment:
       DB_HOST: postgres
       DB_PORT: "5432"
@@ -177,6 +179,7 @@ services:
       STORAGE_BUCKET: emr-documents
       STORAGE_USE_SSL: "false"
       PATIENT_SERVICE_ADDR: patient-service:50051
+      RABBITMQ_URL: amqp://selaras:selaras123@rabbitmq:5672/
     ports:
       - "50052:50052"
       - "9093:9093"
@@ -211,6 +214,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     environment:
       DB_HOST: postgres
       DB_PORT: "5432"
@@ -219,6 +224,7 @@ services:
       DB_NAME: bed_db
       GRPC_PORT: "50054"
       METRICS_PORT: "9095"
+      RABBITMQ_URL: amqp://selaras:selaras123@rabbitmq:5672/
     ports:
       - "50054:50054"
       - "9095:9095"
@@ -232,6 +238,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     environment:
       DB_HOST: postgres
       DB_PORT: "5432"
@@ -240,6 +248,7 @@ services:
       DB_NAME: admission_db
       GRPC_PORT: "50055"
       METRICS_PORT: "9096"
+      RABBITMQ_URL: amqp://selaras:selaras123@rabbitmq:5672/
     ports:
       - "50055:50055"
       - "9096:9096"
@@ -274,6 +283,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     environment:
       DB_HOST: postgres
       DB_PORT: "5432"
@@ -283,6 +294,7 @@ services:
       DATABASE_URL: postgres://billing:change-me@postgres:5432/billing_db?sslmode=disable
       GRPC_PORT: "50058"
       METRICS_PORT: "9099"
+      RABBITMQ_URL: amqp://selaras:selaras123@rabbitmq:5672/
     ports:
       - "50058:50058"
       - "9099:9099"

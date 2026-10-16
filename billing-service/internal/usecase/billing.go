@@ -3,12 +3,14 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"strings"
 	"time"
 
 	"github.com/oklog/ulid/v2"
 
 	"github.com/azuvicenna/selaras-services/billing-service/internal/domain"
+	"github.com/azuvicenna/selaras-services/billing-service/internal/event"
 )
 
 var _ domain.BillingUsecase = (*BillingUsecaseImpl)(nil)
@@ -18,6 +20,7 @@ type BillingUsecaseImpl struct {
 	invoiceRepo domain.InvoiceRepository
 	paymentRepo domain.PaymentRepository
 	depositRepo domain.DepositRepository
+	publisher   event.EventPublisher
 }
 
 func NewBillingUsecase(
@@ -31,7 +34,15 @@ func NewBillingUsecase(
 		invoiceRepo: invoiceRepo,
 		paymentRepo: paymentRepo,
 		depositRepo: depositRepo,
+		publisher:   event.NewNoopPublisher(),
 	}
+}
+
+func (u *BillingUsecaseImpl) WithEventPublisher(p event.EventPublisher) *BillingUsecaseImpl {
+	if p != nil {
+		u.publisher = p
+	}
+	return u
 }
 
 // =============================================================================
@@ -479,6 +490,37 @@ func (u *BillingUsecaseImpl) ProcessPayment(ctx context.Context, invoiceID, cash
 
 	if err := u.invoiceRepo.Update(ctx, inv); err != nil {
 		return nil, nil, err
+	}
+
+	if u.publisher != nil {
+		pubCtx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+		defer cancel()
+
+		recipient := inv.PatientID
+		if recipient == "" {
+			recipient = "+6281234567890"
+		}
+
+		notifMsg := event.NotificationMessage{
+			ID:          ulid.Make().String(),
+			Channel:     "WHATSAPP",
+			Recipient:   recipient,
+			Type:        "BILLING_INVOICE",
+			ReferenceID: inv.ID,
+			Data: map[string]any{
+				"invoice_number": inv.InvoiceNumber,
+				"receipt_number": payment.ReceiptNumber,
+				"total_paid":     fmt.Sprintf("%.2f", payment.TotalPaid),
+				"balance_amount": fmt.Sprintf("%.2f", inv.BalanceAmount),
+				"status":         fmt.Sprintf("%d", inv.Status),
+				"patient_id":     inv.PatientID,
+			},
+			CreatedAt: now,
+		}
+
+		if err := u.publisher.Publish(pubCtx, "notification.exchange", "notification.billing.paid", notifMsg); err != nil {
+			slog.Warn("Failed to publish billing payment notification event", slog.String("invoice_id", inv.ID), slog.String("error", err.Error()))
+		}
 	}
 
 	return &payment, inv, nil

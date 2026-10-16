@@ -398,4 +398,60 @@ func TestBillingUsecase_InvoiceAndPayment(t *testing.T) {
 	if err != nil || bal.TotalBalance != 20000 {
 		t.Errorf("expected remaining balance 20000, got %f", bal.TotalBalance)
 	}
+
+	t.Run("publishes billing notification on payment", func(t *testing.T) {
+		tRepo := newMockTariffRepo()
+		iRepo := newMockInvoiceRepo()
+		pRepo := newMockPaymentRepo()
+		dRepo := newMockDepositRepo()
+		pub := &fakeEventPublisher{}
+		customUc := NewBillingUsecase(tRepo, iRepo, pRepo, dRepo).WithEventPublisher(pub)
+
+		invoice, err := customUc.CreateInvoice(ctx, domain.Invoice{
+			EncounterID: "ENC-EVENT",
+			PatientID:   "PAT-EVENT",
+			PatientName: "Event Patient",
+		}, []domain.InvoiceItem{
+			{ItemName: "Konsultasi", Quantity: 1, UnitPrice: 50000},
+		})
+		if err != nil {
+			t.Fatalf("failed to create invoice: %v", err)
+		}
+
+		_, _, err = customUc.ProcessPayment(ctx, invoice.ID, "CSH-01", "Kasir 1", []domain.PaymentItem{
+			{Method: domain.PaymentMethodCash, Amount: 50000},
+		})
+		if err != nil {
+			t.Fatalf("failed to process payment: %v", err)
+		}
+
+		if len(pub.events) != 1 {
+			t.Fatalf("expected 1 published event, got %d", len(pub.events))
+		}
+		if pub.events[0].exchange != "notification.exchange" {
+			t.Errorf("expected notification.exchange, got %s", pub.events[0].exchange)
+		}
+		if pub.events[0].routingKey != "notification.billing.paid" {
+			t.Errorf("expected notification.billing.paid, got %s", pub.events[0].routingKey)
+		}
+	})
+}
+
+type publishedRecord struct {
+	exchange   string
+	routingKey string
+	payload    any
+}
+
+type fakeEventPublisher struct {
+	events []publishedRecord
+}
+
+func (f *fakeEventPublisher) Publish(_ context.Context, exchange, routingKey string, payload any) error {
+	f.events = append(f.events, publishedRecord{exchange: exchange, routingKey: routingKey, payload: payload})
+	return nil
+}
+
+func (f *fakeEventPublisher) Close() error {
+	return nil
 }
