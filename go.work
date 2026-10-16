@@ -3,6 +3,7 @@ go 1.26.6
 use (
 	./admission-service
 	./auth-service
+	./b2b-gateway
 	./bed-service
 	./bff-mobile
 	./bff-web

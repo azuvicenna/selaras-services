@@ -1,0 +1,12 @@
+services:
+  b2b-gateway:
+    build:
+      context: ..
+      dockerfile: b2b-gateway/Dockerfile
+    container_name: selaras-b2b-gateway
+    restart: on-failure
+    ports:
+      - "8082:8082"
+      - "9092:9092"
+    env_file:
+      - .env
