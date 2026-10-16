@@ -6,6 +6,7 @@ use (
 	./bed-service
 	./bff-web
 	./billing-service
+	./bpjs-worker
 	./document-service
 	./emr-service
 	./laboratory-service

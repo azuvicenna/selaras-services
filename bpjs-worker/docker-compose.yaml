@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  bpjs-worker:
+    build:
+      context: ..
+      dockerfile: bpjs-worker/Dockerfile
+    container_name: selaras-bpjs-worker
+    restart: on-failure
+    environment:
+      HTTP_PORT: "8086"
+      METRICS_PORT: "9096"
+      RABBITMQ_URL: amqp://selaras:selaras123@rabbitmq:5672/
+      RABBITMQ_QUEUE: bpjs.sync
+      RABBITMQ_EXCHANGE: bpjs.exchange
+      RABBITMQ_ROUTING_KEY: bpjs.#
+      RABBITMQ_DLQ: bpjs.sync.dlq
+      BPJS_CONS_ID: "12345"
+      BPJS_SECRET_KEY: bpjs-secret-key-32chars-example
+      BPJS_USER_KEY: bpjs-user-key-trustmark-dev
+      BPJS_VCLAIM_BASE_URL: https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev
+      BPJS_ANTREAN_BASE_URL: https://apijkn-dev.bpjs-kesehatan.go.id/antreanrs_dev
+      BPJS_APLICARES_BASE_URL: https://apijkn-dev.bpjs-kesehatan.go.id/aplicaresws
+      BPJS_KODE_PPK: "0115R001"
+      EMR_SERVICE_ADDR: emr-service:50052
+      BED_SERVICE_ADDR: bed-service:50054
+      WORKER_CONCURRENCY: "5"
+    ports:
+      - "8086:8086"
+    networks:
+      - selaras-network
+
+networks:
+  selaras-network:
+    external: true
