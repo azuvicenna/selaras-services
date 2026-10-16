@@ -1,0 +1,425 @@
+version: "3.9"
+
+services:
+  # =========================================================================
+  # INFRASTRUCTURE SERVICES
+  # =========================================================================
+
+  postgres:
+    image: postgres:18-alpine
+    container_name: selaras-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_MULTIPLE_DATABASES: "auth_db:auth:change-me,patient_db:patient:change-me,practitioner_db:practitioner:change-me,admission_db:admission:change-me,bed_db:bed:change-me,master_db:master:change-me,emr_db:emr:change-me,billing_db:billing:change-me,pharmacy_db:pharmacy:change-me,laboratory_db:laboratory:change-me,radiology_db:radiology:change-me,document_db:document:change-me"
+    volumes:
+      - selaras-pgdata:/var/lib/postgresql/data
+      - ./scripts/init-multi-postgres.sh:/docker-entrypoint-initdb.d/init-multi-postgres.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: selaras-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - selaras-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    container_name: selaras-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - selaras-minio-data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio-init:
+    image: minio/mc:latest
+    container_name: selaras-minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set selaras http://minio:9000 minioadmin minioadmin;
+      /usr/bin/mc mb --ignore-existing selaras/patient-documents;
+      /usr/bin/mc mb --ignore-existing selaras/emr-documents;
+      /usr/bin/mc mb --ignore-existing selaras/medical-documents;
+      /usr/bin/mc anonymous set download selaras/medical-documents;
+      exit 0;
+      "
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: selaras-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: selaras
+      RABBITMQ_DEFAULT_PASS: selaras123
+    volumes:
+      - selaras-rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # =========================================================================
+  # CORE MICROSERVICES (Profile: apps)
+  # Jalankan semua service sekaligus dengan: docker compose --profile apps up -d
+  # =========================================================================
+
+  auth-service:
+    profiles: ["apps"]
+    build:
+      context: ./auth-service
+    container_name: selaras-auth-service
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: auth
+      DB_PASSWORD: change-me
+      DB_NAME: auth_db
+      DATABASE_URL: postgres://auth:change-me@postgres:5432/auth_db?sslmode=disable
+      GRPC_PORT: "50057"
+      METRICS_PORT: "9098"
+      JWT_SECRET: selaras-hospital-jwt-secret-key-32bytes!
+      JWT_ACCESS_EXPIRY: 15m
+      JWT_REFRESH_EXPIRY: 168h
+      CAPTCHA_EXPIRY: 5m
+    ports:
+      - "50057:50057"
+      - "9098:9098"
+
+  patient-service:
+    profiles: ["apps"]
+    build:
+      context: ./patient-service
+    container_name: selaras-patient-service
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: patient
+      DB_PASSWORD: change-me
+      DB_NAME: patient_db
+      GRPC_PORT: "50051"
+      METRICS_PORT: "9092"
+      STORAGE_ENDPOINT: minio:9000
+      STORAGE_ACCESS_KEY: minioadmin
+      STORAGE_SECRET_KEY: minioadmin
+      STORAGE_BUCKET: patient-documents
+      STORAGE_USE_SSL: "false"
+    ports:
+      - "50051:50051"
+      - "9092:9092"
+
+  emr-service:
+    profiles: ["apps"]
+    build:
+      context: ./emr-service
+    container_name: selaras-emr-service
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: emr
+      DB_PASSWORD: change-me
+      DB_NAME: emr_db
+      GRPC_PORT: "50052"
+      METRICS_PORT: "9093"
+      STORAGE_ENDPOINT: minio:9000
+      STORAGE_ACCESS_KEY: minioadmin
+      STORAGE_SECRET_KEY: minioadmin
+      STORAGE_BUCKET: emr-documents
+      STORAGE_USE_SSL: "false"
+      PATIENT_SERVICE_ADDR: patient-service:50051
+    ports:
+      - "50052:50052"
+      - "9093:9093"
+
+  master-service:
+    profiles: ["apps"]
+    build:
+      context: ./master-service
+    container_name: selaras-master-service
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: master
+      DB_PASSWORD: change-me
+      DB_NAME: master_db
+      GRPC_PORT: "50053"
+      METRICS_PORT: "9094"
+    ports:
+      - "50053:50053"
+      - "9094:9094"
+
+  bed-service:
+    profiles: ["apps"]
+    build:
+      context: ./bed-service
+    container_name: selaras-bed-service
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: bed
+      DB_PASSWORD: change-me
+      DB_NAME: bed_db
+      GRPC_PORT: "50054"
+      METRICS_PORT: "9095"
+    ports:
+      - "50054:50054"
+      - "9095:9095"
+
+  admission-service:
+    profiles: ["apps"]
+    build:
+      context: ./admission-service
+    container_name: selaras-admission-service
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: admission
+      DB_PASSWORD: change-me
+      DB_NAME: admission_db
+      GRPC_PORT: "50055"
+      METRICS_PORT: "9096"
+    ports:
+      - "50055:50055"
+      - "9096:9096"
+
+  practitioner-service:
+    profiles: ["apps"]
+    build:
+      context: ./practitioner-service
+    container_name: selaras-practitioner-service
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: practitioner
+      DB_PASSWORD: change-me
+      DB_NAME: practitioner_db
+      GRPC_PORT: "50056"
+      METRICS_PORT: "9097"
+    ports:
+      - "50056:50056"
+      - "9097:9097"
+
+  billing-service:
+    profiles: ["apps"]
+    build:
+      context: ./billing-service
+    container_name: selaras-billing-service
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: billing
+      DB_PASSWORD: change-me
+      DB_NAME: billing_db
+      DATABASE_URL: postgres://billing:change-me@postgres:5432/billing_db?sslmode=disable
+      GRPC_PORT: "50058"
+      METRICS_PORT: "9099"
+    ports:
+      - "50058:50058"
+      - "9099:9099"
+
+  pharmacy-service:
+    profiles: ["apps"]
+    build:
+      context: ./pharmacy-service
+    container_name: selaras-pharmacy-service
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: pharmacy
+      DB_PASSWORD: change-me
+      DB_NAME: pharmacy_db
+      DATABASE_URL: postgres://pharmacy:change-me@postgres:5432/pharmacy_db?sslmode=disable
+      GRPC_PORT: "50059"
+      METRICS_PORT: "9100"
+    ports:
+      - "50059:50059"
+      - "9100:9100"
+
+  laboratory-service:
+    profiles: ["apps"]
+    build:
+      context: ./laboratory-service
+    container_name: selaras-laboratory-service
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: laboratory
+      DB_PASSWORD: change-me
+      DB_NAME: laboratory_db
+      DATABASE_URL: postgres://laboratory:change-me@postgres:5432/laboratory_db?sslmode=disable
+      GRPC_PORT: "50060"
+      METRICS_PORT: "9101"
+    ports:
+      - "50060:50060"
+      - "9101:9101"
+
+  radiology-service:
+    profiles: ["apps"]
+    build:
+      context: ./radiology-service
+    container_name: selaras-radiology-service
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: radiology
+      DB_PASSWORD: change-me
+      DB_NAME: radiology_db
+      DATABASE_URL: postgres://radiology:change-me@postgres:5432/radiology_db?sslmode=disable
+      GRPC_PORT: "50061"
+      METRICS_PORT: "9102"
+    ports:
+      - "50061:50061"
+      - "9102:9102"
+
+  document-service:
+    profiles: ["apps"]
+    build:
+      context: ./document-service
+    container_name: selaras-document-service
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: document
+      DB_PASSWORD: change-me
+      DB_NAME: document_db
+      DATABASE_URL: postgres://document:change-me@postgres:5432/document_db?sslmode=disable
+      GRPC_PORT: "50062"
+      METRICS_PORT: "9103"
+      TYPST_BIN_PATH: typst
+      VERIFY_BASE_URL: https://selaras.hospital.id/verify
+    ports:
+      - "50062:50062"
+      - "9103:9103"
+
+  bff-web:
+    profiles: ["apps"]
+    build:
+      context: .
+      dockerfile: bff-web/Dockerfile
+    container_name: selaras-bff-web
+    restart: on-failure
+    depends_on:
+      - auth-service
+      - patient-service
+      - practitioner-service
+      - admission-service
+      - bed-service
+      - master-service
+      - emr-service
+      - billing-service
+      - pharmacy-service
+      - laboratory-service
+      - radiology-service
+      - document-service
+    environment:
+      HTTP_PORT: "8080"
+      METRICS_PORT: "9090"
+      CORS_ALLOWED_ORIGINS: "*"
+      JWT_SECRET: selaras-hospital-jwt-secret-key-32bytes!
+      AUTH_SERVICE_ADDR: auth-service:50057
+      PATIENT_SERVICE_ADDR: patient-service:50051
+      PRACTITIONER_SERVICE_ADDR: practitioner-service:50056
+      ADMISSION_SERVICE_ADDR: admission-service:50055
+      BED_SERVICE_ADDR: bed-service:50054
+      MASTER_SERVICE_ADDR: master-service:50053
+      EMR_SERVICE_ADDR: emr-service:50052
+      BILLING_SERVICE_ADDR: billing-service:50058
+      PHARMACY_SERVICE_ADDR: pharmacy-service:50059
+      LABORATORY_SERVICE_ADDR: laboratory-service:50060
+      RADIOLOGY_SERVICE_ADDR: radiology-service:50061
+      DOCUMENT_SERVICE_ADDR: document-service:50062
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+
+volumes:
+  selaras-pgdata:
+  selaras-redis-data:
+  selaras-minio-data:
+  selaras-rabbitmq-data:

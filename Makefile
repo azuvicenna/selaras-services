@@ -15,3 +15,12 @@ test:
 
 build:
 	go build $(PKGS)
+
+compose-infra:
+	docker compose up -d postgres redis minio minio-init rabbitmq
+
+compose-apps:
+	docker compose --profile apps up -d --build
+
+compose-down:
+	docker compose down

@@ -4,13 +4,14 @@ use (
 	./admission-service
 	./auth-service
 	./bed-service
+	./bff-web
 	./billing-service
+	./document-service
 	./emr-service
 	./laboratory-service
 	./master-service
 	./patient-service
 	./pharmacy-service
 	./practitioner-service
-	./document-service
 	./radiology-service
 )
