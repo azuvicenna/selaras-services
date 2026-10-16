@@ -76,7 +76,7 @@
 | 11 | [**`radiology-service`**](./radiology-service) | `50061` | `9102` | `radiology_db` (`radiology`) | DICOM / PACS URLs | ✅ Selesai |
 | 12 | [**`document-service`**](./document-service) | `50062` | `9103` | `document_db` (`document`) | `medical-documents` + Typst CLI | ✅ Selesai |
 | 13 | [**`bff-web`**](./bff-web) | HTTP `8080` | `9090` | - | Konsumsi gRPC 12 Services + Swagger UI | ✅ Selesai |
-| 14 | [**`satusehat-worker`**](./satusehat-worker) | - | - | - | RabbitMQ Consumer | 📋 Terencana |
+| 14 | [**`satusehat-worker`**](./satusehat-worker) | HTTP `8085` | `9095` | - | SATUSEHAT FHIR R4 & RabbitMQ Consumer | ✅ Selesai |
 | 15 | [**`bpjs-worker`**](./bpjs-worker) | - | - | - | RabbitMQ Consumer | 📋 Terencana |
 | 16 | [**`notification-worker`**](./notification-worker) | - | - | - | RabbitMQ Consumer | 📋 Terencana |
 

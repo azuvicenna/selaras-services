@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  satusehat-worker:
+    build:
+      context: ..
+      dockerfile: satusehat-worker/Dockerfile
+    container_name: selaras-satusehat-worker
+    restart: on-failure
+    environment:
+      HTTP_PORT: "8085"
+      METRICS_PORT: "9095"
+      RABBITMQ_URL: amqp://selaras:selaras123@rabbitmq:5672/
+      RABBITMQ_QUEUE: satusehat.sync
+      RABBITMQ_EXCHANGE: satusehat.exchange
+      RABBITMQ_ROUTING_KEY: satusehat.sync.#
+      RABBITMQ_DLQ: satusehat.sync.dlq
+      SATUSEHAT_AUTH_URL: https://api-satusehat-stg.dto.kemkes.go.id/oauth2/v1
+      SATUSEHAT_BASE_URL: https://api-satusehat-stg.dto.kemkes.go.id/fhir-r4/v1
+      SATUSEHAT_CLIENT_ID: satusehat-demo-client-id
+      SATUSEHAT_CLIENT_SECRET: satusehat-demo-client-secret
+      SATUSEHAT_ORG_ID: "10000004"
+      EMR_SERVICE_ADDR: emr-service:50052
+      WORKER_CONCURRENCY: "5"
+    ports:
+      - "8085:8085"
+    networks:
+      - selaras-network
+
+networks:
+  selaras-network:
+    external: true
