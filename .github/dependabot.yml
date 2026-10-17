@@ -1,11 +1,85 @@
 version: 2
 updates:
+  # GitHub Actions Workflows
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+
+  # Go Modules Ecosystem
+  - package-ecosystem: gomod
+    directory: /admission-service
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /auth-service
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /b2b-gateway
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /bed-service
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /bff-mobile
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /bff-web
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /billing-service
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /bpjs-worker
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /document-service
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /emr-service
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /laboratory-service
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /master-service
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /notification-worker
+    schedule:
+      interval: weekly
   - package-ecosystem: gomod
     directory: /patient-service
     schedule:
       interval: weekly
-
-  - package-ecosystem: docker
-    directory: /patient-service
+  - package-ecosystem: gomod
+    directory: /pharmacy-service
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /practitioner-service
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /radiology-service
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /satusehat-worker
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /scripts/migrator
     schedule:
       interval: weekly

@@ -1,0 +1,243 @@
+name: CI Pipeline - Selaras Microservices
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - 'release/**'
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  proto-lint:
+    name: Protobuf Validation (Buf)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Buf CLI
+        uses: bufbuild/buf-setup-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Buf Lint
+        run: buf lint
+
+  code-lint:
+    name: Code Quality (golangci-lint)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.work'
+          cache: true
+
+      - name: Install golangci-lint
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.14.0
+
+      - name: Run Linter across Microservices
+        run: |
+          SERVICES=(
+            "admission-service"
+            "auth-service"
+            "b2b-gateway"
+            "bed-service"
+            "bff-mobile"
+            "bff-web"
+            "billing-service"
+            "bpjs-worker"
+            "document-service"
+            "emr-service"
+            "laboratory-service"
+            "master-service"
+            "notification-worker"
+            "patient-service"
+            "pharmacy-service"
+            "practitioner-service"
+            "radiology-service"
+            "satusehat-worker"
+            "scripts/migrator"
+          )
+          for svc in "${SERVICES[@]}"; do
+            echo "::group::Linting $svc"
+            (cd "$svc" && golangci-lint run ./...)
+            echo "::endgroup::"
+          done
+
+  test:
+    name: Unit & Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.work'
+          cache: true
+
+      - name: Sync Go Workspaces
+        run: go work sync
+
+      - name: Execute Tests across All Services
+        run: |
+          go test -v -cover \
+            ./admission-service/... \
+            ./auth-service/... \
+            ./b2b-gateway/... \
+            ./bed-service/... \
+            ./bff-mobile/... \
+            ./bff-web/... \
+            ./billing-service/... \
+            ./bpjs-worker/... \
+            ./document-service/... \
+            ./emr-service/... \
+            ./laboratory-service/... \
+            ./master-service/... \
+            ./notification-worker/... \
+            ./patient-service/... \
+            ./pharmacy-service/... \
+            ./practitioner-service/... \
+            ./radiology-service/... \
+            ./satusehat-worker/... \
+            ./scripts/migrator/...
+
+  build-check:
+    name: Verify Go Compilation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.work'
+          cache: true
+
+      - name: Compile All Binaries
+        run: |
+          go build \
+            ./admission-service/cmd \
+            ./auth-service/cmd \
+            ./b2b-gateway/cmd \
+            ./bed-service/cmd \
+            ./bff-mobile/cmd \
+            ./bff-web/cmd \
+            ./billing-service/cmd \
+            ./bpjs-worker/cmd \
+            ./document-service/cmd \
+            ./emr-service/cmd \
+            ./laboratory-service/cmd \
+            ./master-service/cmd \
+            ./notification-worker/cmd \
+            ./patient-service/cmd \
+            ./pharmacy-service/cmd \
+            ./practitioner-service/cmd \
+            ./radiology-service/cmd \
+            ./satusehat-worker/cmd \
+            ./scripts/migrator
+
+  docker-matrix:
+    name: Docker Build (${{ matrix.service }})
+    needs: [proto-lint, code-lint, test, build-check]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Core Clinical & Admin Microservices
+          - service: admission-service
+            context: ./admission-service
+            file: ./admission-service/Dockerfile
+          - service: auth-service
+            context: ./auth-service
+            file: ./auth-service/Dockerfile
+          - service: bed-service
+            context: ./bed-service
+            file: ./bed-service/Dockerfile
+          - service: billing-service
+            context: ./billing-service
+            file: ./billing-service/Dockerfile
+          - service: document-service
+            context: ./document-service
+            file: ./document-service/Dockerfile
+          - service: emr-service
+            context: ./emr-service
+            file: ./emr-service/Dockerfile
+          - service: laboratory-service
+            context: ./laboratory-service
+            file: ./laboratory-service/Dockerfile
+          - service: master-service
+            context: ./master-service
+            file: ./master-service/Dockerfile
+          - service: patient-service
+            context: ./patient-service
+            file: ./patient-service/Dockerfile
+          - service: pharmacy-service
+            context: ./pharmacy-service
+            file: ./pharmacy-service/Dockerfile
+          - service: practitioner-service
+            context: ./practitioner-service
+            file: ./practitioner-service/Dockerfile
+          - service: radiology-service
+            context: ./radiology-service
+            file: ./radiology-service/Dockerfile
+          # Gateways & BFF Layer
+          - service: bff-web
+            context: .
+            file: bff-web/Dockerfile
+          - service: bff-mobile
+            context: .
+            file: bff-mobile/Dockerfile
+          - service: b2b-gateway
+            context: .
+            file: b2b-gateway/Dockerfile
+          # Asynchronous Workers
+          - service: satusehat-worker
+            context: .
+            file: satusehat-worker/Dockerfile
+          - service: bpjs-worker
+            context: .
+            file: bpjs-worker/Dockerfile
+          - service: notification-worker
+            context: .
+            file: notification-worker/Dockerfile
+          # Database Migration Runner
+          - service: migration-runner
+            context: .
+            file: ./scripts/migrator/Dockerfile
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Container Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
+          push: false
+          tags: selaras/${{ matrix.service }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
