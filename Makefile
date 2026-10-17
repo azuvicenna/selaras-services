@@ -45,3 +45,9 @@ seed-all:
 
 compose-migrate:
 	docker compose --profile tools run --rm migration-runner
+
+test-e2e:
+	go test -v ./tests/e2e/...
+
+run-e2e:
+	go run ./tests/e2e/cmd/main.go

@@ -161,11 +161,21 @@ make compose-apps
 
 ### 6. Menjalankan Pengujian (Testing) & Lint
 ```bash
-# Menjalankan seluruh unit & integration tests di 12 services
+# Menjalankan seluruh unit & integration tests di 18 services
 make test
 
 # Menjalankan linter golangci-lint
 make lint
+
+# Menjalankan End-to-End (E2E) Patient Journey Integration Test
+# (Pastikan stack aplikasi aktif terlebih dahulu via: make compose-apps)
+make test-e2e
+# Atau via interactive CLI runner dengan visualisasi step-by-step:
+make run-e2e
+# Atau via PowerShell (Windows):
+.\scripts\run-e2e.ps1
+# Atau via Bash (Linux/macOS):
+./scripts/run-e2e.sh
 ```
 
 ---

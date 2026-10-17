@@ -74,6 +74,7 @@ jobs:
             "radiology-service"
             "satusehat-worker"
             "scripts/migrator"
+            "tests/e2e"
           )
           for svc in "${SERVICES[@]}"; do
             echo "::group::Linting $svc"
@@ -118,7 +119,8 @@ jobs:
             ./practitioner-service/... \
             ./radiology-service/... \
             ./satusehat-worker/... \
-            ./scripts/migrator/...
+            ./scripts/migrator/... \
+            ./tests/e2e/...
 
   build-check:
     name: Verify Go Compilation
@@ -154,7 +156,8 @@ jobs:
             ./practitioner-service/cmd \
             ./radiology-service/cmd \
             ./satusehat-worker/cmd \
-            ./scripts/migrator
+            ./scripts/migrator \
+            ./tests/e2e/cmd
 
   docker-matrix:
     name: Docker Build (${{ matrix.service }})

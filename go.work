@@ -20,4 +20,5 @@ use (
 	./radiology-service
 	./satusehat-worker
 	./scripts/migrator
+	./tests/e2e
 )
