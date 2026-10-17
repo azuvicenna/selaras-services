@@ -81,6 +81,8 @@
 | 16 | [**`satusehat-worker`**](./satusehat-worker) | HTTP `8085` | `9095` | - | SATUSEHAT FHIR R4 & RabbitMQ Consumer | ✅ Selesai |
 | 17 | [**`bpjs-worker`**](./bpjs-worker) | HTTP `8086` | `9096` | - | BPJS VClaim 2.0, Antrean, Aplicares Consumer | ✅ Selesai |
 | 18 | [**`notification-worker`**](./notification-worker) | HTTP `8087` | `9097` | - | WhatsApp & Email via RabbitMQ Consumer | ✅ Selesai |
+| 19 | [**`prometheus`**](http://localhost:9089) | - | `9089` | `selaras-prometheus-data` | Time-Series Metrics Scraper | ✅ Selesai |
+| 20 | [**`grafana`**](http://localhost:3000) | - | `3000` | `selaras-grafana-data` | Dashboard Visualisasi SIMRS Overview | ✅ Selesai |
 
 ---
 
@@ -110,6 +112,8 @@ Akses Dashboard Infrastruktur:
 - **MinIO Console**: http://localhost:9001 (User: `minioadmin`, Pass: `minioadmin`)
 - **RabbitMQ Management**: http://localhost:15672 (User: `selaras`, Pass: `selaras123`)
 - **PostgreSQL**: `localhost:5432` (Superuser: `postgres` / `postgres`, password default user service: `change-me`)
+- **Prometheus Dashboard**: http://localhost:9089 (Scrape seluruh 18 microservices & RabbitMQ)
+- **Grafana SIMRS Dashboard**: http://localhost:3000 (User: `admin` / Pass: `selaras`)
 
 ### 2. Sinkronisasi Go Workspaces & Modul
 ```bash

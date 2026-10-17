@@ -444,7 +444,7 @@ services:
       DOCUMENT_SERVICE_ADDR: document-service:50062
     ports:
       - "8080:8080"
-      - "9090:9090"
+      - "8090:9090"
 
   bff-mobile:
     profiles: ["apps"]
@@ -532,7 +532,7 @@ services:
       DOCUMENT_SERVICE_ADDR: document-service:50062
     ports:
       - "8082:8082"
-      - "9092:9092"
+      - "8092:9092"
 
   satusehat-worker:
     profiles: ["apps"]
@@ -623,8 +623,59 @@ services:
     ports:
       - "8087:8087"
 
+  # =========================================================================
+  # OBSERVABILITY & MONITORING (Profile: monitoring, apps)
+  # =========================================================================
+
+  prometheus:
+    profiles: ["monitoring", "apps"]
+    image: prom/prometheus:v2.53.0
+    container_name: selaras-prometheus
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+      - "--web.console.templates=/usr/share/prometheus/consoles"
+      - "--web.enable-lifecycle"
+    ports:
+      - "${PROMETHEUS_PORT:-9089}:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - selaras-prometheus-data:/prometheus
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  grafana:
+    profiles: ["monitoring", "apps"]
+    image: grafana/grafana:11.1.0
+    container_name: selaras-grafana
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=selaras
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/etc/grafana/provisioning/dashboards/json/simrs-overview.json
+    volumes:
+      - selaras-grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   selaras-pgdata:
   selaras-redis-data:
   selaras-minio-data:
   selaras-rabbitmq-data:
+  selaras-prometheus-data:
+  selaras-grafana-data:

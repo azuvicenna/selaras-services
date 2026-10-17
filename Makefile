@@ -19,6 +19,9 @@ build:
 compose-infra:
 	docker compose up -d postgres redis minio minio-init rabbitmq
 
+compose-monitoring:
+	docker compose --profile monitoring up -d
+
 compose-apps:
 	docker compose --profile apps up -d --build
 

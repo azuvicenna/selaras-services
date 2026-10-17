@@ -1,0 +1,109 @@
+global:
+  scrape_interval: 10s
+  evaluation_interval: 10s
+  scrape_timeout: 5s
+
+scrape_configs:
+  # Self monitoring
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # Gateway & BFF Layer
+  - job_name: "gateways"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["bff-web:9090"]
+        labels:
+          service: "bff-web"
+          layer: "gateway"
+          tier: "web"
+      - targets: ["bff-mobile:9091"]
+        labels:
+          service: "bff-mobile"
+          layer: "gateway"
+          tier: "mobile"
+      - targets: ["b2b-gateway:9092"]
+        labels:
+          service: "b2b-gateway"
+          layer: "gateway"
+          tier: "b2b"
+
+  # Core Clinical & Administrative Services
+  - job_name: "core-services"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["patient-service:9092"]
+        labels:
+          service: "patient-service"
+          layer: "clinical"
+      - targets: ["emr-service:9093"]
+        labels:
+          service: "emr-service"
+          layer: "clinical"
+      - targets: ["master-service:9094"]
+        labels:
+          service: "master-service"
+          layer: "admin"
+      - targets: ["bed-service:9095"]
+        labels:
+          service: "bed-service"
+          layer: "clinical"
+      - targets: ["admission-service:9096"]
+        labels:
+          service: "admission-service"
+          layer: "admin"
+      - targets: ["practitioner-service:9097"]
+        labels:
+          service: "practitioner-service"
+          layer: "clinical"
+      - targets: ["auth-service:9098"]
+        labels:
+          service: "auth-service"
+          layer: "security"
+      - targets: ["billing-service:9099"]
+        labels:
+          service: "billing-service"
+          layer: "finance"
+      - targets: ["pharmacy-service:9100"]
+        labels:
+          service: "pharmacy-service"
+          layer: "clinical"
+      - targets: ["laboratory-service:9101"]
+        labels:
+          service: "laboratory-service"
+          layer: "diagnostic"
+      - targets: ["radiology-service:9102"]
+        labels:
+          service: "radiology-service"
+          layer: "diagnostic"
+      - targets: ["document-service:9103"]
+        labels:
+          service: "document-service"
+          layer: "support"
+
+  # Asynchronous Background Workers
+  - job_name: "async-workers"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["satusehat-worker:9095"]
+        labels:
+          service: "satusehat-worker"
+          layer: "worker"
+      - targets: ["bpjs-worker:9096"]
+        labels:
+          service: "bpjs-worker"
+          layer: "worker"
+      - targets: ["notification-worker:9097"]
+        labels:
+          service: "notification-worker"
+          layer: "worker"
+
+  # RabbitMQ Management Metrics
+  - job_name: "rabbitmq"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["rabbitmq:15672"]
+        labels:
+          service: "rabbitmq"
+          layer: "messaging"
