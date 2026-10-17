@@ -185,8 +185,3 @@ make run-e2e
 - **Format Respons Database:** PostgreSQL dengan Connection Pool tuning (`pgxpool`) untuk beban produksi rumah sakit.
 - **Observability:** Prometheus metrics (`/metrics`) dan Health check endpoint (`/healthz` + gRPC standard health check).
 - **Format Dokumen Medis:** Tipografi presisi tinggi berbasis [Typst](https://typst.app) untuk 20 template surat medis resmi (Rujukan, Kematian/Visum, Informed Consent, Resume Medis, Odontogram, Hasil Lab/Radiologi, dll.).
-
----
-
-## 📜 Lisensi
-Selaras Services bersifat tertutup (*Proprietary*) dan dilindungi hak cipta untuk ekosistem rumah sakit Selaras.
