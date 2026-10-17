@@ -17,15 +17,3 @@ CREATE UNIQUE INDEX idx_users_email ON users (LOWER(email));
 CREATE INDEX idx_users_role ON users (role);
 CREATE INDEX idx_users_practitioner_id ON users (practitioner_id);
 CREATE INDEX idx_users_is_active ON users (is_active);
-
-CREATE TABLE refresh_tokens (
-    id         CHAR(26)     PRIMARY KEY,
-    user_id    CHAR(26)     NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    token_hash VARCHAR(255) NOT NULL UNIQUE,
-    expires_at TIMESTAMPTZ  NOT NULL,
-    revoked_at TIMESTAMPTZ,
-    created_at TIMESTAMPTZ  NOT NULL DEFAULT now()
-);
-
-CREATE INDEX idx_refresh_tokens_user_id ON refresh_tokens (user_id);
-CREATE INDEX idx_refresh_tokens_token_hash ON refresh_tokens (token_hash);

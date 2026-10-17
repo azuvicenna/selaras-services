@@ -15,9 +15,9 @@ func TestParseMigrationFileName(t *testing.T) {
 		wantErr       bool
 	}{
 		{
-			filename:      "000001_create_auth_tables.up.sql",
+			filename:      "000001_create_users_table.up.sql",
 			wantVersion:   1,
-			wantName:      "create_auth_tables",
+			wantName:      "create_users_table",
 			wantDirection: "up",
 			wantErr:       false,
 		},
