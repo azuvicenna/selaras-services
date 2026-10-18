@@ -14,11 +14,19 @@ import (
 var _ domain.PractitionerUsecase = (*PractitionerUsecaseImpl)(nil)
 
 type PractitionerUsecaseImpl struct {
-	repo domain.PractitionerRepository
+	repo         domain.PractitionerRepository
+	deptVerifier domain.DepartmentVerifier
 }
 
-func NewPractitionerUsecase(repo domain.PractitionerRepository) *PractitionerUsecaseImpl {
-	return &PractitionerUsecaseImpl{repo: repo}
+func NewPractitionerUsecase(repo domain.PractitionerRepository, verifiers ...domain.DepartmentVerifier) *PractitionerUsecaseImpl {
+	var verifier domain.DepartmentVerifier
+	if len(verifiers) > 0 {
+		verifier = verifiers[0]
+	}
+	return &PractitionerUsecaseImpl{
+		repo:         repo,
+		deptVerifier: verifier,
+	}
 }
 
 func (u *PractitionerUsecaseImpl) CreatePractitioner(ctx context.Context, item domain.Practitioner) (*domain.Practitioner, error) {
@@ -46,6 +54,11 @@ func (u *PractitionerUsecaseImpl) CreatePractitioner(ctx context.Context, item d
 	}
 	if item.Type == domain.PractitionerTypeUnspecified {
 		return nil, fmt.Errorf("%w: valid practitioner_type is required", domain.ErrInvalidInput)
+	}
+	if item.DepartmentID != "" && u.deptVerifier != nil {
+		if err := u.deptVerifier.VerifyActiveDepartment(ctx, item.DepartmentID); err != nil {
+			return nil, err
+		}
 	}
 
 	if item.ID == "" {
@@ -120,6 +133,11 @@ func (u *PractitionerUsecaseImpl) UpdatePractitioner(ctx context.Context, item d
 	}
 	if item.Type == domain.PractitionerTypeUnspecified {
 		return nil, fmt.Errorf("%w: valid practitioner_type is required", domain.ErrInvalidInput)
+	}
+	if item.DepartmentID != "" && u.deptVerifier != nil {
+		if err := u.deptVerifier.VerifyActiveDepartment(ctx, item.DepartmentID); err != nil {
+			return nil, err
+		}
 	}
 
 	item.UpdatedAt = time.Now()

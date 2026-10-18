@@ -176,3 +176,52 @@ func TestScheduleUsecase_CRUD(t *testing.T) {
 		t.Errorf("expected ErrNotFound after deletion")
 	}
 }
+
+type mockDeptVerifier struct {
+	err error
+}
+
+func (m *mockDeptVerifier) VerifyActiveDepartment(ctx context.Context, departmentID string) error {
+	return m.err
+}
+
+func TestScheduleUsecase_DepartmentVerifier(t *testing.T) {
+	ctx := context.Background()
+	repo := newMockScheduleRepo()
+
+	t.Run("department verifier returns error on create", func(t *testing.T) {
+		verifier := &mockDeptVerifier{err: domain.ErrNotFound}
+		uc := NewScheduleUsecase(repo, verifier)
+
+		_, err := uc.CreateSchedule(ctx, domain.Schedule{
+			PractitionerID: "practitioner-1",
+			DepartmentID:   "invalid-dept",
+			DayOfWeek:      domain.DayOfWeekMonday,
+			StartTime:      "08:00",
+			EndTime:        "12:00",
+		})
+		if err == nil {
+			t.Fatal("expected error, got nil")
+		}
+	})
+
+	t.Run("department verifier passes on create", func(t *testing.T) {
+		verifier := &mockDeptVerifier{err: nil}
+		uc := NewScheduleUsecase(repo, verifier)
+
+		item, err := uc.CreateSchedule(ctx, domain.Schedule{
+			PractitionerID: "practitioner-1",
+			DepartmentID:   "valid-dept",
+			DayOfWeek:      domain.DayOfWeekMonday,
+			StartTime:      "08:00",
+			EndTime:        "12:00",
+		})
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if item == nil || item.DepartmentID != "valid-dept" {
+			t.Errorf("expected department_id to be valid-dept")
+		}
+	})
+}
+

@@ -21,13 +21,19 @@ type AppointmentUsecaseImpl struct {
 	repo         domain.AppointmentRepository
 	scheduleRepo domain.ScheduleRepository
 	publisher    event.EventPublisher
+	deptVerifier domain.DepartmentVerifier
 }
 
-func NewAppointmentUsecase(repo domain.AppointmentRepository, scheduleRepo domain.ScheduleRepository) *AppointmentUsecaseImpl {
+func NewAppointmentUsecase(repo domain.AppointmentRepository, scheduleRepo domain.ScheduleRepository, verifiers ...domain.DepartmentVerifier) *AppointmentUsecaseImpl {
+	var verifier domain.DepartmentVerifier
+	if len(verifiers) > 0 {
+		verifier = verifiers[0]
+	}
 	return &AppointmentUsecaseImpl{
 		repo:         repo,
 		scheduleRepo: scheduleRepo,
 		publisher:    event.NewNoopPublisher(),
+		deptVerifier: verifier,
 	}
 }
 
@@ -55,6 +61,11 @@ func (u *AppointmentUsecaseImpl) CreateAppointment(ctx context.Context, item dom
 	}
 	if item.DepartmentID == "" {
 		return nil, fmt.Errorf("%w: department_id is required", domain.ErrInvalidInput)
+	}
+	if u.deptVerifier != nil {
+		if err := u.deptVerifier.VerifyActiveDepartment(ctx, item.DepartmentID); err != nil {
+			return nil, err
+		}
 	}
 	if item.AppointmentDate == "" {
 		return nil, fmt.Errorf("%w: appointment_date is required", domain.ErrInvalidInput)

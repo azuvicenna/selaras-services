@@ -7,6 +7,7 @@ import (
 )
 
 type SeedPractitioner struct {
+	ID               string `json:"id"`
 	NIK              string `json:"nik"`
 	Name             string `json:"name"`
 	Gender           int32  `json:"gender"`

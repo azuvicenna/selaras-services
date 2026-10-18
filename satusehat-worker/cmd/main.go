@@ -29,6 +29,26 @@ func main() {
 
 	// 2. Load configuration
 	cfg := config.Load()
+
+	// 2b. Centralized Hospital Profile from master-service
+	if cfg.MasterServiceAddr != "" {
+		profile, err := client.FetchHospitalProfile(context.Background(), cfg.MasterServiceAddr)
+		if err != nil {
+			logger.Warn("Failed to fetch hospital profile from master-service, using local config fallback",
+				slog.String("master_addr", cfg.MasterServiceAddr),
+				slog.String("error", err.Error()),
+			)
+		} else if profile != nil {
+			if profile.GetKemenkesFacilityCode() != "" {
+				cfg.SatusehatOrgID = profile.GetKemenkesFacilityCode()
+			}
+			logger.Info("Synchronized hospital profile from master-service",
+				slog.String("hospital_name", profile.GetName()),
+				slog.String("kemenkes_facility_code", profile.GetKemenkesFacilityCode()),
+			)
+		}
+	}
+
 	logger.Info("Starting satusehat-worker service",
 		slog.String("http_port", cfg.HTTPPort),
 		slog.String("satusehat_base_url", cfg.SatusehatBaseURL),

@@ -95,6 +95,14 @@ func run() error {
 		patientVerifier = patientClient
 	}
 
+	var icdVerifier domain.ICDVerifier
+	if masterClient, err := client.NewMasterClient(cfg.MasterServiceAddr); err != nil {
+		return fmt.Errorf("failed to init master client: %w", err)
+	} else if masterClient != nil {
+		defer func() { _ = masterClient.Close() }()
+		icdVerifier = masterClient
+	}
+
 	// 2c. Inisialisasi RabbitMQ Event Publisher (Non-blocking & Fallback ke No-op)
 	var eventPublisher event.EventPublisher
 	if cfg.RabbitMQURL != "" {
@@ -114,8 +122,8 @@ func run() error {
 	encounterUC := usecase.NewEncounterUsecase(encounterRepo, patientVerifier).WithEventPublisher(eventPublisher)
 	observationUC := usecase.NewObservationUsecase(observationRepo, encounterRepo)
 	clinicalNoteUC := usecase.NewClinicalNoteUsecase(clinicalNoteRepo, encounterRepo)
-	conditionUC := usecase.NewConditionUsecase(conditionRepo, encounterRepo)
-	procedureUC := usecase.NewProcedureUsecase(procedureRepo, encounterRepo)
+	conditionUC := usecase.NewConditionUsecase(conditionRepo, encounterRepo, icdVerifier)
+	procedureUC := usecase.NewProcedureUsecase(procedureRepo, encounterRepo, icdVerifier)
 	medicationRequestUC := usecase.NewMedicationRequestUsecase(medicationRequestRepo, encounterRepo, allergyRepo)
 	diagnosticReportUC := usecase.NewDiagnosticReportUsecase(diagnosticReportRepo, encounterRepo, storage)
 	allergyUC := usecase.NewAllergyUsecase(allergyRepo, encounterRepo)

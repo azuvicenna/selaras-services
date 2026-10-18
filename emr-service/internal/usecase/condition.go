@@ -13,19 +13,36 @@ import (
 type ConditionUsecaseImpl struct {
 	condRepo      domain.ConditionRepository
 	encounterRepo domain.EncounterRepository
+	icdVerifier   domain.ICDVerifier
 }
 
 func NewConditionUsecase(
 	condRepo domain.ConditionRepository,
 	encounterRepo domain.EncounterRepository,
+	verifiers ...domain.ICDVerifier,
 ) *ConditionUsecaseImpl {
+	var verifier domain.ICDVerifier
+	if len(verifiers) > 0 {
+		verifier = verifiers[0]
+	}
 	return &ConditionUsecaseImpl{
 		condRepo:      condRepo,
 		encounterRepo: encounterRepo,
+		icdVerifier:   verifier,
 	}
 }
 
 func (u *ConditionUsecaseImpl) AddCondition(ctx context.Context, cond domain.Condition) (*domain.Condition, error) {
+	if strings.TrimSpace(cond.ICD10Code) != "" && u.icdVerifier != nil {
+		desc, err := u.icdVerifier.VerifyAndLookupICD10(ctx, cond.ICD10Code)
+		if err != nil {
+			return nil, err
+		}
+		if strings.TrimSpace(cond.Name) == "" && desc != "" {
+			cond.Name = desc
+		}
+	}
+
 	if err := validateConditionInput(cond); err != nil {
 		return nil, err
 	}

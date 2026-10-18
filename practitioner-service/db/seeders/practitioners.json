@@ -1,6 +1,7 @@
 {
   "practitioners": [
     {
+      "id": "01J9B1X2K3M4N5P6Q7R8S9T0U1",
       "nik": "3201011504850001",
       "name": "dr. Budi Santoso, Sp.PD",
       "gender": 1,
@@ -18,6 +19,7 @@
       "is_active": true
     },
     {
+      "id": "01J9B3C4D5E6F7G8H9I0J1K2L3",
       "nik": "3201012208880002",
       "name": "dr. Siti Aminah, Sp.A",
       "gender": 2,
@@ -30,11 +32,12 @@
       "sip_expiry_date": "2029-08-22",
       "str_number": "31.2.1.100.1.20.234567",
       "str_expiry_date": "2029-08-22",
-      "department_id": "01J9B4M5N6P7Q8R9S0T1U2V3W4",
+      "department_id": "01J9B1X2K3M4N5P6Q7R8S9T0D2",
       "ihs_number": "N10000002",
       "is_active": true
     },
     {
+      "id": "01J9B5X6Y7Z8A9B0C1D2E3F4G5",
       "nik": "3201011001920003",
       "name": "dr. Ahmad Fauzi",
       "gender": 1,
@@ -47,11 +50,12 @@
       "sip_expiry_date": "2029-01-10",
       "str_number": "31.1.1.100.1.20.345678",
       "str_expiry_date": "2029-01-10",
-      "department_id": "01J9B2Y3Z4A5B6C7D8E9F0G1H2",
+      "department_id": "01J9B1X2K3M4N5P6Q7R8S9T0D1",
       "ihs_number": "N10000003",
       "is_active": true
     },
     {
+      "id": "01J9B6C7D8E9F0G1H2I3J4K5L6",
       "nik": "3201010505950004",
       "name": "Ns. Rina Kusuma, S.Kep",
       "gender": 2,
@@ -69,6 +73,7 @@
       "is_active": true
     },
     {
+      "id": "01J9B7C8D9E0F1G2H3I4J5K6L7",
       "nik": "3201011212930005",
       "name": "Dewi Sartika, S.Gz, RD",
       "gender": 2,
@@ -86,6 +91,7 @@
       "is_active": true
     },
     {
+      "id": "01J9B8C9D0E1F2G3H4I5J6K7L8",
       "nik": "3201010304910006",
       "name": "Bambang Irawan, S.Ft, Ftr",
       "gender": 1,

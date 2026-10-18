@@ -14,6 +14,7 @@ type Config struct {
 	GRPCPort    string
 	MetricsPort string
 	RabbitMQURL string
+	MasterServiceAddr string
 }
 
 func Load() Config {
@@ -26,12 +27,13 @@ func Load() Config {
 	}
 
 	return Config{
-		DatabaseURL: getEnv("DATABASE_URL", dbURL.String()),
-		DBMaxConns:  getEnvInt32("DB_MAX_CONNS", 25),
-		DBMinConns:  getEnvInt32("DB_MIN_CONNS", 5),
-		GRPCPort:    getEnv("GRPC_PORT", "50055"),
-		MetricsPort: getEnv("METRICS_PORT", "9096"),
-		RabbitMQURL: getEnv("RABBITMQ_URL", ""),
+		DatabaseURL:       getEnv("DATABASE_URL", dbURL.String()),
+		DBMaxConns:        getEnvInt32("DB_MAX_CONNS", 25),
+		DBMinConns:        getEnvInt32("DB_MIN_CONNS", 5),
+		GRPCPort:          getEnv("GRPC_PORT", "50055"),
+		MetricsPort:       getEnv("METRICS_PORT", "9096"),
+		RabbitMQURL:       getEnv("RABBITMQ_URL", ""),
+		MasterServiceAddr: os.Getenv("MASTER_SERVICE_ADDR"),
 	}
 }
 

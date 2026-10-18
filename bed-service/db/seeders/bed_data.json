@@ -48,6 +48,7 @@
       "code": "MAWAR-01",
       "name": "Kamar Mawar 101",
       "ward_class_code": "VIP",
+      "department_id": "01J9B1X2K3M4N5P6Q7R8S9T0D3",
       "floor": 2,
       "capacity": 1,
       "is_active": true
@@ -56,6 +57,7 @@
       "code": "MELATI-01",
       "name": "Kamar Melati 201",
       "ward_class_code": "KL1",
+      "department_id": "01J9B1X2K3M4N5P6Q7R8S9T0D3",
       "floor": 3,
       "capacity": 2,
       "is_active": true
@@ -64,6 +66,7 @@
       "code": "ANGGREK-01",
       "name": "Kamar Anggrek 301",
       "ward_class_code": "KL2",
+      "department_id": "01J9B1X2K3M4N5P6Q7R8S9T0D3",
       "floor": 4,
       "capacity": 4,
       "is_active": true
@@ -72,6 +75,7 @@
       "code": "TERATAI-01",
       "name": "Kamar Teratai 401",
       "ward_class_code": "KL3",
+      "department_id": "01J9B1X2K3M4N5P6Q7R8S9T0D3",
       "floor": 5,
       "capacity": 6,
       "is_active": true
@@ -80,6 +84,7 @@
       "code": "ICU-01",
       "name": "Ruang ICU Bed 1-4",
       "ward_class_code": "ICU",
+      "department_id": "01J9B1X2K3M4N5P6Q7R8S9T0D7",
       "floor": 2,
       "capacity": 4,
       "is_active": true

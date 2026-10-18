@@ -76,4 +76,52 @@ func TestAddAndUpdateCondition(t *testing.T) {
 			t.Fatal("expected abatementAt to be set when condition is resolved")
 		}
 	})
+
+	t.Run("icd10 verifier returns error on invalid code", func(t *testing.T) {
+		verifier := &fakeICDVerifier{icd10Err: domain.ErrNotFound}
+		uc := usecase.NewConditionUsecase(&fakeConditionRepo{}, &fakeEncounterRepo{}, verifier)
+
+		_, err := uc.AddCondition(ctx, domain.Condition{
+			EncounterID:    "01ENC",
+			PractitionerID: "PRAC-01",
+			ICD10Code:      "INVALID",
+		})
+		if err == nil {
+			t.Fatal("expected error for invalid icd10 code")
+		}
+	})
+
+	t.Run("icd10 verifier auto-populates name when empty", func(t *testing.T) {
+		verifier := &fakeICDVerifier{icd10Name: "Acute pharyngitis, unspecified"}
+		repo := &fakeConditionRepo{}
+		uc := usecase.NewConditionUsecase(repo, &fakeEncounterRepo{}, verifier)
+
+		cond, err := uc.AddCondition(ctx, domain.Condition{
+			EncounterID:    "01ENC",
+			PractitionerID: "PRAC-01",
+			ICD10Code:      "J02.9",
+		})
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if cond.Name != "Acute pharyngitis, unspecified" {
+			t.Fatalf("got Name %q, want %q", cond.Name, "Acute pharyngitis, unspecified")
+		}
+	})
 }
+
+type fakeICDVerifier struct {
+	icd10Name string
+	icd10Err  error
+	icd9Name  string
+	icd9Err   error
+}
+
+func (f *fakeICDVerifier) VerifyAndLookupICD10(_ context.Context, _ string) (string, error) {
+	return f.icd10Name, f.icd10Err
+}
+
+func (f *fakeICDVerifier) VerifyAndLookupICD9CM(_ context.Context, _ string) (string, error) {
+	return f.icd9Name, f.icd9Err
+}
+

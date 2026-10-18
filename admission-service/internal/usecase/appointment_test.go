@@ -291,3 +291,43 @@ func TestAppointmentUsecase_CRUD_And_StateMachine(t *testing.T) {
 		t.Errorf("failed to delete appointment: %v", err)
 	}
 }
+
+func TestAppointmentUsecase_DepartmentVerifier(t *testing.T) {
+	ctx := context.Background()
+	repo := newMockAppointmentRepo()
+	scheduleRepo := newMockScheduleRepo()
+
+	t.Run("department verifier returns error on create", func(t *testing.T) {
+		verifier := &mockDeptVerifier{err: domain.ErrNotFound}
+		uc := NewAppointmentUsecase(repo, scheduleRepo, verifier)
+
+		_, err := uc.CreateAppointment(ctx, domain.Appointment{
+			PatientID:       "pat-1",
+			PractitionerID:  "prac-1",
+			DepartmentID:    "invalid-dept",
+			AppointmentDate: time.Now().AddDate(0, 0, 1).Format("2006-01-02"),
+		})
+		if err == nil {
+			t.Fatal("expected error, got nil")
+		}
+	})
+
+	t.Run("department verifier passes on create", func(t *testing.T) {
+		verifier := &mockDeptVerifier{err: nil}
+		uc := NewAppointmentUsecase(repo, scheduleRepo, verifier)
+
+		apt, err := uc.CreateAppointment(ctx, domain.Appointment{
+			PatientID:       "pat-1",
+			PractitionerID:  "prac-1",
+			DepartmentID:    "valid-dept",
+			AppointmentDate: time.Now().AddDate(0, 0, 1).Format("2006-01-02"),
+		})
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if apt == nil || apt.DepartmentID != "valid-dept" {
+			t.Errorf("expected valid appointment")
+		}
+	})
+}
+

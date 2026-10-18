@@ -13,19 +13,36 @@ import (
 type ProcedureUsecaseImpl struct {
 	procRepo      domain.ProcedureRepository
 	encounterRepo domain.EncounterRepository
+	icdVerifier   domain.ICDVerifier
 }
 
 func NewProcedureUsecase(
 	procRepo domain.ProcedureRepository,
 	encounterRepo domain.EncounterRepository,
+	verifiers ...domain.ICDVerifier,
 ) *ProcedureUsecaseImpl {
+	var verifier domain.ICDVerifier
+	if len(verifiers) > 0 {
+		verifier = verifiers[0]
+	}
 	return &ProcedureUsecaseImpl{
 		procRepo:      procRepo,
 		encounterRepo: encounterRepo,
+		icdVerifier:   verifier,
 	}
 }
 
 func (u *ProcedureUsecaseImpl) RecordProcedure(ctx context.Context, proc domain.Procedure) (*domain.Procedure, error) {
+	if strings.TrimSpace(proc.ICD9CMCode) != "" && u.icdVerifier != nil {
+		desc, err := u.icdVerifier.VerifyAndLookupICD9CM(ctx, proc.ICD9CMCode)
+		if err != nil {
+			return nil, err
+		}
+		if strings.TrimSpace(proc.ProcedureName) == "" && desc != "" {
+			proc.ProcedureName = desc
+		}
+	}
+
 	if err := validateProcedureInput(proc); err != nil {
 		return nil, err
 	}

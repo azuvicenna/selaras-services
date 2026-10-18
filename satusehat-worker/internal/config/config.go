@@ -28,7 +28,8 @@ type Config struct {
 	RequestTimeout        time.Duration
 
 	// EMR gRPC Target Service
-	EmrServiceAddr string
+	EmrServiceAddr    string
+	MasterServiceAddr string
 
 	// Concurrency
 	WorkerConcurrency int
@@ -56,6 +57,7 @@ func Load() *Config {
 		RequestTimeout:        time.Duration(timeoutSec) * time.Second,
 
 		EmrServiceAddr:    getEnv("EMR_SERVICE_ADDR", "localhost:50052"),
+		MasterServiceAddr: getEnv("MASTER_SERVICE_ADDR", ""),
 		WorkerConcurrency: getEnvAsInt("WORKER_CONCURRENCY", 5),
 	}
 }

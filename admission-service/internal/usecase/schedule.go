@@ -14,11 +14,19 @@ import (
 var _ domain.ScheduleUsecase = (*ScheduleUsecaseImpl)(nil)
 
 type ScheduleUsecaseImpl struct {
-	repo domain.ScheduleRepository
+	repo         domain.ScheduleRepository
+	deptVerifier domain.DepartmentVerifier
 }
 
-func NewScheduleUsecase(repo domain.ScheduleRepository) *ScheduleUsecaseImpl {
-	return &ScheduleUsecaseImpl{repo: repo}
+func NewScheduleUsecase(repo domain.ScheduleRepository, verifiers ...domain.DepartmentVerifier) *ScheduleUsecaseImpl {
+	var verifier domain.DepartmentVerifier
+	if len(verifiers) > 0 {
+		verifier = verifiers[0]
+	}
+	return &ScheduleUsecaseImpl{
+		repo:         repo,
+		deptVerifier: verifier,
+	}
 }
 
 func (u *ScheduleUsecaseImpl) CreateSchedule(ctx context.Context, item domain.Schedule) (*domain.Schedule, error) {
@@ -32,6 +40,11 @@ func (u *ScheduleUsecaseImpl) CreateSchedule(ctx context.Context, item domain.Sc
 	}
 	if item.DepartmentID == "" {
 		return nil, fmt.Errorf("%w: department_id is required", domain.ErrInvalidInput)
+	}
+	if u.deptVerifier != nil {
+		if err := u.deptVerifier.VerifyActiveDepartment(ctx, item.DepartmentID); err != nil {
+			return nil, err
+		}
 	}
 	if item.DayOfWeek < domain.DayOfWeekMonday || item.DayOfWeek > domain.DayOfWeekSunday {
 		return nil, fmt.Errorf("%w: valid day_of_week is required", domain.ErrInvalidInput)
@@ -92,6 +105,11 @@ func (u *ScheduleUsecaseImpl) UpdateSchedule(ctx context.Context, item domain.Sc
 	}
 	if item.DepartmentID == "" {
 		return nil, fmt.Errorf("%w: department_id is required", domain.ErrInvalidInput)
+	}
+	if u.deptVerifier != nil {
+		if err := u.deptVerifier.VerifyActiveDepartment(ctx, item.DepartmentID); err != nil {
+			return nil, err
+		}
 	}
 	if item.DayOfWeek < domain.DayOfWeekMonday || item.DayOfWeek > domain.DayOfWeekSunday {
 		return nil, fmt.Errorf("%w: valid day_of_week is required", domain.ErrInvalidInput)

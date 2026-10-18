@@ -17,6 +17,7 @@ type SeedWard struct {
 	Code          string `json:"code"`
 	Name          string `json:"name"`
 	WardClassCode string `json:"ward_class_code"`
+	DepartmentID  string `json:"department_id"`
 	Floor         int32  `json:"floor"`
 	Capacity      int32  `json:"capacity"`
 	IsActive      bool   `json:"is_active"`

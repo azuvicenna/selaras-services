@@ -97,9 +97,20 @@ func NewRouter(cfg *config.Config, cm *client.ClientManager) http.Handler {
 
 	// 8. Master Data
 	mux.Handle("GET /api/v1/master/icd10", protect(masterH.ListICD10))
+	mux.Handle("GET /api/v1/master/icd10/{code}", protect(masterH.GetICD10ByCode))
 	mux.Handle("GET /api/v1/master/icd9cm", protect(masterH.ListICD9CM))
+	mux.Handle("GET /api/v1/master/icd9cm/{code}", protect(masterH.GetICD9CMByCode))
 	mux.Handle("GET /api/v1/master/departments", protect(masterH.ListDepartments))
+	mux.Handle("GET /api/v1/master/departments/{id}", protect(masterH.GetDepartmentByID))
 	mux.Handle("GET /api/v1/master/hospital-profile", protect(masterH.GetHospitalProfile))
+	mux.Handle("GET /api/v1/master/provinces", protect(masterH.ListProvinces))
+	mux.Handle("GET /api/v1/master/provinces/{code}", protect(masterH.GetProvinceByCode))
+	mux.Handle("GET /api/v1/master/cities", protect(masterH.ListCities))
+	mux.Handle("GET /api/v1/master/cities/{code}", protect(masterH.GetCityByCode))
+	mux.Handle("GET /api/v1/master/districts", protect(masterH.ListDistricts))
+	mux.Handle("GET /api/v1/master/districts/{code}", protect(masterH.GetDistrictByCode))
+	mux.Handle("GET /api/v1/master/villages", protect(masterH.ListVillages))
+	mux.Handle("GET /api/v1/master/villages/{code}", protect(masterH.GetVillageByCode))
 
 	// 9. EMR / RME
 	mux.Handle("POST /api/v1/emr/encounters", protect(emrH.StartEncounter))

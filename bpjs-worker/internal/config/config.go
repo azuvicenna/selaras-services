@@ -30,8 +30,9 @@ type Config struct {
 	RequestTimeout      time.Duration
 
 	// Downstream gRPC Services
-	EmrServiceAddr string
-	BedServiceAddr string
+	EmrServiceAddr    string
+	BedServiceAddr    string
+	MasterServiceAddr string
 
 	// Concurrency
 	WorkerConcurrency int
@@ -62,6 +63,7 @@ func Load() *Config {
 
 		EmrServiceAddr:    getEnv("EMR_SERVICE_ADDR", "localhost:50052"),
 		BedServiceAddr:    getEnv("BED_SERVICE_ADDR", "localhost:50054"),
+		MasterServiceAddr: getEnv("MASTER_SERVICE_ADDR", ""),
 		WorkerConcurrency: getEnvAsInt("WORKER_CONCURRENCY", 5),
 	}
 }

@@ -47,6 +47,7 @@ func run(addr, file string) error {
 	for _, item := range data.Practitioners {
 		res, err := client.CreatePractitioner(ctx, &practitionerv1.CreatePractitionerRequest{
 			Practitioner: &practitionerv1.Practitioner{
+				Id:               item.ID,
 				Nik:              item.NIK,
 				Name:             item.Name,
 				Gender:           practitionerv1.Gender(item.Gender),

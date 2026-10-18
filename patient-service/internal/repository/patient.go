@@ -52,13 +52,15 @@ func NewPatientRepository(pool *pgxpool.Pool) *PatientRepository {
 }
 
 func (r *PatientRepository) Create(ctx context.Context, p *domain.Patient) error {
-	err := r.pool.QueryRow(ctx, `SELECT lpad(nextval('patient_norm_seq')::text, 8, '0')`).
-		Scan(&p.MedicalRecordNo)
-	if err != nil {
-		return err
+	if p.MedicalRecordNo == "" {
+		err := r.pool.QueryRow(ctx, `SELECT lpad(nextval('patient_norm_seq')::text, 8, '0')`).
+			Scan(&p.MedicalRecordNo)
+		if err != nil {
+			return err
+		}
 	}
 
-	_, err = r.pool.Exec(ctx, insertQuery, patientFields(p)...)
+	_, err := r.pool.Exec(ctx, insertQuery, patientFields(p)...)
 	return mapError(err)
 }
 

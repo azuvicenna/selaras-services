@@ -36,7 +36,9 @@ func (u *PatientUsecaseImpl) CreatePatient(ctx context.Context, p domain.Patient
 		return nil, err
 	}
 
-	p.ID = ulid.Make().String()
+	if p.ID == "" {
+		p.ID = ulid.Make().String()
+	}
 	p.Status = domain.PatientStatusActive
 	p.CreatedAt = time.Now()
 	p.UpdatedAt = time.Now()

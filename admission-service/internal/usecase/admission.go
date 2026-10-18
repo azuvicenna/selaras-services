@@ -16,12 +16,18 @@ var _ domain.AdmissionUsecase = (*AdmissionUsecaseImpl)(nil)
 type AdmissionUsecaseImpl struct {
 	repo            domain.AdmissionRepository
 	appointmentRepo domain.AppointmentRepository
+	deptVerifier    domain.DepartmentVerifier
 }
 
-func NewAdmissionUsecase(repo domain.AdmissionRepository, appointmentRepo domain.AppointmentRepository) *AdmissionUsecaseImpl {
+func NewAdmissionUsecase(repo domain.AdmissionRepository, appointmentRepo domain.AppointmentRepository, verifiers ...domain.DepartmentVerifier) *AdmissionUsecaseImpl {
+	var verifier domain.DepartmentVerifier
+	if len(verifiers) > 0 {
+		verifier = verifiers[0]
+	}
 	return &AdmissionUsecaseImpl{
 		repo:            repo,
 		appointmentRepo: appointmentRepo,
+		deptVerifier:    verifier,
 	}
 }
 
@@ -37,6 +43,11 @@ func (u *AdmissionUsecaseImpl) CreateAdmission(ctx context.Context, item domain.
 	}
 	if item.DepartmentID == "" {
 		return nil, fmt.Errorf("%w: department_id is required", domain.ErrInvalidInput)
+	}
+	if u.deptVerifier != nil {
+		if err := u.deptVerifier.VerifyActiveDepartment(ctx, item.DepartmentID); err != nil {
+			return nil, err
+		}
 	}
 	if item.PractitionerID == "" {
 		return nil, fmt.Errorf("%w: practitioner_id is required", domain.ErrInvalidInput)

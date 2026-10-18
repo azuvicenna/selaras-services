@@ -181,6 +181,8 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+      master-service:
+        condition: service_started
     environment:
       DB_HOST: postgres
       DB_PORT: "5432"
@@ -195,6 +197,7 @@ services:
       STORAGE_BUCKET: emr-documents
       STORAGE_USE_SSL: "false"
       PATIENT_SERVICE_ADDR: patient-service:50051
+      MASTER_SERVICE_ADDR: master-service:50053
       RABBITMQ_URL: amqp://selaras:selaras123@rabbitmq:5672/
     ports:
       - "50052:50052"
@@ -256,6 +259,8 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+      master-service:
+        condition: service_started
     environment:
       DB_HOST: postgres
       DB_PORT: "5432"
@@ -264,6 +269,7 @@ services:
       DB_NAME: admission_db
       GRPC_PORT: "50055"
       METRICS_PORT: "9096"
+      MASTER_SERVICE_ADDR: master-service:50053
       RABBITMQ_URL: amqp://selaras:selaras123@rabbitmq:5672/
     ports:
       - "50055:50055"
@@ -278,6 +284,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      master-service:
+        condition: service_started
     environment:
       DB_HOST: postgres
       DB_PORT: "5432"
@@ -286,6 +294,7 @@ services:
       DB_NAME: practitioner_db
       GRPC_PORT: "50056"
       METRICS_PORT: "9097"
+      MASTER_SERVICE_ADDR: master-service:50053
     ports:
       - "50056:50056"
       - "9097:9097"
@@ -546,6 +555,8 @@ services:
         condition: service_healthy
       emr-service:
         condition: service_started
+      master-service:
+        condition: service_started
     environment:
       HTTP_PORT: "8085"
       METRICS_PORT: "9095"
@@ -560,6 +571,7 @@ services:
       SATUSEHAT_CLIENT_SECRET: satusehat-demo-client-secret
       SATUSEHAT_ORG_ID: "10000004"
       EMR_SERVICE_ADDR: emr-service:50052
+      MASTER_SERVICE_ADDR: master-service:50053
       WORKER_CONCURRENCY: "5"
     ports:
       - "8085:8085"
@@ -578,6 +590,8 @@ services:
         condition: service_started
       bed-service:
         condition: service_started
+      master-service:
+        condition: service_started
     environment:
       HTTP_PORT: "8086"
       METRICS_PORT: "9096"
@@ -595,6 +609,7 @@ services:
       BPJS_KODE_PPK: "0115R001"
       EMR_SERVICE_ADDR: emr-service:50052
       BED_SERVICE_ADDR: bed-service:50054
+      MASTER_SERVICE_ADDR: master-service:50053
       WORKER_CONCURRENCY: "5"
     ports:
       - "8086:8086"

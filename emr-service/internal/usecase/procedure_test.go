@@ -78,4 +78,39 @@ func TestRecordAndUpdateProcedure(t *testing.T) {
 			t.Fatalf("got %v, want ErrInvalidInput", err)
 		}
 	})
+
+	t.Run("icd9cm verifier returns error on invalid code", func(t *testing.T) {
+		verifier := &fakeICDVerifier{icd9Err: domain.ErrNotFound}
+		uc := usecase.NewProcedureUsecase(&fakeProcedureRepo{}, &fakeEncounterRepo{}, verifier)
+
+		_, err := uc.RecordProcedure(ctx, domain.Procedure{
+			EncounterID:    "01ENC",
+			PractitionerID: "PRAC-01",
+			Category:       domain.ProcedureCategoryTherapeutic,
+			ICD9CMCode:     "INVALID",
+		})
+		if err == nil {
+			t.Fatal("expected error for invalid icd9cm code")
+		}
+	})
+
+	t.Run("icd9cm verifier auto-populates procedure name when empty", func(t *testing.T) {
+		verifier := &fakeICDVerifier{icd9Name: "Oxygen therapy"}
+		procRepo := &fakeProcedureRepo{}
+		uc := usecase.NewProcedureUsecase(procRepo, &fakeEncounterRepo{}, verifier)
+
+		res, err := uc.RecordProcedure(ctx, domain.Procedure{
+			EncounterID:    "01ENC",
+			PractitionerID: "PRAC-01",
+			Category:       domain.ProcedureCategoryTherapeutic,
+			ICD9CMCode:     "93.96",
+		})
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if res.ProcedureName != "Oxygen therapy" {
+			t.Fatalf("got ProcedureName %q, want %q", res.ProcedureName, "Oxygen therapy")
+		}
+	})
 }
+

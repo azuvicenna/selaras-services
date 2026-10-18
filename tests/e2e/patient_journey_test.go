@@ -30,8 +30,8 @@ func TestPatientJourneyE2E(t *testing.T) {
 		radOrderID    string
 		invoiceID     string
 		documentID    string
-		deptID        = "01ARZ3NDEKTSV4RRFFQ69G0001"
-		doctorID      = "01ARZ3NDEKTSV4RRFFQ69G0002"
+		deptID        = "01J9B1X2K3M4N5P6Q7R8S9T0D1"
+		doctorID      = "01J9B5X6Y7Z8A9B0C1D2E3F4G5"
 		testTimestamp = time.Now().UnixNano()
 		testNIK       = fmt.Sprintf("3171%012d", testTimestamp%1e12)
 		testName      = fmt.Sprintf("E2E Pasien %d", testTimestamp%10000)
@@ -105,7 +105,7 @@ func TestPatientJourneyE2E(t *testing.T) {
 			"city_code":          "3171",
 			"district_code":      "317101",
 			"village_code":       "3171011001",
-			"postal_code":        "12345",
+			"postal_code":        "10110",
 			"preferred_language": "Indonesia",
 			"status":             1, // PATIENT_STATUS_ACTIVE
 		}

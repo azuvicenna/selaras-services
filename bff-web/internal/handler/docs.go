@@ -210,6 +210,54 @@ func (h *DocsHandler) OpenAPISpec(w http.ResponseWriter, r *http.Request) {
         "responses": { "200": { "description": "Binary PDF stream" } }
       }
     },
+    "/api/v1/master/departments": {
+      "get": {
+        "summary": "List Hospital Departments / Clinics",
+        "responses": { "200": { "description": "List of departments" } }
+      }
+    },
+    "/api/v1/master/hospital-profile": {
+      "get": {
+        "summary": "Get Hospital Profile",
+        "responses": { "200": { "description": "Hospital profile details" } }
+      }
+    },
+    "/api/v1/master/icd10": {
+      "get": {
+        "summary": "Search & List ICD-10 Diagnoses",
+        "responses": { "200": { "description": "List of ICD-10 codes" } }
+      }
+    },
+    "/api/v1/master/icd9cm": {
+      "get": {
+        "summary": "Search & List ICD-9-CM Procedures",
+        "responses": { "200": { "description": "List of ICD-9-CM codes" } }
+      }
+    },
+    "/api/v1/master/provinces": {
+      "get": {
+        "summary": "List Indonesian Provinces",
+        "responses": { "200": { "description": "List of provinces" } }
+      }
+    },
+    "/api/v1/master/cities": {
+      "get": {
+        "summary": "List Cities by Province Code",
+        "responses": { "200": { "description": "List of cities" } }
+      }
+    },
+    "/api/v1/master/districts": {
+      "get": {
+        "summary": "List Districts by City Code",
+        "responses": { "200": { "description": "List of districts" } }
+      }
+    },
+    "/api/v1/master/villages": {
+      "get": {
+        "summary": "List Villages / Kelurahan by District Code",
+        "responses": { "200": { "description": "List of villages" } }
+      }
+    },
     "/api/v1/composite/encounters/{id}/summary": {
       "get": {
         "summary": "Composite Encounter Summary (Encounter + Patient + Doctor + SOAP + Vitals + Labs + Rad + Rx)",

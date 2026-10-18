@@ -207,3 +207,50 @@ func TestPractitionerUsecase_CRUD(t *testing.T) {
 		t.Errorf("failed to delete: %v", err)
 	}
 }
+
+type mockDeptVerifier struct {
+	err error
+}
+
+func (m *mockDeptVerifier) VerifyActiveDepartment(ctx context.Context, departmentID string) error {
+	return m.err
+}
+
+func TestPractitionerUsecase_DepartmentVerifier(t *testing.T) {
+	ctx := context.Background()
+	repo := newMockPractitionerRepo()
+
+	t.Run("department verifier fails on invalid department", func(t *testing.T) {
+		verifier := &mockDeptVerifier{err: domain.ErrNotFound}
+		uc := NewPractitionerUsecase(repo, verifier)
+
+		_, err := uc.CreatePractitioner(ctx, domain.Practitioner{
+			NIK:          "3201012345679999",
+			Name:         "dr. Invalid Dept",
+			Type:         domain.PractitionerTypeDoctor,
+			DepartmentID: "NON_EXISTENT",
+		})
+		if err == nil {
+			t.Fatal("expected error, got nil")
+		}
+	})
+
+	t.Run("department verifier passes on valid department", func(t *testing.T) {
+		verifier := &mockDeptVerifier{err: nil}
+		uc := NewPractitionerUsecase(repo, verifier)
+
+		p, err := uc.CreatePractitioner(ctx, domain.Practitioner{
+			NIK:          "3201012345678888",
+			Name:         "dr. Valid Dept",
+			Type:         domain.PractitionerTypeDoctor,
+			DepartmentID: "POLI_UMUM",
+		})
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if p == nil || p.DepartmentID != "POLI_UMUM" {
+			t.Errorf("expected department to be POLI_UMUM")
+		}
+	})
+}
+

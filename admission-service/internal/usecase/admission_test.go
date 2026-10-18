@@ -198,3 +198,43 @@ func TestAdmissionUsecase_CRUD_And_StateMachine(t *testing.T) {
 		t.Errorf("failed to delete admission: %v", err)
 	}
 }
+
+func TestAdmissionUsecase_DepartmentVerifier(t *testing.T) {
+	ctx := context.Background()
+	repo := newMockAdmissionRepo()
+	appointmentRepo := newMockAppointmentRepo()
+
+	t.Run("department verifier returns error on create", func(t *testing.T) {
+		verifier := &mockDeptVerifier{err: domain.ErrNotFound}
+		uc := NewAdmissionUsecase(repo, appointmentRepo, verifier)
+
+		_, err := uc.CreateAdmission(ctx, domain.Admission{
+			PatientID:      "pat-1",
+			PractitionerID: "prac-1",
+			DepartmentID:   "invalid-dept",
+			AdmissionType:  domain.AdmissionTypeOutpatient,
+		})
+		if err == nil {
+			t.Fatal("expected error, got nil")
+		}
+	})
+
+	t.Run("department verifier passes on create", func(t *testing.T) {
+		verifier := &mockDeptVerifier{err: nil}
+		uc := NewAdmissionUsecase(repo, appointmentRepo, verifier)
+
+		adm, err := uc.CreateAdmission(ctx, domain.Admission{
+			PatientID:      "pat-1",
+			PractitionerID: "prac-1",
+			DepartmentID:   "valid-dept",
+			AdmissionType:  domain.AdmissionTypeOutpatient,
+		})
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if adm == nil || adm.DepartmentID != "valid-dept" {
+			t.Errorf("expected valid admission")
+		}
+	})
+}
+

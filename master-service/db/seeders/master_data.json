@@ -24,9 +24,26 @@
       "code": "45.13",
       "description": "Other endoscopy of small intestine",
       "is_active": true
+    },
+    {
+      "code": "93.96",
+      "description": "Other oxygen enrichment (Nebulizer / Oxygen therapy)",
+      "is_active": true
+    },
+    {
+      "code": "99.23",
+      "description": "Injection of steroid",
+      "is_active": true
     }
   ],
   "icd10": [
+    {
+      "code": "A09",
+      "description_id": "Gastroenteritis dan kolitis akibat infeksi, tidak ditentukan",
+      "description_en": "Infectious gastroenteritis and colitis, unspecified",
+      "category": "Certain infectious and parasitic diseases",
+      "is_active": true
+    },
     {
       "code": "A09.0",
       "description_id": "Gastroenteritis dan kolitis akibat infeksi lain dan tidak ditentukan",
@@ -56,10 +73,38 @@
       "is_active": true
     },
     {
+      "code": "J02.9",
+      "description_id": "Faringitis akut, tidak spesifik",
+      "description_en": "Acute pharyngitis, unspecified",
+      "category": "Diseases of the respiratory system",
+      "is_active": true
+    },
+    {
+      "code": "J30.4",
+      "description_id": "Rinitis alergi, tidak spesifik",
+      "description_en": "Allergic rhinitis, unspecified",
+      "category": "Diseases of the respiratory system",
+      "is_active": true
+    },
+    {
+      "code": "K29.1",
+      "description_id": "Gastritis akut lainnya",
+      "description_en": "Other acute gastritis",
+      "category": "Diseases of the digestive system",
+      "is_active": true
+    },
+    {
       "code": "K29.7",
       "description_id": "Gastritis, tidak spesifik",
       "description_en": "Gastritis, unspecified",
       "category": "Diseases of the digestive system",
+      "is_active": true
+    },
+    {
+      "code": "T78.1",
+      "description_id": "Reaksi simpang makanan lain, tidak terklasifikasi di tempat lain",
+      "description_en": "Other adverse food reactions, not elsewhere classified",
+      "category": "Injury, poisoning and certain other consequences of external causes",
       "is_active": true
     }
   ],
@@ -72,6 +117,21 @@
     {
       "code": "32",
       "name": "JAWA BARAT",
+      "is_active": true
+    },
+    {
+      "code": "33",
+      "name": "JAWA TENGAH",
+      "is_active": true
+    },
+    {
+      "code": "35",
+      "name": "JAWA TIMUR",
+      "is_active": true
+    },
+    {
+      "code": "51",
+      "name": "BALI",
       "is_active": true
     }
   ],
@@ -93,6 +153,30 @@
       "province_code": "32",
       "name": "KABUPATEN BOGOR",
       "is_active": true
+    },
+    {
+      "code": "3273",
+      "province_code": "32",
+      "name": "KOTA BANDUNG",
+      "is_active": true
+    },
+    {
+      "code": "3374",
+      "province_code": "33",
+      "name": "KOTA SEMARANG",
+      "is_active": true
+    },
+    {
+      "code": "3578",
+      "province_code": "35",
+      "name": "KOTA SURABAYA",
+      "is_active": true
+    },
+    {
+      "code": "5171",
+      "province_code": "51",
+      "name": "KOTA DENPASAR",
+      "is_active": true
     }
   ],
   "districts": [
@@ -112,6 +196,30 @@
       "code": "320101",
       "city_code": "3201",
       "name": "CIBINONG",
+      "is_active": true
+    },
+    {
+      "code": "327301",
+      "city_code": "3273",
+      "name": "SUKASARI",
+      "is_active": true
+    },
+    {
+      "code": "337402",
+      "city_code": "3374",
+      "name": "SEMARANG TENGAH",
+      "is_active": true
+    },
+    {
+      "code": "357804",
+      "city_code": "3578",
+      "name": "TEGALSARI",
+      "is_active": true
+    },
+    {
+      "code": "517101",
+      "city_code": "5171",
+      "name": "DENPASAR SELATAN",
       "is_active": true
     }
   ],
@@ -136,46 +244,95 @@
       "name": "CIBINONG",
       "postal_code": "16911",
       "is_active": true
+    },
+    {
+      "code": "3273011002",
+      "district_code": "327301",
+      "name": "GEGERKALONG",
+      "postal_code": "40153",
+      "is_active": true
+    },
+    {
+      "code": "3374021003",
+      "district_code": "337402",
+      "name": "PANDANSARI",
+      "postal_code": "50139",
+      "is_active": true
+    },
+    {
+      "code": "3578041001",
+      "district_code": "357804",
+      "name": "TEGALSARI",
+      "postal_code": "60262",
+      "is_active": true
+    },
+    {
+      "code": "5171011004",
+      "district_code": "517101",
+      "name": "SANUR",
+      "postal_code": "80228",
+      "is_active": true
     }
   ],
   "departments": [
     {
+      "id": "01J9B1X2K3M4N5P6Q7R8S9T0D1",
       "code": "POLI_UMUM",
       "name": "Poliklinik Umum",
       "department_type": 1,
       "is_active": true
     },
     {
+      "id": "01J9B2Y3Z4A5B6C7D8E9F0G1H2",
       "code": "POLI_INT",
       "name": "Poliklinik Penyakit Dalam",
       "department_type": 1,
       "is_active": true
     },
     {
+      "id": "01J9B1X2K3M4N5P6Q7R8S9T0D2",
+      "code": "POLI_ANAK",
+      "name": "Poliklinik Anak",
+      "department_type": 1,
+      "is_active": true
+    },
+    {
+      "id": "01J9B4M5N6P7Q8R9S0T1U2V3W4",
       "code": "IGD",
       "name": "Instalasi Gawat Darurat",
       "department_type": 3,
       "is_active": true
     },
     {
+      "id": "01J9B1X2K3M4N5P6Q7R8S9T0D3",
       "code": "RAWAT_INAP_VIP",
       "name": "Bangsal Rawat Inap VIP",
       "department_type": 2,
       "is_active": true
     },
     {
+      "id": "01J9B1X2K3M4N5P6Q7R8S9T0D7",
+      "code": "ICU",
+      "name": "Intensive Care Unit (ICU)",
+      "department_type": 4,
+      "is_active": true
+    },
+    {
+      "id": "01J9B1X2K3M4N5P6Q7R8S9T0D4",
       "code": "FARMASI_RAWAT_JALAN",
       "name": "Instalasi Farmasi Rawat Jalan",
       "department_type": 5,
       "is_active": true
     },
     {
+      "id": "01J9B1X2K3M4N5P6Q7R8S9T0D5",
       "code": "LAB_PATOLOGI_KLINIK",
       "name": "Laboratorium Patologi Klinik",
       "department_type": 6,
       "is_active": true
     },
     {
+      "id": "01J9B1X2K3M4N5P6Q7R8S9T0D6",
       "code": "RADIOLOGI_SENTRAL",
       "name": "Instalasi Radiologi Sentral",
       "department_type": 7,
@@ -183,6 +340,7 @@
     }
   ],
   "hospital_profile": {
+    "id": "01J9A000000000000000000001",
     "name": "RS Selaras Sehat Medika",
     "bpjs_facility_code": "0115R001",
     "kemenkes_facility_code": "3171012",

@@ -1,9 +1,9 @@
 [
   {
     "encounter": {
-      "patientId": "01JQXK7M9P2R4T6V8X0Z1B3D5F",
-      "practitionerId": "PRAC-2026-0001",
-      "locationId": "LOC-POLI-UMUM-01",
+      "patientId": "01J9A01B2C3D4E5F6G7H8J9K0L",
+      "practitionerId": "01J9B1X2K3M4N5P6Q7R8S9T0U1",
+      "locationId": "01J9B1X2K3M4N5P6Q7R8S9T0D1",
       "status": "ENCOUNTER_STATUS_FINISHED",
       "encounterClass": "ENCOUNTER_CLASS_AMBULATORY",
       "priority": "ENCOUNTER_PRIORITY_ROUTINE",
@@ -11,7 +11,7 @@
       "satusehatId": "ENC-IHS-2026-0001",
       "sepNumber": "0123R0010326V000001",
       "serviceType": "Poli Penyakit Dalam",
-      "participantIds": ["NURS-2026-0001"],
+      "participantIds": ["01J9B6C7D8E9F0G1H2I3J4K5L6"],
       "dischargeDisposition": "DISCHARGE_DISPOSITION_HOME",
       "startTime": "2026-03-10T08:30:00Z",
       "endTime": "2026-03-10T09:15:00Z"
@@ -86,7 +86,7 @@
         "assessment": "Faringitis Akut bakterial (J02.9) dengan riwayat alergi Amoxicillin.",
         "plan": "Berikan Azithromycin 1x500mg selama 3 hari, Paracetamol 3x500mg bila demam, edukasi istirahat dan banyak minum air putih.",
         "practitionerRole": "Dokter Spesialis Penyakit Dalam",
-        "unitId": "LOC-POLI-UMUM-01",
+        "unitId": "01J9B1X2K3M4N5P6Q7R8S9T0D1",
         "isConfidential": false,
         "primaryIcd10Code": "J02.9",
         "recordedAt": "2026-03-10T08:50:00Z"
@@ -189,9 +189,9 @@
   },
   {
     "encounter": {
-      "patientId": "01JQXK7M9P2R4T6V8X0Z1B3D5G",
-      "practitionerId": "PRAC-2026-0002",
-      "locationId": "LOC-IGD-01",
+      "patientId": "01J9A22B2C3D4E5F6G7H8J9K0N",
+      "practitionerId": "01J9B3C4D5E6F7G8H9I0J1K2L3",
+      "locationId": "01J9B4M5N6P7Q8R9S0T1U2V3W4",
       "status": "ENCOUNTER_STATUS_FINISHED",
       "encounterClass": "ENCOUNTER_CLASS_EMERGENCY",
       "priority": "ENCOUNTER_PRIORITY_EMERGENCY",
@@ -199,7 +199,7 @@
       "satusehatId": "ENC-IHS-2026-0002",
       "sepNumber": "0123R0010326V000002",
       "serviceType": "Instalasi Gawat Darurat",
-      "participantIds": ["NURS-2026-0002", "NURS-2026-0003"],
+      "participantIds": ["01J9B6C7D8E9F0G1H2I3J4K5L6", "NURS-2026-0003"],
       "dischargeDisposition": "DISCHARGE_DISPOSITION_HOME",
       "startTime": "2026-03-11T19:00:00Z",
       "endTime": "2026-03-11T22:30:00Z"
@@ -244,7 +244,7 @@
         "assessment": "Reaksi alergi makanan akut / angioedema akibat seafood (T78.1).",
         "plan": "Oksigen nasal kanul 3 lpm, injeksi Dexamethasone IV dan Diphenhydramine IV, observasi 3 jam di IGD. Pasien stabil dan boleh pulang dengan obat oral.",
         "practitionerRole": "Dokter Jaga IGD",
-        "unitId": "LOC-IGD-01",
+        "unitId": "01J9B4M5N6P7Q8R9S0T1U2V3W4",
         "isConfidential": false,
         "primaryIcd10Code": "T78.1",
         "icd9cmCodes": ["93.96", "99.23"],
@@ -277,11 +277,11 @@
         "procedureName": "Oxygen enrichment therapy via nasal cannula",
         "performers": [
           {
-            "practitionerId": "PRAC-2026-0002",
+            "practitionerId": "01J9B3C4D5E6F7G8H9I0J1K2L3",
             "role": "Emergency Physician"
           },
           {
-            "practitionerId": "NURS-2026-0002",
+            "practitionerId": "01J9B6C7D8E9F0G1H2I3J4K5L6",
             "role": "Emergency Nurse"
           }
         ],
@@ -318,9 +318,9 @@
   },
   {
     "encounter": {
-      "patientId": "01JQXK7M9P2R4T6V8X0Z1B3D5H",
-      "practitionerId": "PRAC-2026-0003",
-      "locationId": "LOC-POLI-SARAF-01",
+      "patientId": "01J9A11B2C3D4E5F6G7H8J9K0M",
+      "practitionerId": "01J9B5X6Y7Z8A9B0C1D2E3F4G5",
+      "locationId": "01J9B2Y3Z4A5B6C7D8E9F0G1H2",
       "status": "ENCOUNTER_STATUS_FINISHED",
       "encounterClass": "ENCOUNTER_CLASS_AMBULATORY",
       "priority": "ENCOUNTER_PRIORITY_ROUTINE",
@@ -374,7 +374,7 @@
         "assessment": "Essential (primary) hypertension (I10).",
         "plan": "Lanjutkan Amlodipine 1x10mg, program fisioterapi rutin.",
         "practitionerRole": "Dokter Spesialis Saraf",
-        "unitId": "LOC-POLI-SARAF-01",
+        "unitId": "01J9B2Y3Z4A5B6C7D8E9F0G1H2",
         "isConfidential": false,
         "primaryIcd10Code": "I10",
         "recordedAt": "2026-03-12T09:30:00Z"
@@ -422,9 +422,9 @@
   },
   {
     "encounter": {
-      "patientId": "01JQXK7M9P2R4T6V8X0Z1B3D5J",
-      "practitionerId": "PRAC-2026-0004",
-      "locationId": "LOC-POLI-THT-01",
+      "patientId": "01J9A33B2C3D4E5F6G7H8J9K0P",
+      "practitionerId": "01J9B5X6Y7Z8A9B0C1D2E3F4G5",
+      "locationId": "01J9B1X2K3M4N5P6Q7R8S9T0D1",
       "status": "ENCOUNTER_STATUS_FINISHED",
       "encounterClass": "ENCOUNTER_CLASS_AMBULATORY",
       "priority": "ENCOUNTER_PRIORITY_ROUTINE",
@@ -462,7 +462,7 @@
         "assessment": "Allergic rhinitis, unspecified (J30.4).",
         "plan": "Berikan racikan kapsul simtomatik rhinitis alergi 2x1 selama 5 hari.",
         "practitionerRole": "Dokter Spesialis THT",
-        "unitId": "LOC-POLI-THT-01",
+        "unitId": "01J9B1X2K3M4N5P6Q7R8S9T0D1",
         "isConfidential": false,
         "primaryIcd10Code": "J30.4",
         "recordedAt": "2026-03-13T10:25:00Z"
@@ -522,9 +522,9 @@
   },
   {
     "encounter": {
-      "patientId": "01JQXK7M9P2R4T6V8X0Z1B3D5K",
-      "practitionerId": "PRAC-2026-0001",
-      "locationId": "LOC-POLI-DALAM-01",
+      "patientId": "01J9A44B2C3D4E5F6G7H8J9K0Q",
+      "practitionerId": "01J9B1X2K3M4N5P6Q7R8S9T0U1",
+      "locationId": "01J9B2Y3Z4A5B6C7D8E9F0G1H2",
       "status": "ENCOUNTER_STATUS_FINISHED",
       "encounterClass": "ENCOUNTER_CLASS_AMBULATORY",
       "priority": "ENCOUNTER_PRIORITY_URGENT",
@@ -532,7 +532,7 @@
       "satusehatId": "ENC-IHS-2026-0005",
       "sepNumber": "0123R0010326V000005",
       "serviceType": "Poli Penyakit Dalam",
-      "participantIds": ["NURS-2026-0001"],
+      "participantIds": ["01J9B6C7D8E9F0G1H2I3J4K5L6"],
       "dischargeDisposition": "DISCHARGE_DISPOSITION_HOME",
       "startTime": "2026-03-14T11:00:00Z",
       "endTime": "2026-03-14T11:50:00Z"
@@ -563,7 +563,7 @@
         "assessment": "Acute gastritis (K29.1) diinduksi NSAID.",
         "plan": "Hentikan konsumsi NSAID, berikan Lansoprazole 1x30mg sebelum makan dan Sucralfate suspensi 3x10ml.",
         "practitionerRole": "Dokter Spesialis Penyakit Dalam",
-        "unitId": "LOC-POLI-DALAM-01",
+        "unitId": "01J9B2Y3Z4A5B6C7D8E9F0G1H2",
         "isConfidential": false,
         "primaryIcd10Code": "K29.1",
         "recordedAt": "2026-03-14T11:30:00Z"

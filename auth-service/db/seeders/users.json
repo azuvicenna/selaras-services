@@ -24,7 +24,7 @@
       "password": "Password123!",
       "full_name": "dr. Budi Santoso, Sp.PD",
       "role": 3,
-      "practitioner_id": "",
+      "practitioner_id": "01J9B1X2K3M4N5P6Q7R8S9T0U1",
       "is_active": true
     },
     {
@@ -33,7 +33,7 @@
       "password": "Password123!",
       "full_name": "Ns. Rina Kusuma, S.Kep",
       "role": 4,
-      "practitioner_id": "",
+      "practitioner_id": "01J9B6C7D8E9F0G1H2I3J4K5L6",
       "is_active": true
     },
     {
@@ -60,7 +60,7 @@
       "password": "Password123!",
       "full_name": "Dewi Sartika, S.Gz, RD",
       "role": 10,
-      "practitioner_id": "",
+      "practitioner_id": "01J9B7C8D9E0F1G2H3I4J5K6L7",
       "is_active": true
     },
     {
@@ -69,7 +69,7 @@
       "password": "Password123!",
       "full_name": "Bambang Irawan, S.Ft, Ftr",
       "role": 11,
-      "practitioner_id": "",
+      "practitioner_id": "01J9B8C9D0E1F2G3H4I5J6K7L8",
       "is_active": true
     }
   ]

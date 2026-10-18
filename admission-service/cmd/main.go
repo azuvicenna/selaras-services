@@ -20,7 +20,9 @@ import (
 	"google.golang.org/grpc/reflection"
 
 	admissionv1 "github.com/azuvicenna/selaras-services/admission-service/gen/admission/v1"
+	"github.com/azuvicenna/selaras-services/admission-service/internal/client"
 	"github.com/azuvicenna/selaras-services/admission-service/internal/config"
+	"github.com/azuvicenna/selaras-services/admission-service/internal/domain"
 	"github.com/azuvicenna/selaras-services/admission-service/internal/event"
 	"github.com/azuvicenna/selaras-services/admission-service/internal/handler"
 	"github.com/azuvicenna/selaras-services/admission-service/internal/middleware"
@@ -88,10 +90,22 @@ func run() error {
 		eventPublisher = event.NewNoopPublisher()
 	}
 
+	// 2c. Inisialisasi Master Service Client (Department Verifier)
+	var deptVerifier domain.DepartmentVerifier
+	if cfg.MasterServiceAddr != "" {
+		masterClient, err := client.NewMasterClient(cfg.MasterServiceAddr)
+		if err != nil {
+			slog.Warn("failed to initialize master client, falling back to no-op", "error", err)
+		} else if masterClient != nil {
+			defer masterClient.Close()
+			deptVerifier = masterClient
+		}
+	}
+
 	// 3. Inisialisasi Usecases
-	scheduleUC := usecase.NewScheduleUsecase(scheduleRepo)
-	appointmentUC := usecase.NewAppointmentUsecase(appointmentRepo, scheduleRepo).WithEventPublisher(eventPublisher)
-	admissionUC := usecase.NewAdmissionUsecase(admissionRepo, appointmentRepo)
+	scheduleUC := usecase.NewScheduleUsecase(scheduleRepo, deptVerifier)
+	appointmentUC := usecase.NewAppointmentUsecase(appointmentRepo, scheduleRepo, deptVerifier).WithEventPublisher(eventPublisher)
+	admissionUC := usecase.NewAdmissionUsecase(admissionRepo, appointmentRepo, deptVerifier)
 
 	// 4. Inisialisasi Handler & Injeksi Seluruh Usecase
 	admissionHandler := handler.NewAdmissionHandler(

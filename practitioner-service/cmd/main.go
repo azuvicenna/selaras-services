@@ -20,7 +20,9 @@ import (
 	"google.golang.org/grpc/reflection"
 
 	practitionerv1 "github.com/azuvicenna/selaras-services/practitioner-service/gen/practitioner/v1"
+	"github.com/azuvicenna/selaras-services/practitioner-service/internal/client"
 	"github.com/azuvicenna/selaras-services/practitioner-service/internal/config"
+	"github.com/azuvicenna/selaras-services/practitioner-service/internal/domain"
 	"github.com/azuvicenna/selaras-services/practitioner-service/internal/handler"
 	"github.com/azuvicenna/selaras-services/practitioner-service/internal/middleware"
 	"github.com/azuvicenna/selaras-services/practitioner-service/internal/repository"
@@ -70,8 +72,20 @@ func run() error {
 	// 2. Inisialisasi Repository
 	practitionerRepo := repository.NewPractitionerRepository(pool)
 
+	// 2b. Inisialisasi Master Service Client (Department Verifier)
+	var deptVerifier domain.DepartmentVerifier
+	if cfg.MasterServiceAddr != "" {
+		masterClient, err := client.NewMasterClient(cfg.MasterServiceAddr)
+		if err != nil {
+			slog.Warn("failed to initialize master client, falling back to no-op", "error", err)
+		} else if masterClient != nil {
+			defer masterClient.Close()
+			deptVerifier = masterClient
+		}
+	}
+
 	// 3. Inisialisasi Usecase
-	practitionerUC := usecase.NewPractitionerUsecase(practitionerRepo)
+	practitionerUC := usecase.NewPractitionerUsecase(practitionerRepo, deptVerifier)
 
 	// 4. Inisialisasi Handler
 	practitionerHandler := handler.NewPractitionerHandler(practitionerUC)

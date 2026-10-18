@@ -81,12 +81,13 @@ func run(addr, file string) error {
 
 		res, err := client.CreateWard(ctx, &bedv1.CreateWardRequest{
 			Ward: &bedv1.Ward{
-				Code:        item.Code,
-				Name:        item.Name,
-				WardClassId: wardClassID,
-				Floor:       item.Floor,
-				Capacity:    item.Capacity,
-				IsActive:    item.IsActive,
+				Code:         item.Code,
+				Name:         item.Name,
+				WardClassId:  wardClassID,
+				DepartmentId: item.DepartmentID,
+				Floor:        item.Floor,
+				Capacity:     item.Capacity,
+				IsActive:     item.IsActive,
 			},
 		})
 		if status.Code(err) == codes.AlreadyExists {
