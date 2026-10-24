@@ -4,8 +4,9 @@ go 1.26.6
 
 require (
 	github.com/azuvicenna/selaras-services/emr-service v0.0.0-20261016053139-eee3b932502c
+	github.com/azuvicenna/selaras-services/master-service v0.0.0-20261020152448-bd41b3c0bd51
 	github.com/prometheus/client_golang v1.25.0
-	github.com/rabbitmq/amqp091-go v1.15.0
+	github.com/rabbitmq/amqp091-go v1.16.0
 	google.golang.org/grpc v1.84.0
 )
 
